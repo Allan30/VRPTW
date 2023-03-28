@@ -2,13 +2,13 @@
 
 public interface ITransformations
 {
-    void TwoOpt(LinkedList<IElement> element);
-    void RelocateIntra(LinkedList<IElement> element);
-    void Exchange(LinkedList<IElement> element);
-    void Reverse(LinkedList<IElement> element);
-    
-    void RelocateInter(LinkedList<IElement> element1, LinkedList<IElement> element2);
-    void Cross(LinkedList<IElement> element1, LinkedList<IElement> element2);
-    void CrossExchange(LinkedList<IElement> element1, LinkedList<IElement> element2);
+    List<LinkedList<IElement>> TwoOpt(LinkedList<IElement> graph);
+    List<LinkedList<IElement>> RelocateIntra(LinkedList<IElement> graph);
+    List<LinkedList<IElement>> Reverse(LinkedList<IElement> graph);
+    List<LinkedList<IElement>> ExchangeIntra(LinkedList<IElement> graph);
+
+    (List<LinkedList<IElement>> graph1, List<LinkedList<IElement>> graph2) CrossExchange(LinkedList<IElement> graph1, LinkedList<IElement> graph2);
+    (List<LinkedList<IElement>> graph1, List<LinkedList<IElement>> graph2) ExchangeInter(LinkedList<IElement> graph1, LinkedList<IElement> graph2);
+    (List<LinkedList<IElement>> graph1, List<LinkedList<IElement>> graph2) RelocateInter(LinkedList<IElement> graph1, LinkedList<IElement> graph2);
     
 }
