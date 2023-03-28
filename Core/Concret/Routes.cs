@@ -7,8 +7,14 @@ public class Routes : ISolution
     public Client Depot { get; set; }
     public List<Client> Clients { get; set; }
     public List<Vehicle> Vehicles { get; set; }
-    public static int Capacity { get; set; }
+    public int Capacity { get; set; }
     
+    public Routes()
+    {
+        Capacity = -1;
+        Clients = new List<Client>();
+        Vehicles = new List<Vehicle>();
+    }
     public Routes(Client depot, List<Client> clients)
     {
         Depot = depot;
