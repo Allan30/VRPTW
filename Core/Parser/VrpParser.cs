@@ -23,7 +23,7 @@ public class VrpParser
                     solution.Depot = new Client(data[0], new Coordinate(int.Parse(data[1]), int.Parse(data[2])), int.Parse(data[3]), int.Parse(data[4]));
                     break;
                 case > 11:
-                    solution.Clients.Add(new Client(data[0], new Coordinate(int.Parse(data[1]), int.Parse(data[2])), int.Parse(data[3]), int.Parse(data[4]), int.Parse(data[5]), int.Parse(data[6])));
+                    solution.Clients.Add(new Client(data[0], new Coordinate(int.Parse(data[1]), int.Parse(data[2])), 0, 230, int.Parse(data[5]), int.Parse(data[6])));
                     break;
             }
             

@@ -1,4 +1,5 @@
-﻿using VRPTW.AbstractObjects;
+﻿using System.Text;
+using VRPTW.AbstractObjects;
 
 namespace VRPTW.Concret;
 
@@ -52,5 +53,50 @@ public class Routes : ISolution
                 currentVehicle = new Vehicle(Vehicles.Count, Capacity, Depot);
             };
         }
+    }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        sb.Append("[");
+        foreach (var vehicle in Vehicles)
+        {
+            sb.Append("{\"Vehicle\": ");
+            sb.Append("\"");
+            sb.Append(vehicle.Id);
+            sb.Append("\"");
+            sb.Append(", \"Clients\": [");
+            foreach (var client in vehicle.Clients)
+            {
+                sb.Append("\"");
+                sb.Append(client.Id);
+                sb.Append("\"");
+                sb.Append(", ");
+            }
+            sb.Remove(sb.Length - 2, 2);
+
+            sb.Append("], \"Points\": [");
+            foreach (var client in vehicle.Clients)
+            {
+                sb.Append("[");
+                sb.Append(client.Coordinate.X);
+                sb.Append(", ");
+                sb.Append(client.Coordinate.Y);
+                sb.Append("], ");
+            }
+            sb.Remove(sb.Length - 2, 2);
+            
+            sb.Append("], \"Distance\":");
+            sb.Append(vehicle.GetTravelledDistance());
+            sb.Append(", \"Capacity\":");
+            sb.Append(vehicle.Capacity);
+            sb.Append("}, \n");
+        }
+
+        sb.Remove(sb.Length - 3, 3);
+
+        sb.Append("]");
+
+        return sb.ToString();
     }
 }
