@@ -26,13 +26,18 @@ public class Transformations : ITransformations
         return result;
     }
 
-    public IEnumerable<LinkedList<Client>> RelocateIntra(LinkedList<Client> graph) //n*(n-1)
+    public IEnumerable<(LinkedList<Client> relocated, Client node)> RelocateIntra(LinkedList<Client> graph, List<Client> tabouList) //n*(n-1)
     {
-        var result = new List<LinkedList<Client>>();
+        var result = new List<(LinkedList<Client> relocated, Client node)>();
         
         var nodeToRelocate = graph.First.Next;
         while(!nodeToRelocate.Equals(graph.Last))
         {
+            if (tabouList.Contains(nodeToRelocate.Value))
+            {
+                nodeToRelocate = nodeToRelocate.Next;
+                continue;
+            }
             var firstNodeOfEdge = graph.First;
             while(!firstNodeOfEdge.Equals(graph.Last))
             {
@@ -46,12 +51,11 @@ public class Transformations : ITransformations
                 var newFirstNodeOfEdge = newGraph.Find(firstNodeOfEdge.Value);
                 newGraph.Remove(newNodeToRelocate);
                 newGraph.AddAfter(newFirstNodeOfEdge, newNodeToRelocate);
-                result.Add(newGraph);
+                result.Add((newGraph, nodeToRelocate.Value));
                 firstNodeOfEdge = firstNodeOfEdge.Next;
             }
             nodeToRelocate = nodeToRelocate.Next;
         }
-
         return result;
     }
 

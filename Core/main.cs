@@ -15,7 +15,13 @@ public class Test
         var solution = parser.ExtractVrpFile("C:\\Users\\Epulapp\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.vrp");
         solution.GenerateRandomSolution();
         writer.WritePythonFile("C:\\Users\\Epulapp\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.json", solution);
-        var lists = trans.RelocateIntra(solution.Vehicles[0].Clients);
+        //var lists = trans.RelocateIntra(solution.Vehicles[0].Clients);
+        var tabouList = new List<Client>();
+        for (var i = 0; i < 1000; i++)
+        {
+            solution.SetBestRelocate(tabouList);
+        }
+        writer.WritePythonFile("C:\\Users\\Epulapp\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.2.json", solution);
     }
     
 }

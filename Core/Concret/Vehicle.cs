@@ -5,7 +5,7 @@ public class Vehicle
     public int Id;
     public int Capacity;
     public int time;
-    public readonly LinkedList<Client> Clients = new();
+    public LinkedList<Client> Clients = new();
     
     public Vehicle(int id, int capacity, Client depot)
     {

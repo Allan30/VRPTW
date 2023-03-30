@@ -38,6 +38,36 @@ public class Routes : ISolution
         throw new System.NotImplementedException();
     }
 
+    public void SetBestRelocate(List<Client> tabouList)
+    {
+        var currentFitness = GetFitness();
+        var trans = new Transformations();
+        (LinkedList<Client> relocated, Client node) best = (Vehicles[0].Clients, null);
+        var bestDelta = Int32.MinValue;
+        var bestId = 0;
+        foreach (var vehicle in Vehicles)
+        {
+            var currentDistance = vehicle.GetTravelledDistance();
+            var relocationsOfClients = trans.RelocateIntra(vehicle.Clients, tabouList);
+            foreach (var relocation in relocationsOfClients)
+            {
+                var distance = relocation.relocated.Zip(relocation.relocated.Skip(1), (prevClient, nextClient) => prevClient.Coordinate.GetDistance(nextClient.Coordinate)).Sum();
+                if (currentDistance - distance <= bestDelta) continue;
+                bestDelta = currentDistance - distance;
+                best = relocation;
+                bestId = vehicle.Id;
+            }
+        }
+        Vehicles[bestId].Clients = best.relocated;
+        if (currentFitness <= GetFitness())
+        {
+            if(tabouList.Count > 10) tabouList.RemoveAt(0);
+            tabouList.Add(best.node);
+        }
+        
+        
+    }
+
     public void GenerateRandomSolution()
     {
         var values = Enumerable.Range(0, Clients.Count).Select(x => x).ToList();
