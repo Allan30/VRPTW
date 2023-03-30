@@ -26,9 +26,33 @@ public class Transformations : ITransformations
         return result;
     }
 
-    public List<LinkedList<IElement>> RelocateIntra(LinkedList<IElement> graph)
+    public IEnumerable<LinkedList<Client>> RelocateIntra(LinkedList<Client> graph) //n*(n-1)
     {
-        throw new NotImplementedException();
+        var result = new List<LinkedList<Client>>();
+        
+        var nodeToRelocate = graph.First.Next;
+        while(!nodeToRelocate.Equals(graph.Last))
+        {
+            var firstNodeOfEdge = graph.First;
+            while(!firstNodeOfEdge.Equals(graph.Last))
+            {
+                if (firstNodeOfEdge.Equals(nodeToRelocate) || nodeToRelocate.Equals(firstNodeOfEdge.Next))
+                {
+                    firstNodeOfEdge = firstNodeOfEdge.Next;
+                    continue;
+                }
+                var newGraph = new LinkedList<Client>(graph);
+                var newNodeToRelocate = newGraph.Find(nodeToRelocate.Value);
+                var newFirstNodeOfEdge = newGraph.Find(firstNodeOfEdge.Value);
+                newGraph.Remove(newNodeToRelocate);
+                newGraph.AddAfter(newFirstNodeOfEdge, newNodeToRelocate);
+                result.Add(newGraph);
+                firstNodeOfEdge = firstNodeOfEdge.Next;
+            }
+            nodeToRelocate = nodeToRelocate.Next;
+        }
+
+        return result;
     }
 
     public List<LinkedList<IElement>> Reverse(LinkedList<IElement> graph)
