@@ -1,7 +1,8 @@
 ﻿namespace VRPTW.Concret;
 
-public record struct Coordinate(int X, int Y)
+public record struct Coordinate(float X, float Y)
 {
-    public int GetDistance(Coordinate coordinate) =>
-        Math.Abs(X - coordinate.X) + Math.Abs(Y - coordinate.Y);
+    
+    public double GetDistance(Coordinate coordinate) =>
+        Math.Sqrt(Math.Pow(Math.Abs(X - coordinate.X), 2) + Math.Pow(Math.Abs(Y - coordinate.Y), 2));
 }

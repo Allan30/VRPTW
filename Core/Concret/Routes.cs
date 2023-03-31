@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using VRPTW.AbstractObjects;
 
 namespace VRPTW.Concret;
@@ -27,7 +29,7 @@ public class Routes : ISolution
         Vehicles.Add(new Vehicle(Vehicles.Count, Capacity, Depot));
     }
     
-    public float GetFitness()
+    public double GetFitness()
     {
         return Vehicles.Sum(vehicle => vehicle.GetTravelledDistance());
     }
@@ -43,7 +45,7 @@ public class Routes : ISolution
         var currentFitness = GetFitness();
         var trans = new Transformations();
         (LinkedList<Client> relocated, Client node) best = (Vehicles[0].Clients, null);
-        var bestDelta = Int32.MinValue;
+        var bestDelta = double.MinValue;
         var bestId = 0;
         foreach (var vehicle in Vehicles)
         {
@@ -116,9 +118,9 @@ public class Routes : ISolution
             }
             sb.Remove(sb.Length - 2, 2);
             
-            sb.Append("], \"Distance\":");
+            sb.Append("], \"Distance\":\"");
             sb.Append(vehicle.GetTravelledDistance());
-            sb.Append(", \"Capacity\":");
+            sb.Append("\", \"Capacity\":");
             sb.Append(vehicle.Capacity);
             sb.Append("}, \n");
         }

@@ -4,7 +4,6 @@ public class Vehicle
 {
     public int Id;
     public int Capacity;
-    public int time;
     public LinkedList<Client> Clients = new();
     
     public Vehicle(int id, int capacity, Client depot)
@@ -13,7 +12,6 @@ public class Vehicle
         Capacity = capacity;
         Clients.AddFirst(depot);
         Clients.AddLast(depot);
-        time = GetTravelledDistance();
     }
     
     public bool AddClient(Client client)
@@ -48,7 +46,7 @@ public class Vehicle
         return true;
     }
     
-    public int GetTravelledDistance()
+    public double GetTravelledDistance()
     {
         /*
         var sum = 0;
