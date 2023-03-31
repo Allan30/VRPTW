@@ -21,6 +21,11 @@ namespace VRPTW.Concret
             Service = service;
             
         }
+
+        public double GetDistance(Client otherClient)
+        {
+            return Coordinate.GetDistance(otherClient.Coordinate);
+        }
         
     }
 }

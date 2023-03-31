@@ -11,17 +11,14 @@ public class Test
         Console.WriteLine("Hello World!");
         var parser = new VrpParser();
         var writer = new PythonParser();
-        var trans = new Transformations();
         var solution = parser.ExtractVrpFile("C:\\Users\\allan\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.vrp");
         solution.GenerateRandomSolution();
         writer.WritePythonFile("C:\\Users\\allan\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.json", solution);
-        //var lists = trans.RelocateIntra(solution.Vehicles[0].Clients);
-        var tabouList = new List<Client>();
-        for (var i = 0; i < 1000; i++)
-        {
-            solution.SetBestRelocate(tabouList);
-        }
+        Console.WriteLine(solution.GetFitness());
+        var metaH = new TabouResearch(solution);
+        metaH.performSolution(100);
         writer.WritePythonFile("C:\\Users\\allan\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.2.json", solution);
+        Console.WriteLine(solution.GetFitness());
     }
     
 }
