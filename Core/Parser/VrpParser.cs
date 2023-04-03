@@ -17,7 +17,7 @@ public class VrpParser
             switch (index)
             {
                 case 6:
-                    solution.Capacity = int.Parse(data[1]);
+                    solution.MaxCapacity = int.Parse(data[1]);
                     break;
                 case 9:
                     solution.Depot = new Client(data[0], new Coordinate(int.Parse(data[1]), int.Parse(data[2])), int.Parse(data[3]), int.Parse(data[4]));

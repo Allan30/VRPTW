@@ -10,11 +10,11 @@ public class Routes : ISolution
     public Client Depot { get; set; }
     public List<Client> Clients { get; set; }
     public List<Vehicle> Vehicles { get; set; }
-    public int Capacity { get; set; }
+    public int MaxCapacity { get; set; }
     
     public Routes()
     {
-        Capacity = -1;
+        MaxCapacity = -1;
         Clients = new List<Client>();
         Vehicles = new List<Vehicle>();
     }
@@ -26,7 +26,7 @@ public class Routes : ISolution
     
     public void AddVehicle()
     {
-        Vehicles.Add(new Vehicle(Vehicles.Count, Capacity, Depot));
+        Vehicles.Add(new Vehicle(Vehicles.Count, MaxCapacity, Depot));
     }
     
     public double GetFitness()
@@ -46,13 +46,13 @@ public class Routes : ISolution
         var rand = new Random();
         var shuffled = values.OrderBy(_ => rand.Next()).ToList();
         
-        var currentVehicle = new Vehicle(Vehicles.Count, Capacity, Depot);
+        var currentVehicle = new Vehicle(Vehicles.Count, MaxCapacity, Depot);
         foreach (var client in shuffled.Select(index => Clients[index]))
         {
             if (!currentVehicle.AddClient(client))
             {
                 Vehicles.Add(currentVehicle);
-                currentVehicle = new Vehicle(Vehicles.Count, Capacity, Depot);
+                currentVehicle = new Vehicle(Vehicles.Count, MaxCapacity, Depot);
             };
         }
     }
@@ -91,7 +91,7 @@ public class Routes : ISolution
             sb.Append("], \"Distance\":\"");
             sb.Append(vehicle.GetTravelledDistance());
             sb.Append("\", \"Capacity\":");
-            sb.Append(vehicle.Capacity);
+            sb.Append(vehicle.CurrentCapacity);
             sb.Append("}, \n");
         }
 
