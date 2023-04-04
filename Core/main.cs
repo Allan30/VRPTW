@@ -17,8 +17,8 @@ public class Test
         Console.WriteLine(solution.GetFitness());
         var metaH = new TabouResearch(solution);
         metaH.performSolution(1000);
-        writer.WritePythonFile("C:\\Users\\epulapp\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.2.json", solution);
-        Console.WriteLine(solution.GetFitness());
+        Console.WriteLine(metaH.bestSolution.GetFitness());
+        writer.WritePythonFile("C:\\Users\\epulapp\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.2.json", metaH.bestSolution);
     }
     
 }

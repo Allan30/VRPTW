@@ -5,7 +5,7 @@ using VRPTW.AbstractObjects;
 
 namespace VRPTW.Concret;
 
-public class Routes : ISolution
+public class Routes : ISolution, ICloneable
 {
     public Client Depot { get; set; }
     public List<Client> Clients { get; set; }
@@ -45,7 +45,6 @@ public class Routes : ISolution
         var values = Enumerable.Range(0, Clients.Count).Select(x => x).ToList();
         var rand = new Random();
         var shuffled = values.OrderBy(_ => rand.Next()).ToList();
-        
         var currentVehicle = new Vehicle(Vehicles.Count, MaxCapacity, Depot);
         foreach (var client in shuffled.Select(index => Clients[index]))
         {
@@ -53,8 +52,10 @@ public class Routes : ISolution
             {
                 Vehicles.Add(currentVehicle);
                 currentVehicle = new Vehicle(Vehicles.Count, MaxCapacity, Depot);
+                currentVehicle.AddClient(client);
             };
         }
+        Vehicles.Add(currentVehicle);
     }
 
     public override string ToString()
@@ -89,7 +90,7 @@ public class Routes : ISolution
             sb.Remove(sb.Length - 2, 2);
             
             sb.Append("], \"Distance\":\"");
-            sb.Append(vehicle.GetTravelledDistance());
+            sb.Append((int) vehicle.GetTravelledDistance());
             sb.Append("\", \"Capacity\":");
             sb.Append(vehicle.CurrentCapacity);
             sb.Append("}, \n");
@@ -100,5 +101,20 @@ public class Routes : ISolution
         sb.Append("]");
 
         return sb.ToString();
+    }
+
+    public object Clone()
+    {
+        var routes = new Routes();
+        routes.Clients = Clients;
+        routes.Depot = Depot;
+        routes.MaxCapacity = MaxCapacity;
+        routes.Vehicles = Vehicles.Select(vehicle => (Vehicle) vehicle.Clone()).ToList();
+        return routes;
+    }
+    
+    public int GetNbClients()
+    {
+        return Vehicles.Sum(vehicle => vehicle.GetNbClients());
     }
 }

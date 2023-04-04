@@ -6,20 +6,27 @@ public class TabouResearch
 {
     public Routes solution;
 
-    public Dictionary<String, ArrayList> tabouList; //KeyValuePair<String, ArrayList<Client>>
-    public int MAX_TABOUS = 15;
+    public Dictionary<string, ArrayList> tabouList; //KeyValuePair<String, ArrayList<Client>>
+    public int MAX_TABOUS = 10;
+    public double bestFitness { get; set; }
+    public Routes bestSolution { get; set; }
 
     public TabouResearch(Routes randomSolution)
     {
         solution = randomSolution;
         tabouList = new Dictionary<string, ArrayList>();
+        bestFitness = solution.GetFitness();
+        bestSolution = (Routes) solution.Clone();
     }
 
     public void performSolution(int nbSteps)
     {
-        for (var i = 0; i < nbSteps; i++)
-        {
-            RelocateInter();
+        
+        using (var progress = new ProgressBar()) {
+            for (int i = 0; i <= nbSteps; i++) {
+                progress.Report((double) i / nbSteps);
+                RelocateInter();
+            }
         }
 
         DelEmptyVehicle();
@@ -27,11 +34,11 @@ public class TabouResearch
 
     public void DelEmptyVehicle()
     {
-        for(var index = solution.Vehicles.Count-1; index >= 0; index--)
+        for(var index = bestSolution.Vehicles.Count-1; index >= 0; index--)
         {
-            if (solution.Vehicles[index].Clients.Count == 2)
+            if (bestSolution.Vehicles[index].Clients.Count == 2)
             {
-                solution.Vehicles.RemoveAt(index);
+                bestSolution.Vehicles.RemoveAt(index);
             }
         }
     }
@@ -107,7 +114,6 @@ public class TabouResearch
 
     public void RelocateInter()
     {
-        
         var prevFitness = solution.GetFitness();
         if (!tabouList.ContainsKey("RelocateInter")) tabouList["RelocateInter"] = new ArrayList();
         var bestDelta = double.MaxValue;//on cherche le delta le plus petit car nouvelle distance plus petite
@@ -170,10 +176,16 @@ public class TabouResearch
         
         solution.Vehicles[bestVehicles.src].Clients.Remove(bestNodeToRelocate);
         solution.Vehicles[bestVehicles.trg].Clients.AddAfter(bestFirstNodeOfNewEdge, bestNodeToRelocate);
-        Console.WriteLine(bestDelta);
+        //Console.WriteLine(bestDelta);
         
-        if (bestDelta < 0) return;
-        Console.WriteLine("Solution dégradée !!");
+        //Console.WriteLine(bestNodeToRelocate.Value.Id);
+        if (prevFitness + bestDelta < bestFitness)
+        {
+            bestFitness = prevFitness + bestDelta;
+            bestSolution = (Routes) solution.Clone();
+        }
+        if (bestDelta < -1) return; //-1 car sinon boucle sur de petites valeurs
+        //Console.WriteLine("Solution dégradée !!");
         if (tabouList["RelocateInter"].Contains(bestNodeToRelocate.Value.Id))
         {
             tabouList["RelocateInter"].Remove(bestNodeToRelocate.Value.Id);

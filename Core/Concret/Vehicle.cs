@@ -1,6 +1,6 @@
 ﻿namespace VRPTW.Concret;
 
-public class Vehicle
+public class Vehicle : ICloneable
 {
     public int Id;
     public static int MaxCapacity;
@@ -16,17 +16,14 @@ public class Vehicle
         Clients.AddFirst(depot);
         Clients.AddLast(depot);
     }
-    
+
     public bool AddClient(Client client)
     {
-        Clients.AddBefore(Clients.Last, client);
-        if (GetTravelledDistance() > 230 || client.Demand + CurrentCapacity > MaxCapacity)
+        if (client.Demand + CurrentCapacity > MaxCapacity || GetTravelledDistance() + client.GetDistance(Clients.Last.Value) + client.GetDistance(Clients.Last.Previous.Value) - Clients.Last.Value.GetDistance(Clients.Last.Previous.Value) > 230)
         {
-            Clients.Remove(Clients.Last);
-            Clients.Remove(Clients.Last);
-            Clients.AddLast(Clients.First.Value);
             return false;
         }
+        Clients.AddBefore(Clients.Last, client);
         CurrentCapacity += client.Demand;
         return true;
     }
@@ -35,5 +32,19 @@ public class Vehicle
     {
         return Clients.Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.Coordinate.GetDistance(nextClient.Coordinate)).Sum();
     }
+
+    public object Clone()
+    {
+        var vehicle = new Vehicle(Id, MaxCapacity, Clients.First.Value)
+        {
+            CurrentCapacity = CurrentCapacity,
+            Clients = new LinkedList<Client>(Clients)
+        };
+        return vehicle;
+    }
     
+    public int GetNbClients()
+    {
+        return Clients.Count - 2;
+    }
 }
