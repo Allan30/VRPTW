@@ -21,13 +21,21 @@ public class TabouResearch
 
     public void performSolution(int nbSteps)
     {
-        
         using (var progress = new ProgressBar()) {
-            for (int i = 0; i <= nbSteps; i++) {
+            for (var i = 0; i <= nbSteps; i++) {
                 progress.Report((double) i / nbSteps);
                 RelocateInter();
             }
         }
+        /*
+        Console.WriteLine("RelocateInter done : "+solution.GetFitness());
+        using (var progress = new ProgressBar()) {
+            for (var i = 0; i <= nbSteps; i++) {
+                progress.Report((double) i / nbSteps);
+                TwoOpt();
+            }
+        }
+        */
 
         DelEmptyVehicle();
     }
@@ -156,7 +164,7 @@ public class TabouResearch
                                           + nodeToRelocate.Value.GetDistance(firstNodeOfEdge.Next.Value);
                         var delta = newDistance - currentDistance;
 
-                        if (delta > bestDelta || newDistanceTrg + vehicleTrg.GetTravelledDistance() > 230)
+                        if (delta > bestDelta || !vehicleTrg.StayCorrect(newDistanceTrg, nodeToRelocate.Value.Demand))
                         {
                             firstNodeOfEdge = firstNodeOfEdge.Next;
                             continue;
@@ -174,8 +182,8 @@ public class TabouResearch
             }
         }
         
-        solution.Vehicles[bestVehicles.src].Clients.Remove(bestNodeToRelocate);
-        solution.Vehicles[bestVehicles.trg].Clients.AddAfter(bestFirstNodeOfNewEdge, bestNodeToRelocate);
+        solution.Vehicles[bestVehicles.src].RemoveClient(bestNodeToRelocate);
+        solution.Vehicles[bestVehicles.trg].AddClientAfter(bestFirstNodeOfNewEdge, bestNodeToRelocate);
         //Console.WriteLine(bestDelta);
         
         //Console.WriteLine(bestNodeToRelocate.Value.Id);
@@ -195,6 +203,111 @@ public class TabouResearch
             tabouList["RelocateInter"].RemoveAt(0);
         }
         tabouList["RelocateInter"].Add(bestNodeToRelocate.Value.Id);
+    }
+
+
+    public void TwoOpt()
+    {
+        
+        //Console.WriteLine("=====================================");
+        var prevFitness = solution.GetFitness();
+        //Console.WriteLine(prevFitness);
+        if (!tabouList.ContainsKey("TwoOpt")) tabouList["TwoOpt"] = new ArrayList();
+        var bestDelta = double.MaxValue;
+        var bestVehicle = 0;
+        LinkedListNode<Client> bestSrcNode = null;
+        LinkedListNode<Client> bestTrgNode = null;
+        foreach (var vehicle in solution.Vehicles)
+        {
+            var SrcNode = vehicle.Clients.First;
+            while (SrcNode.Next != null)
+            {
+                var TrgNode = vehicle.Clients.First;
+                while (TrgNode.Next != null)
+                {
+                    
+                    if (tabouList["TwoOpt"].Contains((SrcNode.Value.Id, TrgNode.Value.Id)) || tabouList["TwoOpt"].Contains((TrgNode.Value.Id, SrcNode.Value.Id)))
+                    {
+                        TrgNode = TrgNode.Next;
+                        continue;
+                    }
+
+                    if (SrcNode.Value.Id != TrgNode.Value.Id &&
+                        SrcNode.Value.Id != TrgNode.Next.Value.Id &&
+                        SrcNode.Next.Value.Id != TrgNode.Value.Id &&
+                        SrcNode.Next.Value.Id != TrgNode.Next.Value.Id)
+                    {
+                        var currentDistance = SrcNode.Value.GetDistance(SrcNode.Next.Value) + TrgNode.Value.GetDistance(TrgNode.Next.Value);
+                        var newDistance = SrcNode.Value.GetDistance(TrgNode.Value) + SrcNode.Next.Value.GetDistance(TrgNode.Next.Value);
+                        var delta = newDistance - currentDistance;
+                    
+                        if (delta < bestDelta && vehicle.StayCorrect(delta, 0))
+                        {
+                            bestDelta = delta;
+                            bestVehicle = vehicle.Id;
+                            bestSrcNode = SrcNode;
+                            bestTrgNode = TrgNode;
+                        }
+                    }
+                    
+                    
+                    
+                    TrgNode = TrgNode.Next;
+                }
+                
+                SrcNode = SrcNode.Next;
+            }
+            
+        }
+        //Console.WriteLine("SrcNode : " + bestSrcNode.Value.Id);
+        //Console.WriteLine("TrgNode : " + bestTrgNode.Value.Id);
+        var SrcNodeNext = bestSrcNode.Next;
+        var TrgNodeNext = bestTrgNode.Next;
+        //Console.WriteLine("SrcNodeNext : " + SrcNodeNext.Value.Id);
+        //Console.WriteLine("TrgNodeNext : " + TrgNodeNext.Value.Id);
+        
+        //Console.WriteLine(solution.Vehicles[bestVehicle].ToStringClient());
+        var currentNode = bestSrcNode.Next;
+        var lastNode = bestTrgNode.Next;
+        while(currentNode != bestTrgNode)
+        {
+            var nextNode = currentNode.Next;
+            solution.Vehicles[bestVehicle].Clients.Remove(currentNode);
+            solution.Vehicles[bestVehicle].Clients.AddBefore(lastNode, currentNode);
+            lastNode = currentNode;
+            currentNode = nextNode;
+        }
+
+        /*
+        Console.WriteLine(solution.Vehicles[bestVehicle].ToStringClient());
+
+        Console.WriteLine(prevFitness + bestDelta);
+        Console.WriteLine(solution.GetFitness());
+        Console.WriteLine(bestDelta);
+        */
+
+        if (prevFitness + bestDelta < bestFitness)
+        {
+            bestFitness = prevFitness + bestDelta;
+            bestSolution = (Routes) solution.Clone();
+        }
+        
+        if (bestDelta < -1) return; //-1 car sinon boucle sur de petites valeurs
+        if (tabouList["TwoOpt"].Contains((bestSrcNode.Value.Id, bestTrgNode.Value.Id)))
+        {
+            tabouList["TwoOpt"].Remove((bestSrcNode.Value.Id, bestTrgNode.Value.Id));
+        }
+
+        if (tabouList["TwoOpt"].Contains((bestTrgNode.Value.Id, bestSrcNode.Value.Id)))
+        {
+            tabouList["TwoOpt"].Remove((bestTrgNode.Value.Id, bestSrcNode.Value.Id));
+        }
+
+        if (tabouList["TwoOpt"].Count >= MAX_TABOUS)
+        {
+            tabouList["TwoOpt"].RemoveAt(0);
+        }
+        tabouList["TwoOpt"].Add((bestSrcNode.Value.Id, bestTrgNode.Value.Id));
     }
     
 }
