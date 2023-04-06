@@ -7,7 +7,7 @@ public class TabouResearch
     public Routes solution;
 
     public ArrayList tabouList;
-    public int MAX_TABOUS = 50;
+    public int MAX_TABOUS = 40;
     public double bestFitness { get; set; }
     public Routes bestSolution { get; set; }
 
@@ -37,18 +37,26 @@ public class TabouResearch
         using (var progress = new ProgressBar()) {
             for (var i = 0; i <= nbSteps; i++) {
                 progress.Report((double) i / nbSteps);
+                Exchange();
+            }
+        }
+        Console.WriteLine("Exchange done : "+bestSolution.GetFitness());
+        using (var progress = new ProgressBar()) {
+            for (var i = 0; i <= nbSteps; i++) {
+                progress.Report((double) i / nbSteps);
                 RelocateInter();
             }
         }
-        /*
-        Console.WriteLine("RelocateInter done : "+solution.GetFitness());
+        Console.WriteLine("RelocateInter done : "+bestSolution.GetFitness());
+        DelEmptyVehicle(); 
+        
         using (var progress = new ProgressBar()) {
             for (var i = 0; i <= nbSteps; i++) {
                 progress.Report((double) i / nbSteps);
                 TwoOpt();
             }
         }
-        */
+        Console.WriteLine("TwoOpt done : "+bestSolution.GetFitness());
 
         DelEmptyVehicle();
     }
@@ -62,6 +70,26 @@ public class TabouResearch
                 bestSolution.Vehicles.RemoveAt(index);
             }
         }
+        
+        for(var index = solution.Vehicles.Count-1; index >= 0; index--)
+        {
+            if (solution.Vehicles[index].Clients.Count == 2)
+            {
+                solution.Vehicles.RemoveAt(index);
+            }
+        }
+        
+        //re allocation des numéros des camions dans l'ordre
+        for (var i = 0; i < bestSolution.Vehicles.Count; i++)
+        {
+            bestSolution.Vehicles[i].Id = i;
+        }
+        
+        for (var i = 0; i < solution.Vehicles.Count; i++)
+        {
+            solution.Vehicles[i].Id = i;
+        }
+        
     }
     
     public void RelocateIntra() //n*(n-1)
@@ -289,6 +317,81 @@ public class TabouResearch
             ManageTabouList("TwoOpt_"+bestSrcNode.Value.Id+bestTrgNode.Value.Id);
         else
             ManageTabouList("TwoOpt_"+bestTrgNode.Value.Id+bestSrcNode.Value.Id);
+    }
+
+    public void Exchange()
+    {
+        var prevFitness = solution.GetFitness();
+        var bestDelta = double.MaxValue;
+        (int vehicleOfNode1, int vehicleOfNode2) bestVehicles = (0, 0);
+        LinkedListNode<Client> bestNodeToExchange1 = null;
+        LinkedListNode<Client> bestNodeToExchange2 = null;
+        
+        foreach (var vehicle1 in solution.Vehicles)
+        {
+            var nodeToExchange1 = vehicle1.Clients.First.Next;
+            while (nodeToExchange1 != vehicle1.Clients.Last)
+            {
+                foreach (var vehicle2 in solution.Vehicles)
+                {
+                    if (vehicle1.Id == vehicle2.Id) continue; ///!\ important pour le rapport, c'est un exchange intra si on fait ça
+                    var nodeToExchange2 = vehicle2.Clients.First.Next;
+                    while (nodeToExchange2 != vehicle2.Clients.Last)
+                    {
+                        if (nodeToExchange1.Value.Id == nodeToExchange2.Value.Id ||tabouList.Contains("Exchange_"+nodeToExchange1.Value.Id+nodeToExchange2.Value.Id) || tabouList.Contains("Exchange_"+nodeToExchange2.Value.Id+nodeToExchange1.Value.Id))
+                        {
+                            nodeToExchange2 = nodeToExchange2.Next;
+                            continue;
+                        }
+                        var currentDistanceVehicle1 = nodeToExchange1.Value.GetDistance(nodeToExchange1.Next.Value) + nodeToExchange1.Value.GetDistance(nodeToExchange1.Previous.Value);
+                        var newDistanceVehicle1 = nodeToExchange1.Value.GetDistance(nodeToExchange2.Next.Value) + nodeToExchange1.Value.GetDistance(nodeToExchange2.Previous.Value);
+                        var currentDistanceVehicle2 = nodeToExchange2.Value.GetDistance(nodeToExchange2.Next.Value) + nodeToExchange2.Value.GetDistance(nodeToExchange2.Previous.Value);
+                        var newDistanceVehicle2 = nodeToExchange2.Value.GetDistance(nodeToExchange1.Next.Value) + nodeToExchange2.Value.GetDistance(nodeToExchange1.Previous.Value);
+                        var deltaVehicle1 = newDistanceVehicle1 - currentDistanceVehicle1;
+                        var deltaVehicle2 = newDistanceVehicle2 - currentDistanceVehicle2;
+                        var delta = deltaVehicle1 + deltaVehicle2;
+                        if (delta < bestDelta && vehicle1.StayCorrect(deltaVehicle1, nodeToExchange2.Value.Demand) && vehicle2.StayCorrect(deltaVehicle2, nodeToExchange1.Value.Demand))
+                        {
+                            bestDelta = delta;
+                            bestVehicles = (vehicle1.Id, vehicle2.Id);
+                            bestNodeToExchange1 = nodeToExchange1;
+                            bestNodeToExchange2 = nodeToExchange2;
+                        }
+                        nodeToExchange2 = nodeToExchange2.Next;
+                    }
+                }
+                nodeToExchange1 = nodeToExchange1.Next;
+            }
+        }
+        //Console.WriteLine(solution.Vehicles[bestVehicles.vehicleOfNode1].ToString());
+        //Console.WriteLine(solution.Vehicles[bestVehicles.vehicleOfNode2].ToString());
+        var nodeToExchange2Next = bestNodeToExchange2.Next.Value;
+        solution.Vehicles[bestVehicles.vehicleOfNode2].Clients.Remove(bestNodeToExchange2);
+        solution.Vehicles[bestVehicles.vehicleOfNode1].Clients.AddBefore(bestNodeToExchange1, bestNodeToExchange2);
+        solution.Vehicles[bestVehicles.vehicleOfNode1].Clients.Remove(bestNodeToExchange1);
+        solution.Vehicles[bestVehicles.vehicleOfNode2].Clients.AddBefore(solution.Vehicles[bestVehicles.vehicleOfNode2].Clients.FindLast(nodeToExchange2Next), bestNodeToExchange1);
+        
+        /*
+         Console.WriteLine("=======================================");
+        Console.WriteLine(prevFitness + bestDelta);
+        Console.WriteLine(solution.GetFitness());
+        Console.WriteLine("=======================================");
+        Console.WriteLine(solution.Vehicles[bestVehicles.vehicleOfNode1].ToString());
+        Console.WriteLine(solution.Vehicles[bestVehicles.vehicleOfNode2].ToString());
+        */
+        if (prevFitness + bestDelta < bestFitness)
+        {
+            bestFitness = prevFitness + bestDelta;
+            bestSolution = (Routes) solution.Clone();
+        }
+        //Console.WriteLine(bestDelta);
+        
+        if (bestDelta < -1) return; //-1 car sinon boucle sur de petites valeurs
+        if(tabouList.Contains("Exchange_"+bestNodeToExchange1.Value.Id+bestNodeToExchange2.Value.Id))
+            ManageTabouList("Exchange_"+bestNodeToExchange1.Value.Id+bestNodeToExchange2.Value.Id);
+        else
+            ManageTabouList("Exchange_"+bestNodeToExchange2.Value.Id+bestNodeToExchange1.Value.Id);
+        
     }
     
 }
