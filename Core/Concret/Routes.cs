@@ -117,4 +117,14 @@ public class Routes : ISolution, ICloneable
     {
         return Vehicles.Sum(vehicle => vehicle.GetNbClients());
     }
+    
+    public int GetTotalDemand()
+    {
+        return Vehicles.Sum(vehicle => vehicle.GetTotalDemand());
+    }
+
+    public int GetCapacity()
+    {
+        return Vehicles.Sum(vehicle => vehicle.CurrentCapacity);
+    }
 }

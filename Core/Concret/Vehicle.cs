@@ -16,7 +16,7 @@ public class Vehicle : ICloneable
         MaxCapacity = capacity;
         Clients = new LinkedList<Client>();
         Clients.AddFirst(depot);
-        Clients.AddLast(depot);
+        Clients.AddLast(new Client(depot.Id+"_bis", depot.Coordinate, depot.Demand, depot.DueTime));
     }
 
     public bool AddClient(Client client)
@@ -62,9 +62,20 @@ public class Vehicle : ICloneable
         CurrentCapacity += client.Value.Demand;
     }
     
+    public void AddClientBefore(LinkedListNode<Client> before, LinkedListNode<Client> client)
+    {
+        Clients.AddBefore(before, client);
+        CurrentCapacity += client.Value.Demand;
+    }
+    
     public int GetNbClients()
     {
         return Clients.Count - 2;
+    }
+    
+    public int GetTotalDemand()
+    {
+        return Clients.Sum(client => client.Demand);
     }
     
     public override string ToString()
