@@ -1,10 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using ScottPlot;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
-using VRPTW.Concret;
 using VRPTW.UI.ViewModels;
 
 namespace VRPTW.UI;
