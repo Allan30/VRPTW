@@ -1,6 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using ScottPlot;
 using System.ComponentModel;
+using System.Linq;
 using VRPTW.UI.ViewModels;
 
 namespace VRPTW.UI;
@@ -14,7 +15,7 @@ public partial class MainWindow : MetroWindow
     {
         InitializeComponent();
         // Configure Grid
-        PlotZone.Plot.Style(ScottPlot.Style.Blue1);
+        PlotZone.Plot.Style(ScottPlot.Style.Black);
         PlotZone.Plot.Grid(false);
         PlotZone.Plot.XAxis.IsVisible = false;
         PlotZone.Plot.YAxis.IsVisible = false;
@@ -39,8 +40,8 @@ public partial class MainWindow : MetroWindow
         else if (e.PropertyName == nameof(MainWindowViewModel.IsSolutionCalculated))
         {
             PlotZone.Plot.Clear();
-            DrawClients();
             DrawRoutes();
+            DrawClients();
             PlotZone.Refresh();
         }
     }
@@ -49,7 +50,7 @@ public partial class MainWindow : MetroWindow
     {
         foreach (var client in ((MainWindowViewModel)DataContext).Solution!.Clients)
         {
-            PlotZone.Plot.AddMarker(client.Coordinate.X, client.Coordinate.Y, MarkerShape.filledCircle, 10);
+            PlotZone.Plot.AddPoint(client.Coordinate.X, client.Coordinate.Y, size: 10).Text = client.Id;
         }
     }
     
@@ -57,16 +58,12 @@ public partial class MainWindow : MetroWindow
     {
         foreach (var vehicle in ((MainWindowViewModel)DataContext).Solution!.Vehicles)
         {
-            var currentNode = vehicle.Clients.First;
-            if (currentNode is null) return;
-            var nextNode = currentNode.Next;
-
-            while (nextNode is not null)
-            {
-                PlotZone.Plot.AddLine(currentNode.Value.Coordinate.X, currentNode.Value.Coordinate.Y, nextNode.Value.Coordinate.X, nextNode.Value.Coordinate.Y);
-                currentNode = nextNode;
-                nextNode = currentNode.Next;
-            }
+            PlotZone.Plot.AddScatterLines(
+                    vehicle.Clients.Select(c => (double)c.Coordinate.X).ToArray(),
+                    vehicle.Clients.Select(c => (double)c.Coordinate.Y).ToArray(),
+                    lineWidth: 2,
+                    label: vehicle.Id.ToString()
+                );
         }
     }
 }
