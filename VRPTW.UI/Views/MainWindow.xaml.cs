@@ -1,7 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 using ScottPlot;
 using System.ComponentModel;
-using System.Drawing;
 using VRPTW.UI.ViewModels;
 
 namespace VRPTW.UI;
@@ -15,9 +14,12 @@ public partial class MainWindow : MetroWindow
     {
         InitializeComponent();
         // Configure Grid
+        PlotZone.Plot.Style(ScottPlot.Style.Blue1);
         PlotZone.Plot.Grid(false);
         PlotZone.Plot.XAxis.IsVisible = false;
         PlotZone.Plot.YAxis.IsVisible = false;
+        PlotZone.Plot.XAxis2.IsVisible = false;
+        PlotZone.Plot.YAxis2.IsVisible = false;
         PlotZone.Plot.XAxis.Line(false);
         PlotZone.Plot.YAxis.Line(false);
         PlotZone.Plot.XAxis2.Line(false);
@@ -47,7 +49,7 @@ public partial class MainWindow : MetroWindow
     {
         foreach (var client in ((MainWindowViewModel)DataContext).Solution!.Clients)
         {
-            PlotZone.Plot.AddMarker(client.Coordinate.X, client.Coordinate.Y, MarkerShape.filledCircle, 10, Color.Red);
+            PlotZone.Plot.AddMarker(client.Coordinate.X, client.Coordinate.Y, MarkerShape.filledCircle, 10);
         }
     }
     
@@ -61,7 +63,7 @@ public partial class MainWindow : MetroWindow
 
             while (nextNode is not null)
             {
-                PlotZone.Plot.AddLine(currentNode.Value.Coordinate.X, currentNode.Value.Coordinate.Y, nextNode.Value.Coordinate.X, nextNode.Value.Coordinate.Y, Color.Blue);
+                PlotZone.Plot.AddLine(currentNode.Value.Coordinate.X, currentNode.Value.Coordinate.Y, nextNode.Value.Coordinate.X, nextNode.Value.Coordinate.Y);
                 currentNode = nextNode;
                 nextNode = currentNode.Next;
             }
