@@ -1,6 +1,4 @@
 ﻿using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using VRPTW.AbstractObjects;
 
 namespace VRPTW.Concret;
@@ -61,7 +59,7 @@ public class Routes : ISolution, ICloneable
     public override string ToString()
     {
         var sb = new StringBuilder();
-        sb.Append("[");
+        sb.Append('[');
         foreach (var vehicle in Vehicles)
         {
             sb.Append("{\"Vehicle\": ");
