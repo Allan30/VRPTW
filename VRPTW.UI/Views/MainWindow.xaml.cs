@@ -1,8 +1,10 @@
 ﻿using MahApps.Metro.Controls;
 using ScottPlot;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using VRPTW.Concret;
 using VRPTW.UI.ViewModels;
 
 namespace VRPTW.UI;
@@ -46,21 +48,25 @@ public partial class MainWindow : MetroWindow
 
     private void DrawClients()
     {
-        foreach (var client in ((MainWindowViewModel)DataContext).Solution!.Clients.Select(x => x.Coordinate))
+        foreach (var client in ((MainWindowViewModel)DataContext).Solution!.Clients)
         {
-            PlotZone.Plot.AddMarker(client.X, client.Y, MarkerShape.filledCircle, 10, Color.Red);
+            PlotZone.Plot.AddMarker(client.Coordinate.X, client.Coordinate.Y, MarkerShape.filledCircle, 10, Color.Red);
         }
     }
-
+    
     private void DrawRoutes()
     {
-        foreach (var route in ((MainWindowViewModel)DataContext).Solution!.Vehicles)
-        {            
-            for (int i = 0; i < route.Clients.Count - 1; i++)
+        foreach (var vehicle in ((MainWindowViewModel)DataContext).Solution!.Vehicles)
+        {
+            var currentNode = vehicle.Clients.First;
+            if (currentNode is null) return;
+            var nextNode = currentNode.Next;
+
+            while (nextNode is not null)
             {
-                var client1 = route.Clients.ElementAt(i);
-                var client2 = route.Clients.ElementAt(i + 1);
-                PlotZone.Plot.AddLine(client1.Coordinate.X, client1.Coordinate.Y, client2.Coordinate.X, client2.Coordinate.Y, Color.Blue);
+                PlotZone.Plot.AddLine(currentNode.Value.Coordinate.X, currentNode.Value.Coordinate.Y, nextNode.Value.Coordinate.X, nextNode.Value.Coordinate.Y, Color.Blue);
+                currentNode = nextNode;
+                nextNode = currentNode.Next;
             }
         }
     }
