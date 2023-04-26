@@ -1,6 +1,8 @@
 ﻿using MahApps.Metro.Controls;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using VRPTW.Concret;
 using VRPTW.UI.ViewModels;
 
 namespace VRPTW.UI;
@@ -30,7 +32,6 @@ public partial class MainWindow : MetroWindow
         {
             PlotZone.Plot.Clear();
             DrawRoutes();
-            DrawClients();
             PlotZone.Refresh();
         }
         else if (e.PropertyName == nameof(MainWindowViewModel.SelectedStyle))
@@ -51,13 +52,26 @@ public partial class MainWindow : MetroWindow
     private void DrawRoutes()
     {
         foreach (var vehicle in ((MainWindowViewModel)DataContext).Solution!.Vehicles)
-        {            
-            PlotZone.Plot.AddScatterLines(
-                    vehicle.Clients.Select(c => c.Coordinate.X).ToArray(),
-                    vehicle.Clients.Select(c => c.Coordinate.Y).ToArray(),
-                    lineWidth: 2,
-                    label: vehicle.Id.ToString()
-                );
+        {
+            var xs = new double[vehicle.Clients.Count];
+            var ys = new double[vehicle.Clients.Count];
+
+            var currentNode = vehicle.Clients.First;
+            if (currentNode is null) return;
+            var nextNode = currentNode.Next;
+
+            var i = 0;
+            
+            while (nextNode is not null)
+            {
+                xs[i] = currentNode.Value.Coordinate.X;
+                ys[i] = currentNode.Value.Coordinate.Y;
+                currentNode = nextNode;
+                nextNode = currentNode.Next;
+                i++;
+            }
+
+            PlotZone.Plot.AddScatter(xs, ys, lineWidth: 2, label: vehicle.Id.ToString());
         }
     }
 }
