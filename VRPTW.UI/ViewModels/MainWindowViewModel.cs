@@ -21,13 +21,13 @@ public partial class MainWindowViewModel : ObservableObject
     public static List<PlotStyleViewModel> AvailablePlotStyles => _availablePlotStyles;
 
     [ObservableProperty]
-    private PlotStyleViewModel _selectedPlotStyle = new(Style.Black);
+    private PlotStyleViewModel _selectedPlotStyle = AvailablePlotStyles.First();
 
     private static readonly List<AppThemeViewModel> _availableAppThemes = ThemeManager.Current.Themes.OrderBy(theme => theme.DisplayName).Select(theme => new AppThemeViewModel(theme)).ToList();
     public static List<AppThemeViewModel> AvailableAppThemes => _availableAppThemes;
 
     [ObservableProperty]
-    private AppThemeViewModel _selectedAppTheme = new(ThemeManager.Current.DetectTheme()!);
+    private AppThemeViewModel _selectedAppTheme = AvailableAppThemes.First(themeVM => themeVM.Theme == ThemeManager.Current.DetectTheme()!);
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(StartVRPTWCommand))]
