@@ -1,8 +1,5 @@
 ﻿using MahApps.Metro.Controls;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using VRPTW.Concret;
 using VRPTW.UI.ViewModels;
 
 namespace VRPTW.UI;
