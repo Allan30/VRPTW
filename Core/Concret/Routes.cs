@@ -40,7 +40,7 @@ public class Routes : ISolution, ICloneable
 
     public void GenerateRandomSolution()
     {
-        var values = Enumerable.Range(0, Clients.Count).Select(x => x).ToList();
+        var values = Enumerable.Range(0, Clients.Count).ToList();
         var rand = new Random();
         var shuffled = values.OrderBy(_ => rand.Next()).ToList();
         var currentVehicle = new Vehicle(Vehicles.Count, MaxCapacity, Depot);
