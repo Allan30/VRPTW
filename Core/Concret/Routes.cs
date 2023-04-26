@@ -29,7 +29,7 @@ public class Routes : ISolution, ICloneable
     
     public double GetFitness()
     {
-        return Vehicles.Sum(vehicle => vehicle.GetTravelledDistance());
+        return Vehicles.Sum(vehicle => vehicle.TravelledDistance);
     }
 
     public List<ISolution> GetNeighbours()
@@ -88,7 +88,7 @@ public class Routes : ISolution, ICloneable
             sb.Remove(sb.Length - 2, 2);
             
             sb.Append("], \"Distance\":\"");
-            sb.Append((int) vehicle.GetTravelledDistance());
+            sb.Append((int) vehicle.TravelledDistance);
             sb.Append("\", \"Capacity\":");
             sb.Append(vehicle.CurrentCapacity);
             sb.Append("}, \n");
@@ -111,18 +111,9 @@ public class Routes : ISolution, ICloneable
         return routes;
     }
     
-    public int GetNbClients()
-    {
-        return Vehicles.Sum(vehicle => vehicle.GetNbClients());
-    }
-    
-    public int GetTotalDemand()
-    {
-        return Vehicles.Sum(vehicle => vehicle.GetTotalDemand());
-    }
+    public int NbClients => Vehicles.Sum(vehicle => vehicle.NbClients);
 
-    public int GetCapacity()
-    {
-        return Vehicles.Sum(vehicle => vehicle.CurrentCapacity);
-    }
+    public int TotalDemand => Vehicles.Sum(vehicle => vehicle.GetTotalDemand);
+
+    public int Capacity => Vehicles.Sum(vehicle => vehicle.CurrentCapacity);
 }

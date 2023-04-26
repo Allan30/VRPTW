@@ -21,7 +21,7 @@ public class Vehicle : ICloneable
 
     public bool AddClient(Client client)
     {
-        if (client.Demand + CurrentCapacity > MaxCapacity || GetTravelledDistance() + client.GetDistance(Clients.Last.Value) + client.GetDistance(Clients.Last.Previous.Value) - Clients.Last.Value.GetDistance(Clients.Last.Previous.Value) > 230)
+        if (client.Demand + CurrentCapacity > MaxCapacity || TravelledDistance + client.GetDistance(Clients.Last.Value) + client.GetDistance(Clients.Last.Previous.Value) - Clients.Last.Value.GetDistance(Clients.Last.Previous.Value) > 230)
         {
             return false;
         }
@@ -30,10 +30,7 @@ public class Vehicle : ICloneable
         return true;
     }
     
-    public double GetTravelledDistance()
-    {
-        return Clients.Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.Coordinate.GetDistance(nextClient.Coordinate)).Sum();
-    }
+    public double TravelledDistance => Clients.Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.Coordinate.GetDistance(nextClient.Coordinate)).Sum();
 
     public object Clone()
     {
@@ -47,7 +44,7 @@ public class Vehicle : ICloneable
     
     public bool StayCorrect(double deltaDist, double deltaCap)
     {
-        return deltaDist + GetTravelledDistance() <= 230 && deltaCap + CurrentCapacity <= MaxCapacity;
+        return deltaDist + TravelledDistance <= 230 && deltaCap + CurrentCapacity <= MaxCapacity;
     }
     
     public void RemoveClient(LinkedListNode<Client> client)
@@ -68,41 +65,35 @@ public class Vehicle : ICloneable
         CurrentCapacity += client.Value.Demand;
     }
     
-    public int GetNbClients()
-    {
-        return Clients.Count - 2;
-    }
+    public int NbClients => Clients.Count - 2;
     
-    public int GetTotalDemand()
-    {
-        return Clients.Sum(client => client.Demand);
-    }
+    public int GetTotalDemand => Clients.Sum(client => client.Demand);
     
     public override string ToString()
     {
         var sb = new StringBuilder();
-        sb.Append("[");
+        sb.Append('[');
         foreach (var client in Clients)
         {
             sb.Append(client.Coordinate);
-            sb.Append(",");
+            sb.Append(',');
         }
         sb.Remove(sb.Length - 1, 1);
-        sb.Append("]");
+        sb.Append(']');
         return sb.ToString();
     }
 
     public string ToStringClient()
     {
         var sb = new StringBuilder();
-        sb.Append("[");
+        sb.Append('[');
         foreach (var client in Clients)
         {
             sb.Append(client.Id);
-            sb.Append(",");
+            sb.Append(',');
         }
         sb.Remove(sb.Length - 1, 1);
-        sb.Append("]");
+        sb.Append(']');
         return sb.ToString();
     }
 }
