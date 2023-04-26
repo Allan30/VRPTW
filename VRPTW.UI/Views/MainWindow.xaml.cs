@@ -1,5 +1,7 @@
 ﻿using ControlzEx.Theming;
 using MahApps.Metro.Controls;
+using ScottPlot.Plottable;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using VRPTW.UI.ViewModels;
@@ -44,25 +46,40 @@ public partial class MainWindow : MetroWindow
         }
     }
     
-    private void DrawClients(bool showLabels = false)
+    private void DrawClients()
     {
         PlotZone.Plot.Clear();
+        _labels.Clear();
         foreach (var client in ViewModel.Solution!.Clients)
         {
             var clientPlot = PlotZone.Plot.AddPoint(client.Coordinate.X, client.Coordinate.Y, size: 10);
-            if (showLabels)
+            var label = new Text
             {
-                PlotZone.Plot.AddText(client.Id, client.Coordinate.X, client.Coordinate.Y, color: clientPlot.Color);
+                Label = client.Id,
+                X = client.Coordinate.X,
+                Y = client.Coordinate.Y,
+                Color = clientPlot.Color
+            };
+            _labels.Add(label);
+            if (_showLabels)
+            {   
+                PlotZone.Plot.Add(label);
             }
         }
         PlotZone.Refresh();
     }
 
-    private void DrawRoutes(bool showLabels = false)
+    private bool _showLabels = false;
+    private readonly List<Text> _labels = new();
+
+    private void DrawRoutes()
     {
         PlotZone.Plot.Clear();
+        _labels.Clear();
+        
         foreach (var vehicle in ViewModel.Solution!.Vehicles)
         {
+            var color = PlotZone.Plot.GetNextColor();
             var xs = new double[vehicle.Clients.Count];
             var ys = new double[vehicle.Clients.Count];
 
@@ -76,18 +93,25 @@ public partial class MainWindow : MetroWindow
             {
                 xs[i] = currentNode.Value.Coordinate.X;
                 ys[i] = currentNode.Value.Coordinate.Y;
+
+                var label = new Text
+                {
+                    Label = currentNode.Value.Id,
+                    X = currentNode.Value.Coordinate.X,
+                    Y = currentNode.Value.Coordinate.Y,
+                    Color = color
+                };
+                _labels.Add(label);
+                if (_showLabels)
+                {
+                    PlotZone.Plot.Add(label);
+                }
+                
                 currentNode = nextNode;
                 nextNode = currentNode.Next;
                 i++;
             }
-            var vehiculeScatter = PlotZone.Plot.AddScatter(xs, ys, markerSize: 10);
-            if (showLabels)
-            {
-                foreach (var client in vehicle.Clients)
-                {
-                    PlotZone.Plot.AddText(client.Id, client.Coordinate.X, client.Coordinate.Y, color: vehiculeScatter.Color);
-                }
-            }
+            PlotZone.Plot.AddScatter(xs, ys, color: color, markerSize: 10);
         }
         PlotZone.Refresh();
     }
@@ -96,14 +120,20 @@ public partial class MainWindow : MetroWindow
     {
         if (sender is ToggleSwitch toggleSwitch && ViewModel.IsSolutionLoaded)
         {
-            if (ViewModel.IsSolutionCalculated)
+            if (toggleSwitch.IsOn)
             {
-                DrawRoutes(toggleSwitch.IsOn);
+                _showLabels = true;
+                foreach (var label in _labels)
+                {
+                    PlotZone.Plot.Add(label);
+                }
             }
             else
             {
-                DrawClients(toggleSwitch.IsOn);
+                _showLabels = false;
+                PlotZone.Plot.Clear(typeof(Text));
             }
+            PlotZone.Refresh();
         }
     }
 }
