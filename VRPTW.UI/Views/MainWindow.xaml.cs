@@ -1,5 +1,7 @@
-﻿using MahApps.Metro.Controls;
+﻿using ControlzEx.Theming;
+using MahApps.Metro.Controls;
 using System.ComponentModel;
+using System.Windows;
 using VRPTW.UI.ViewModels;
 
 namespace VRPTW.UI;
@@ -14,10 +16,12 @@ public partial class MainWindow : MetroWindow
         InitializeComponent();
         PlotZone.Plot.Style(ScottPlot.Style.Black);
         PlotZone.Plot.Frameless();
-        ((MainWindowViewModel)DataContext).PropertyChanged += MainWindow_PropertyChanged;
+        ViewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
 
-    private void MainWindow_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    public MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(MainWindowViewModel.IsSolutionLoaded))
         {
@@ -31,16 +35,20 @@ public partial class MainWindow : MetroWindow
             DrawRoutes();
             PlotZone.Refresh();
         }
-        else if (e.PropertyName == nameof(MainWindowViewModel.SelectedStyle))
+        else if (e.PropertyName == nameof(MainWindowViewModel.SelectedPlotStyle))
         {
-            PlotZone.Plot.Style(((MainWindowViewModel)DataContext).SelectedStyle.Style);
+            PlotZone.Plot.Style(ViewModel.SelectedPlotStyle.Style);
             PlotZone.Refresh();
+        }
+        else if (e.PropertyName == nameof(MainWindowViewModel.SelectedAppTheme))
+        {
+            ThemeManager.Current.ChangeTheme(Application.Current, ViewModel.SelectedAppTheme.Theme);
         }
     }
 
     private void DrawClients()
     {
-        foreach (var client in ((MainWindowViewModel)DataContext).Solution!.Clients)
+        foreach (var client in ViewModel.Solution!.Clients)
         {
             PlotZone.Plot.AddPoint(client.Coordinate.X, client.Coordinate.Y, size: 10).Text = client.Id;
         }
@@ -48,7 +56,7 @@ public partial class MainWindow : MetroWindow
     
     private void DrawRoutes()
     {
-        foreach (var vehicle in ((MainWindowViewModel)DataContext).Solution!.Vehicles)
+        foreach (var vehicle in ViewModel.Solution!.Vehicles)
         {
             var xs = new double[vehicle.Clients.Count];
             var ys = new double[vehicle.Clients.Count];

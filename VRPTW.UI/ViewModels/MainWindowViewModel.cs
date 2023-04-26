@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ControlzEx.Theming;
 using Microsoft.Win32;
 using ScottPlot;
 using System;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VRPTW.Concret;
+using VRPTW.UI.ViewModels.Styles;
 using VRPTWCore.Parser;
 
 namespace VRPTW.UI.ViewModels;
@@ -15,11 +17,17 @@ public partial class MainWindowViewModel : ObservableObject
 {
     public Routes? Solution { get; set; }
     
-    private static readonly List<StyleViewModel> _availableStyles = Style.GetStyles().Select(style => new StyleViewModel(style)).ToList();
-    public static List<StyleViewModel> AvailableStyles => _availableStyles;
+    private static readonly List<PlotStyleViewModel> _availablePlotStyles = Style.GetStyles().Select(style => new PlotStyleViewModel(style)).ToList();
+    public static List<PlotStyleViewModel> AvailablePlotStyles => _availablePlotStyles;
 
     [ObservableProperty]
-    private StyleViewModel _selectedStyle = new(Style.Black);
+    private PlotStyleViewModel _selectedPlotStyle = new(Style.Black);
+
+    private static readonly List<AppThemeViewModel> _availableAppThemes = ThemeManager.Current.Themes.OrderBy(theme => theme.DisplayName).Select(theme => new AppThemeViewModel(theme)).ToList();
+    public static List<AppThemeViewModel> AvailableAppThemes => _availableAppThemes;
+
+    [ObservableProperty]
+    private AppThemeViewModel _selectedAppTheme = new(ThemeManager.Current.DetectTheme()!);
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(StartVRPTWCommand))]

@@ -26,7 +26,8 @@
         <StackPanel Orientation="Vertical" Grid.Column="1">
             <Button Content="Choisir un fichier" Command="{Binding ChooseFileCommand}" />
             <Button Content="Démarrer" Command="{Binding StartVRPTWCommand}" />
-            <ComboBox ItemsSource="{Binding AvailableStyles}" SelectedItem="{Binding SelectedStyle}" DisplayMemberPath="Name" />
+            <ComboBox ItemsSource="{Binding AvailablePlotStyles}" SelectedItem="{Binding SelectedPlotStyle}" />
+            <ComboBox ItemsSource="{Binding AvailableAppThemes}" SelectedItem="{Binding SelectedAppTheme}" />
         </StackPanel>
     </Grid>
 </mah:MetroWindow>
