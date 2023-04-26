@@ -10,7 +10,7 @@ namespace VRPTW.UI;
 /// Interaction logic for MainWindow.xaml
 /// </summary>
 public partial class MainWindow : MetroWindow
-{
+{    
     public MainWindow()
     {
         InitializeComponent();
@@ -27,15 +27,11 @@ public partial class MainWindow : MetroWindow
     {
         if (e.PropertyName == nameof(MainWindowViewModel.IsSolutionLoaded))
         {
-            PlotZone.Plot.Clear();
             DrawClients();
-            PlotZone.Refresh();
         }
         else if (e.PropertyName == nameof(MainWindowViewModel.IsSolutionCalculated))
         {
-            PlotZone.Plot.Clear();
             DrawRoutes();
-            PlotZone.Refresh();
         }
         else if (e.PropertyName == nameof(MainWindowViewModel.SelectedPlotStyle))
         {
@@ -47,17 +43,24 @@ public partial class MainWindow : MetroWindow
             ThemeManager.Current.ChangeTheme(Application.Current, ViewModel.SelectedAppTheme.Theme);
         }
     }
-
-    private void DrawClients()
+    
+    private void DrawClients(bool showLabels = false)
     {
+        PlotZone.Plot.Clear();
         foreach (var client in ViewModel.Solution!.Clients)
         {
-            PlotZone.Plot.AddPoint(client.Coordinate.X, client.Coordinate.Y, size: 10).Text = client.Id;
+            var clientPlot = PlotZone.Plot.AddPoint(client.Coordinate.X, client.Coordinate.Y, size: 10);
+            if (showLabels)
+            {
+                PlotZone.Plot.AddText(client.Id, client.Coordinate.X, client.Coordinate.Y, color: clientPlot.Color);
+            }
         }
+        PlotZone.Refresh();
     }
-    
-    private void DrawRoutes()
+
+    private void DrawRoutes(bool showLabels = false)
     {
+        PlotZone.Plot.Clear();
         foreach (var vehicle in ViewModel.Solution!.Vehicles)
         {
             var xs = new double[vehicle.Clients.Count];
@@ -77,8 +80,30 @@ public partial class MainWindow : MetroWindow
                 nextNode = currentNode.Next;
                 i++;
             }
+            var vehiculeScatter = PlotZone.Plot.AddScatter(xs, ys, markerSize: 10);
+            if (showLabels)
+            {
+                foreach (var client in vehicle.Clients)
+                {
+                    PlotZone.Plot.AddText(client.Id, client.Coordinate.X, client.Coordinate.Y, color: vehiculeScatter.Color);
+                }
+            }
+        }
+        PlotZone.Refresh();
+    }
 
-            PlotZone.Plot.AddScatter(xs, ys, lineWidth: 2, label: vehicle.Id.ToString());
+    private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (sender is ToggleSwitch toggleSwitch && ViewModel.IsSolutionLoaded)
+        {
+            if (ViewModel.IsSolutionCalculated)
+            {
+                DrawRoutes(toggleSwitch.IsOn);
+            }
+            else
+            {
+                DrawClients(toggleSwitch.IsOn);
+            }
         }
     }
 }
