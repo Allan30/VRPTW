@@ -4,10 +4,10 @@ namespace VRPTW.Concret;
 
 public class Vehicle : ICloneable
 {
-    public int Id;
-    public static int MaxCapacity;
-    public int CurrentCapacity;
-    public LinkedList<Client> Clients;
+    public int Id { get; set; }
+    public int MaxCapacity { get; init; }
+    public int CurrentCapacity { get; private set; }
+    public LinkedList<Client> Clients { get; set; }
     
     public Vehicle(int id, int capacity, Client depot)
     {

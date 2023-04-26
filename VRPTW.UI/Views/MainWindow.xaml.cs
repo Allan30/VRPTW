@@ -53,8 +53,8 @@ public partial class MainWindow : MetroWindow
         foreach (var vehicle in ((MainWindowViewModel)DataContext).Solution!.Vehicles)
         {            
             PlotZone.Plot.AddScatterLines(
-                    vehicle.Clients.Select(c => (double)c.Coordinate.X).ToArray(),
-                    vehicle.Clients.Select(c => (double)c.Coordinate.Y).ToArray(),
+                    vehicle.Clients.Select(c => c.Coordinate.X).ToArray(),
+                    vehicle.Clients.Select(c => c.Coordinate.Y).ToArray(),
                     lineWidth: 2,
                     label: vehicle.Id.ToString()
                 );

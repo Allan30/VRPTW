@@ -1,6 +1,6 @@
 ﻿namespace VRPTW.Concret;
 
-public record struct Coordinate(float X, float Y)
+public record struct Coordinate(double X, double Y)
 {
     
     public double GetDistance(Coordinate coordinate) =>
