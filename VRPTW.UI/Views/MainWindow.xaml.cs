@@ -14,6 +14,8 @@ public partial class MainWindow : MetroWindow
     public MainWindow()
     {
         InitializeComponent();
+        ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
+        ThemeManager.Current.SyncTheme();
         PlotZone.Plot.Style(ScottPlot.Style.Black);
         PlotZone.Plot.Frameless();
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
