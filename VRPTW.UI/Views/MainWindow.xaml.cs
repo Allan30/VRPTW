@@ -5,6 +5,7 @@ using ScottPlot.Plottable;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using VRPTW.UI.ViewModels;
@@ -91,7 +92,7 @@ public partial class MainWindow : MetroWindow
         var allXs = new List<double>();
         var allYs = new List<double>();
 
-        foreach (var vehicle in ViewModel.Solution!.Vehicles)
+        foreach (var vehicle in ViewModel.Solution!.Vehicles.Take(1))
         {
             var xs = new List<double>(ViewModel.Solution!.Vehicles.Count);
             var ys = new List<double>(ViewModel.Solution!.Vehicles.Count);
@@ -114,7 +115,10 @@ public partial class MainWindow : MetroWindow
 
             allXs.AddRange(xs);
             allYs.AddRange(ys);
-            
+
+            xs.Add(currentNode.Value.Coordinate.X);
+            ys.Add(currentNode.Value.Coordinate.Y);
+
             PlotZone.Plot.AddScatter(xs.ToArray(), ys.ToArray(), markerSize: MARKER_SIZE);
         }
         _allPlots = PlotZone.Plot.AddScatter(allXs.ToArray(), allYs.ToArray(), color: Color.Transparent);
