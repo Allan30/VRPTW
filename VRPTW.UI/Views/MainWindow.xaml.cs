@@ -130,12 +130,10 @@ public partial class MainWindow : MetroWindow
         double xyRatio = PlotZone.Plot.XAxis.Dims.PxPerUnit / PlotZone.Plot.YAxis.Dims.PxPerUnit;
         (double pointX, double pointY, int pointIndex) = _allPlots.GetPointNearest(mouseCoordX, mouseCoordY, xyRatio);
 
-        // place the highlight over the point of interest
         _highlightedPoint.X = pointX;
         _highlightedPoint.Y = pointY;
         _highlightedPoint.IsVisible = true;
 
-        // render if the highlighted point chnaged
         if (_lastHighlightedIndex != pointIndex)
         {
             _lastHighlightedIndex = pointIndex;
