@@ -39,6 +39,7 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanStartVRPTWCommand))]
     private void StartVRPTW()
     {
+        IsSolutionCalculated = false;
         Solution!.GenerateRandomSolution();
         IsSolutionCalculated = true;
     }

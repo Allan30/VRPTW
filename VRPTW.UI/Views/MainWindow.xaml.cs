@@ -4,6 +4,7 @@ using ScottPlot.Plottable;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using VRPTW.UI.Extensions;
 using VRPTW.UI.ViewModels;
 
 namespace VRPTW.UI;
@@ -12,7 +13,7 @@ namespace VRPTW.UI;
 /// Interaction logic for MainWindow.xaml
 /// </summary>
 public partial class MainWindow : MetroWindow
-{    
+{
     public MainWindow()
     {
         InitializeComponent();
@@ -45,7 +46,7 @@ public partial class MainWindow : MetroWindow
             ThemeManager.Current.ChangeTheme(Application.Current, ViewModel.SelectedAppTheme.Theme);
         }
     }
-    
+
     private void DrawClients()
     {
         PlotZone.Plot.Clear();
@@ -62,7 +63,7 @@ public partial class MainWindow : MetroWindow
             };
             _labels.Add(label);
             if (_showLabels)
-            {   
+            {
                 PlotZone.Plot.Add(label);
             }
         }
@@ -76,7 +77,7 @@ public partial class MainWindow : MetroWindow
     {
         PlotZone.Plot.Clear();
         _labels.Clear();
-        
+
         foreach (var vehicle in ViewModel.Solution!.Vehicles)
         {
             var color = PlotZone.Plot.GetNextColor();
@@ -88,7 +89,7 @@ public partial class MainWindow : MetroWindow
             var nextNode = currentNode.Next;
 
             var i = 0;
-            
+
             while (nextNode is not null)
             {
                 xs[i] = currentNode.Value.Coordinate.X;
@@ -106,7 +107,7 @@ public partial class MainWindow : MetroWindow
                 {
                     PlotZone.Plot.Add(label);
                 }
-                
+
                 currentNode = nextNode;
                 nextNode = currentNode.Next;
                 i++;
@@ -123,10 +124,7 @@ public partial class MainWindow : MetroWindow
             if (toggleSwitch.IsOn)
             {
                 _showLabels = true;
-                foreach (var label in _labels)
-                {
-                    PlotZone.Plot.Add(label);
-                }
+                PlotZone.Plot.AddRange(_labels);
             }
             else
             {
