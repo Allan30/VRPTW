@@ -7,8 +7,8 @@
         xmlns:viewmodels="clr-namespace:VRPTW.UI.ViewModels"
         xmlns:ScottPlot="clr-namespace:ScottPlot;assembly=ScottPlot.WPF"
         Title="VRPTW"
-        MinWidth="800"
-        Width="800"
+        Width="1000"
+        MinWidth="1000"
         MinHeight="600"
         Height="600"
         ResizeMode="CanResizeWithGrip"
@@ -19,14 +19,17 @@
     </mah:MetroWindow.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
             <ColumnDefinition MinWidth="600" />
-            <ColumnDefinition Width="200" MinWidth="180" MaxWidth="220" />
+            <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
-        <ScottPlot:WpfPlot x:Name="PlotZone" MouseMove="OnPlotZoneMouseMoved" />
+        <ScottPlot:WpfPlot Grid.Column="1"
+                           x:Name="PlotZone"
+                           MouseMove="OnPlotZoneMouseMoved" />
 
         <StackPanel Orientation="Vertical"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Margin="5">
             <Button Content="Choisir un fichier"
                     Command="{Binding ChooseFileCommand}" />
