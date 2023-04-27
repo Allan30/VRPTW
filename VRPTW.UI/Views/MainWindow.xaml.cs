@@ -17,6 +17,8 @@ namespace VRPTW.UI;
 public partial class MainWindow : MetroWindow
 {
     private const int MARKER_SIZE = 10;
+    private ScatterPlot? _allPlots;
+    private int _lastHighlightedIndex = -1;
     private static readonly MarkerPlot _highlightedPoint = new()
     {
         X = 0,
@@ -60,9 +62,6 @@ public partial class MainWindow : MetroWindow
             ThemeManager.Current.ChangeTheme(Application.Current, ViewModel.SelectedAppTheme.Theme);
         }
     }
-
-    private ScatterPlot? _allPlots;
-    private int _lastHighlightedIndex = -1;
 
     private void DrawClients()
     {
