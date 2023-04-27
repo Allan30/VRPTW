@@ -36,14 +36,12 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private bool _isSolutionCalculated;
 
-    [RelayCommand(CanExecute = nameof(CanStartVRPTWCommand))]
+    [RelayCommand(CanExecute = nameof(IsSolutionLoaded))]
     private void StartVRPTW()
     {
         Solution!.GenerateRandomSolution();
         IsSolutionCalculated = true;
     }
-
-    private bool CanStartVRPTWCommand() => IsSolutionLoaded;
 
     [RelayCommand]
     private void ChooseFile()
