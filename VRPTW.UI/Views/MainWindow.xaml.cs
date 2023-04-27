@@ -1,10 +1,9 @@
 ﻿using ControlzEx.Theming;
 using MahApps.Metro.Controls;
 using ScottPlot.Plottable;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
-using VRPTW.UI.Extensions;
+using System.Windows.Input;
 using VRPTW.UI.ViewModels;
 
 namespace VRPTW.UI;
@@ -50,7 +49,6 @@ public partial class MainWindow : MetroWindow
     private void DrawClients()
     {
         PlotZone.Plot.Clear();
-        _labels.Clear();
         foreach (var client in ViewModel.Solution!.Clients)
         {
             var clientPlot = PlotZone.Plot.AddPoint(client.Coordinate.X, client.Coordinate.Y, size: 10);
@@ -61,22 +59,13 @@ public partial class MainWindow : MetroWindow
                 Y = client.Coordinate.Y,
                 Color = clientPlot.Color
             };
-            _labels.Add(label);
-            if (_showLabels)
-            {
-                PlotZone.Plot.Add(label);
-            }
         }
         PlotZone.Refresh();
     }
 
-    private bool _showLabels = false;
-    private readonly List<Text> _labels = new();
-
     private void DrawRoutes()
     {
         PlotZone.Plot.Clear();
-        _labels.Clear();
 
         foreach (var vehicle in ViewModel.Solution!.Vehicles)
         {
@@ -102,11 +91,6 @@ public partial class MainWindow : MetroWindow
                     Y = currentNode.Value.Coordinate.Y,
                     Color = color
                 };
-                _labels.Add(label);
-                if (_showLabels)
-                {
-                    PlotZone.Plot.Add(label);
-                }
 
                 currentNode = nextNode;
                 nextNode = currentNode.Next;
@@ -117,21 +101,30 @@ public partial class MainWindow : MetroWindow
         PlotZone.Refresh();
     }
 
-    private void OnDisplayLabelsToggleSwitchToggled(object sender, RoutedEventArgs e)
+    private void OnPlotZoneMouseMoved(object sender, MouseEventArgs e)
     {
-        if (sender is ToggleSwitch toggleSwitch && ViewModel.IsSolutionLoaded)
-        {
-            if (toggleSwitch.IsOn)
-            {
-                _showLabels = true;
-                PlotZone.Plot.AddRange(_labels);
-            }
-            else
-            {
-                _showLabels = false;
-                PlotZone.Plot.Clear(typeof(Text));
-            }
-            PlotZone.Refresh();
-        }
+
+        //(double mouseCoordX, double mouseCoordY) = PlotZone.GetMouseCoordinates();
+        //double xyRatio = PlotZone.Plot.XAxis.Dims.PxPerUnit / PlotZone.Plot.YAxis.Dims.PxPerUnit;
+        //(double pointX, double pointY, int pointIndex) = PlotZone.Plot.GetPointNearest(mouseCoordX, mouseCoordY, xyRatio);
+
+        //// place the highlight over the point of interest
+        //HighlightedPoint.X = pointX;
+        //HighlightedPoint.Y = pointY;
+        //HighlightedPoint.IsVisible = true;
+
+        //// render if the highlighted point chnaged
+        //if (LastHighlightedIndex != pointIndex)
+        //{
+        //    LastHighlightedIndex = pointIndex;
+        //    wpfPlot1.Refresh();
+        //}
+
+        //// update the GUI to describe the highlighted point
+        //double mouseX = e.GetPosition(this).X;
+        //double mouseY = e.GetPosition(this).Y;
+        //label1.Content = $"Closest point to ({mouseX:N2}, {mouseY:N2}) " +
+        //    $"is index {pointIndex} ({pointX:N2}, {pointY:N2})";
+
     }
 }
