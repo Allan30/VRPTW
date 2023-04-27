@@ -48,6 +48,7 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void ChooseFile()
     {
+        IsSolutionLoaded = false;
         IsSolutionCalculated = false;
         var appPath = AppDomain.CurrentDomain.BaseDirectory;
         var dialog = new OpenFileDialog()

@@ -45,7 +45,7 @@
                               IsOn="False"
                               OffContent="Désactivés"
                               OnContent="Activés"
-                              Toggled="ToggleSwitch_Toggled"
+                              Toggled="OnDisplayLabelsToggleSwitchToggled"
                               Margin="0,10,0,0" />
         </StackPanel>
     </Grid>

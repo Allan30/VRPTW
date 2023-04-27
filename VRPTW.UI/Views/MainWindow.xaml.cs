@@ -116,7 +116,7 @@ public partial class MainWindow : MetroWindow
         PlotZone.Refresh();
     }
 
-    private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+    private void OnDisplayLabelsToggleSwitchToggled(object sender, RoutedEventArgs e)
     {
         if (sender is ToggleSwitch toggleSwitch && ViewModel.IsSolutionLoaded)
         {
