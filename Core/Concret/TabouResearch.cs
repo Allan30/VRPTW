@@ -15,7 +15,7 @@ public class TabouResearch
     {
         solution = randomSolution;
         tabouList = new ArrayList();
-        bestFitness = solution.GetFitness();
+        bestFitness = solution.Fitness;
         bestSolution = (Routes) solution.Clone();
     }
     
@@ -61,14 +61,14 @@ public class TabouResearch
                 Exchange();
             }
         }
-        Console.WriteLine("Exchange done : "+bestSolution.GetFitness());
+        Console.WriteLine("Exchange done : "+bestSolution.Fitness);
         using (var progress = new ProgressBar()) {
             for (var i = 0; i <= nbSteps; i++) {
                 progress.Report((double) i / nbSteps);
                 RelocateInter();
             }
         }
-        Console.WriteLine("RelocateInter done : "+bestSolution.GetFitness());
+        Console.WriteLine("RelocateInter done : "+bestSolution.Fitness);
         DelEmptyVehicle(); 
         
         using (var progress = new ProgressBar()) {
@@ -77,7 +77,7 @@ public class TabouResearch
                 TwoOpt();
             }
         }
-        Console.WriteLine("TwoOpt done : "+bestSolution.GetFitness());
+        Console.WriteLine("TwoOpt done : "+bestSolution.Fitness);
 
         DelEmptyVehicle();
         */
@@ -116,7 +116,7 @@ public class TabouResearch
     
     public void RelocateIntra() //n*(n-1)
     {
-        var prevFitness = solution.GetFitness();
+        var prevFitness = solution.Fitness;
         var bestDelta = Double.MaxValue;//on cherche le delta le plus petit car nouvelle distance plus petite
         Vehicle bestVehicle = null;
         LinkedListNode<Client> bestNodeToRelocate = null;
@@ -167,13 +167,13 @@ public class TabouResearch
         bestVehicle.Clients.Remove(bestNodeToRelocate);
         bestVehicle.Clients.AddAfter(bestFirstNodeOfNewEdge, bestNodeToRelocate);
         
-        if (!(solution.GetFitness() > prevFitness)) return;
+        if (!(solution.Fitness > prevFitness)) return;
         ManageTabouList("RelocateIntra_"+bestNodeToRelocate.Value.Id);
     }
 
     public void RelocateInter()
     {
-        var prevFitness = solution.GetFitness();
+        var prevFitness = solution.Fitness;
         var bestDelta = double.MaxValue;//on cherche le delta le plus petit car nouvelle distance plus petite
         (Vehicle src, Vehicle trg) bestVehicles = (null, null);
         LinkedListNode<Client> bestNodeToRelocate = null;
@@ -252,7 +252,7 @@ public class TabouResearch
     {
         
         //Console.WriteLine("=====================================");
-        var prevFitness = solution.GetFitness();
+        var prevFitness = solution.Fitness;
         //Console.WriteLine(prevFitness);
         var bestDelta = double.MaxValue;
         Vehicle bestVehicle = null;
@@ -321,7 +321,7 @@ public class TabouResearch
         Console.WriteLine(solution.Vehicles[bestVehicle].ToStringClient());
 
         Console.WriteLine(prevFitness + bestDelta);
-        Console.WriteLine(solution.GetFitness());
+        Console.WriteLine(solution.Fitness);
         Console.WriteLine(bestDelta);
         */
 
@@ -341,7 +341,7 @@ public class TabouResearch
 
     public void Exchange()
     {
-        var prevFitness = solution.GetFitness();
+        var prevFitness = solution.Fitness;
         var bestDelta = double.MaxValue;
         (Vehicle vehicleOfNode1, Vehicle vehicleOfNode2) bestVehicles = (null, null);
         LinkedListNode<Client> bestNodeToExchange1 = null;
@@ -402,7 +402,7 @@ public class TabouResearch
         /*
          Console.WriteLine("=======================================");
         Console.WriteLine(prevFitness + bestDelta);
-        Console.WriteLine(solution.GetFitness());
+        Console.WriteLine(solution.Fitness);
         Console.WriteLine("=======================================");
         Console.WriteLine(solution.Vehicles[bestVehicles.vehicleOfNode1].ToString());
         Console.WriteLine(solution.Vehicles[bestVehicles.vehicleOfNode2].ToString());

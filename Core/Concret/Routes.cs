@@ -7,7 +7,7 @@ public class Routes : ISolution, ICloneable
 {
     public Client Depot { get; set; }
     public List<Client> Clients { get; set; }
-    public List<Vehicle> Vehicles { get; set; }
+    public List<Vehicle> Vehicles { get; set; } = new();
     public int MaxCapacity { get; set; }
     
     public Routes()
@@ -20,6 +20,7 @@ public class Routes : ISolution, ICloneable
     {
         Depot = depot;
         Clients = clients;
+        
     }
     
     public void AddVehicle()
@@ -27,10 +28,7 @@ public class Routes : ISolution, ICloneable
         Vehicles.Add(new Vehicle(Vehicles.Count, MaxCapacity, Depot));
     }
     
-    public double GetFitness()
-    {
-        return Vehicles.Sum(vehicle => vehicle.TravelledDistance);
-    }
+    public double Fitness => Vehicles.Sum(vehicle => vehicle.TravelledDistance);
 
     public List<ISolution> GetNeighbours()
     {

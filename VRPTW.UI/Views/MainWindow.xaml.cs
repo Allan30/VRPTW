@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using VRPTW.UI.ViewModels;
 
-namespace VRPTW.UI;
+namespace VRPTW.UI.Views;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -34,7 +34,7 @@ public partial class MainWindow : MetroWindow
         InitializeComponent();
         ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
         ThemeManager.Current.SyncTheme();
-        PlotZone.Plot.Style(ScottPlot.Style.Black);
+        PlotZone.Plot.Style(ScottPlot.Style.Default);
         PlotZone.Plot.Frameless();
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         PlotZone.Refresh();
