@@ -31,6 +31,8 @@ public partial class MainWindow : MetroWindow
         IsVisible = false
     };
 
+    public MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -38,7 +40,6 @@ public partial class MainWindow : MetroWindow
         ThemeManager.Current.SyncTheme();
         PlotZone.Plot.Style(ScottPlot.Style.Default);
         PlotZone.Plot.Frameless();
-        ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         ViewModel.RoutesViewModel.PropertyChanged += RoutesViewModel_PropertyChanged;
         PlotZone.Refresh();
         
@@ -56,26 +57,13 @@ public partial class MainWindow : MetroWindow
         }
     }
 
-    public MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;
-
-    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(MainWindowViewModel.SelectedPlotStyle))
-        {
-            PlotZone.Plot.Style(ViewModel.SelectedPlotStyle.Style);
-            PlotZone.Refresh();
-        }
-        else if (e.PropertyName == nameof(MainWindowViewModel.SelectedAppTheme))
-        {
-            ThemeManager.Current.ChangeTheme(Application.Current, ViewModel.SelectedAppTheme.Theme);
-        }
-    }
 
     private void DrawClients()
     {
         PlotZone.Plot.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
-
+        SetDepotAxes();
+        
         var xs = new double[ViewModel.RoutesViewModel.ClientsWithDepot.Count];
         var ys = new double[ViewModel.RoutesViewModel.ClientsWithDepot.Count];
         
@@ -95,6 +83,7 @@ public partial class MainWindow : MetroWindow
     {
         PlotZone.Plot.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
+        SetDepotAxes();
 
         var allXs = new List<double>();
         var allYs = new List<double>();
@@ -118,7 +107,13 @@ public partial class MainWindow : MetroWindow
         _allPlots = PlotZone.Plot.AddScatter(allXs.ToArray(), allYs.ToArray(), color: Color.Transparent);
         PlotZone.Refresh();
     }
-    
+
+    private void SetDepotAxes()
+    {
+        PlotZone.Plot.AddHorizontalLine(ViewModel.RoutesViewModel.ClientsWithDepot[0].Coordinate.Y, color: Color.DimGray, style: LineStyle.DashDotDot);
+        PlotZone.Plot.AddVerticalLine(ViewModel.RoutesViewModel.ClientsWithDepot[0].Coordinate.X, color: Color.DimGray, style: LineStyle.DashDotDot);
+    }
+
     private void OnPlotZoneMouseMoved(object sender, MouseEventArgs e)
     {
         if (_allPlots is null) return;
@@ -166,14 +161,15 @@ public partial class MainWindow : MetroWindow
         if (ViewModel.RoutesViewModel.SelectedClient is null) return;
 
         var str = ViewModel.RoutesViewModel.SelectedClient.ToString();
+        var pos = $"Position : {ViewModel.RoutesViewModel.SelectedClient.Coordinate}";
         var demand = $"Demande : {ViewModel.RoutesViewModel.SelectedClient.Demand}";
         var readyTime = $"Heure min : {ViewModel.RoutesViewModel.SelectedClient.ReadyTime}";
         var dueTime = $"Heure max : {ViewModel.RoutesViewModel.SelectedClient.DueTime}";
         var service = $"Temps de chargement : {ViewModel.RoutesViewModel.SelectedClient.Service}";
-        PlotZone.Plot.AddTooltip($"{str}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
+        PlotZone.Plot.AddTooltip($"{str}\n{pos}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
     }
 
-    private void PlotZone_LeftClicked(object sender, RoutedEventArgs e)
+    private void OnPlotZoneLeftClicked(object sender, RoutedEventArgs e)
     {
         ViewModel.RoutesViewModel.SelectedClient =
             ViewModel
