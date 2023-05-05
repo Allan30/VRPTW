@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using VRPTW.UI.ViewModels;
 
@@ -40,6 +41,7 @@ public partial class MainWindow : MetroWindow
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         ViewModel.RoutesViewModel.PropertyChanged += RoutesViewModel_PropertyChanged;
         PlotZone.Refresh();
+        
     }
 
     private void RoutesViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -74,15 +76,15 @@ public partial class MainWindow : MetroWindow
         PlotZone.Plot.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
 
-        var xs = new double[ViewModel.RoutesViewModel.Clients.Count];
-        var ys = new double[ViewModel.RoutesViewModel.Clients.Count];
+        var xs = new double[ViewModel.RoutesViewModel.ClientsWithDepot.Count];
+        var ys = new double[ViewModel.RoutesViewModel.ClientsWithDepot.Count];
         
-        for (var i = 0; i < ViewModel.RoutesViewModel.Clients.Count; i++)
+        for (var i = 0; i < ViewModel.RoutesViewModel.ClientsWithDepot.Count; i++)
         {
-            PlotZone.Plot.AddPoint(ViewModel.RoutesViewModel.Clients[i].Coordinate.X, ViewModel.RoutesViewModel.Clients[i].Coordinate.Y, size: 10);
+            PlotZone.Plot.AddPoint(ViewModel.RoutesViewModel.ClientsWithDepot[i].Coordinate.X, ViewModel.RoutesViewModel.ClientsWithDepot[i].Coordinate.Y, size: 10);
 
-            xs[i] = ViewModel.RoutesViewModel.Clients[i].Coordinate.X;
-            ys[i] = ViewModel.RoutesViewModel.Clients[i].Coordinate.Y;
+            xs[i] = ViewModel.RoutesViewModel.ClientsWithDepot[i].Coordinate.X;
+            ys[i] = ViewModel.RoutesViewModel.ClientsWithDepot[i].Coordinate.Y;
         }
         
         _allPlots = PlotZone.Plot.AddScatterPoints(xs, ys, markerSize: MARKER_SIZE, color: Color.Transparent);
@@ -102,7 +104,7 @@ public partial class MainWindow : MetroWindow
             var xs = new List<double>(ViewModel.RoutesViewModel.Vehicles.Count);
             var ys = new List<double>(ViewModel.RoutesViewModel.Vehicles.Count);
 
-            foreach (var client in vehicle.Clients.SkipLast(1))
+            foreach (var client in vehicle.Clients)
             {
                 xs.Add(client.Coordinate.X);
                 ys.Add(client.Coordinate.Y);
@@ -122,17 +124,66 @@ public partial class MainWindow : MetroWindow
         if (_allPlots is null) return;
         
         (double mouseCoordX, double mouseCoordY) = PlotZone.GetMouseCoordinates();
-        //double xyRatio = PlotZone.Plot.XAxis.Dims.PxPerUnit / PlotZone.Plot.YAxis.Dims.PxPerUnit;
-        //(double pointX, double pointY, int pointIndex) = _allPlots.GetPointNearest(mouseCoordX, mouseCoordY, xyRatio);
+        double xyRatio = PlotZone.Plot.XAxis.Dims.PxPerUnit / PlotZone.Plot.YAxis.Dims.PxPerUnit;
 
-        _highlightedPoint.X = mouseCoordX;
-        _highlightedPoint.Y = mouseCoordY;
+        (double pointX, double pointY, int pointIndex) = _allPlots.GetPointNearest(mouseCoordX, mouseCoordY, xyRatio);
+        
+        _highlightedPoint.X = pointX;
+        _highlightedPoint.Y = pointY;
         _highlightedPoint.IsVisible = true;
 
-        //if (_lastHighlightedIndex != pointIndex)
-        //{
-        //    _lastHighlightedIndex = pointIndex;
+        if (_lastHighlightedIndex != pointIndex)
+        {
+            _lastHighlightedIndex = pointIndex;
             PlotZone.Refresh();
-        //}
+        }
+    }
+
+    private void OnPlotZoneMouseLeft(object sender, MouseEventArgs e)
+    {
+        _highlightedPoint.IsVisible = false;
+        _lastHighlightedIndex = -1;
+        PlotZone.Refresh();
+    }
+
+    private void OnSelectedClientChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ViewModel.RoutesViewModel.SelectedClient is null) return;
+        
+        _highlightedPoint.X = ViewModel.RoutesViewModel.SelectedClient.Coordinate.X;
+        _highlightedPoint.Y = ViewModel.RoutesViewModel.SelectedClient.Coordinate.Y;
+        _highlightedPoint.IsVisible = true;
+
+        AddSelectedClientTooltip();
+        
+        PlotZone.Refresh();
+    }
+
+    private void AddSelectedClientTooltip()
+    {
+        PlotZone.Plot.Clear(typeof(Tooltip));
+
+        if (ViewModel.RoutesViewModel.SelectedClient is null) return;
+
+        var id = ViewModel.RoutesViewModel.SelectedClient.Id;
+        var coordinates = ViewModel.RoutesViewModel.SelectedClient.Coordinate;
+        var demand = $"Demande : {ViewModel.RoutesViewModel.SelectedClient.Demand}";
+        var readyTime = $"Heure min : {ViewModel.RoutesViewModel.SelectedClient.ReadyTime}";
+        var dueTime = $"Heure max : {ViewModel.RoutesViewModel.SelectedClient.DueTime}";
+        var service = $"Temps de chargement : {ViewModel.RoutesViewModel.SelectedClient.Service}";
+        PlotZone.Plot.AddTooltip($"{id} {coordinates}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
+    }
+
+    private void PlotZone_LeftClicked(object sender, RoutedEventArgs e)
+    {
+        ViewModel.RoutesViewModel.SelectedClient =
+            ViewModel
+            .RoutesViewModel
+            .ClientsWithDepot
+            .First(x => x.Coordinate.X == _highlightedPoint.X && x.Coordinate.Y == _highlightedPoint.Y);
+        
+        AddSelectedClientTooltip();
+
+        PlotZone.Refresh();
     }
 }

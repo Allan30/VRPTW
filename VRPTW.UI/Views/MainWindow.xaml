@@ -27,12 +27,23 @@
         <StackPanel Orientation="Vertical"
                     Margin="5">
             <Label Content="Clients" />
-            <ComboBox ItemsSource="{Binding RoutesViewModel.Clients}" DisplayMemberPath="Id" />
+            <ComboBox ItemsSource="{Binding RoutesViewModel.ClientsWithDepot}"
+                      DisplayMemberPath="Id"
+                      SelectedItem="{Binding RoutesViewModel.SelectedClient}"
+                      SelectionChanged="OnSelectedClientChanged"
+                      IsEnabled="{Binding RoutesViewModel.IsSolutionLoaded}"
+                      x:Name="ClientsCombobox" />
+            <Label Content="Routes" />
+            <ComboBox ItemsSource="{Binding RoutesViewModel.Vehicles}"
+                      IsEnabled="{Binding RoutesViewModel.IsSolutionCalculated}"
+                      DisplayMemberPath="Id" />
         </StackPanel>
 
         <ScottPlot:WpfPlot Grid.Column="1"
                            x:Name="PlotZone"
-                           MouseMove="OnPlotZoneMouseMoved" />
+                           LeftClicked="PlotZone_LeftClicked"
+                           MouseMove="OnPlotZoneMouseMoved"
+                           MouseLeave="OnPlotZoneMouseLeft" />
 
         <StackPanel Orientation="Vertical"
                     Grid.Column="2"

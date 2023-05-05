@@ -20,7 +20,6 @@ public class Routes : ISolution, ICloneable
     {
         Depot = depot;
         Clients = clients;
-        
     }
     
     public void AddVehicle()

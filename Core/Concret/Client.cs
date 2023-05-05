@@ -19,12 +19,8 @@ public class Client : IElement
         DueTime = dueTime;
         Demand = demand;
         Service = service;
-        
     }
 
-    public double GetDistance(Client otherClient)
-    {
-        return Coordinate.GetDistance(otherClient.Coordinate);
-    }
-    
+    public double GetDistance(Client otherClient) =>
+        Coordinate.GetDistance(otherClient.Coordinate);    
 }

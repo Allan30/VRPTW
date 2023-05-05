@@ -2,6 +2,7 @@
 
 public sealed class ClientViewModel
 {
+    public bool IsDepot { get; set; }
     public string Id { get; set; }
     public CoordinateViewModel Coordinate { get; set; }
     public int ReadyTime { get; set; }

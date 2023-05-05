@@ -15,21 +15,23 @@ public partial class RoutesViewModel : ObservableObject
     private readonly RoutesMapper _routesMapper = new();
 
     private Routes? _solution;
-    private ObservableCollection<ClientViewModel> _clients = new();
-    public ObservableCollection<ClientViewModel> Clients
+    
+    private ObservableCollection<ClientViewModel> _clientsWithDepot = new();
+    public ObservableCollection<ClientViewModel> ClientsWithDepot
     {
-        get => _clients;
-        set
-        {
-            _clients = value;
-            OnPropertyChanged();
-        }
+        get => _clientsWithDepot;
+        set => SetProperty(ref _clientsWithDepot, value);
     }
+
+    [ObservableProperty]
+    private ClientViewModel? _selectedClient;
+
     public ObservableCollection<VehicleViewModel> Vehicles { get; set; } = new();
     public double Fitness { get; set; }
     public int NbClients { get; set; }
     public int TotalDemand { get; set; }
     public int Capacity { get; set; }
+    
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(StartVRPTWCommand))]
     private bool _isSolutionLoaded;
@@ -41,7 +43,7 @@ public partial class RoutesViewModel : ObservableObject
     private void StartVRPTW()
     {
         _solution!.GenerateRandomSolution();
-        _routesMapper.RoutesToRoutesViewModel(_solution, this);
+        _routesMapper.MapRoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
     }
 
@@ -60,7 +62,7 @@ public partial class RoutesViewModel : ObservableObject
         {
             var parser = new VrpParser();
             _solution = parser.ExtractVrpFile(dialog.FileName);
-            _routesMapper.RoutesToRoutesViewModel(_solution, this);
+            _routesMapper.MapRoutesToRoutesViewModel(_solution, this);
             IsSolutionLoaded = true;
         }
     }
