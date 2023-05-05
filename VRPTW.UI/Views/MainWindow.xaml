@@ -28,11 +28,9 @@
                     Margin="5">
             <Label Content="Clients" />
             <ComboBox ItemsSource="{Binding RoutesViewModel.ClientsWithDepot}"
-                      DisplayMemberPath="Id"
                       SelectedItem="{Binding RoutesViewModel.SelectedClient}"
                       SelectionChanged="OnSelectedClientChanged"
-                      IsEnabled="{Binding RoutesViewModel.IsSolutionLoaded}"
-                      x:Name="ClientsCombobox" />
+                      IsEnabled="{Binding RoutesViewModel.IsSolutionLoaded}" />
             <Label Content="Routes" />
             <ComboBox ItemsSource="{Binding RoutesViewModel.Vehicles}"
                       IsEnabled="{Binding RoutesViewModel.IsSolutionCalculated}"

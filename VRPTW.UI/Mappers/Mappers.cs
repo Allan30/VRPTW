@@ -9,16 +9,19 @@ namespace VRPTW.UI.Mappers;
 [Mapper]
 public partial class RoutesMapper
 {
-    public void MapRoutesToRoutesViewModel(Routes routes, RoutesViewModel routesViewModel)
+    public void RoutesToRoutesViewModel(Routes routes, RoutesViewModel routesViewModel)
     {
-        RoutesToRoutesViewModel(routes, routesViewModel);
+        Map(routes, routesViewModel);
         var clientMapper = new ClientMapper();
-        var clients = routes.Clients.Select(clientMapper.ClientToClientViewModel);
-        var depot = clientMapper.ClientToClientViewModel(routes.Depot);
+        var clients = routes.Clients.Select(c => clientMapper.ClientToClientViewModel(c));
+        var depot = clientMapper.ClientToClientViewModel(routes.Depot, true);
         routesViewModel.ClientsWithDepot = new ObservableCollection<ClientViewModel>(clients.Prepend(depot));
     }
 
-    private partial void RoutesToRoutesViewModel(Routes routes, RoutesViewModel routesViewModel);
+    [MapperIgnoreSource(nameof(Routes.Clients))]
+    [MapperIgnoreSource(nameof(Routes.Depot))]
+    [MapperIgnoreTarget(nameof(RoutesViewModel.ClientsWithDepot))]
+    private partial void Map(Routes routes, RoutesViewModel routesViewModel);
 }
 
 [Mapper]
@@ -30,5 +33,13 @@ public partial class VehicleMapper
 [Mapper]
 public partial class ClientMapper
 {
-    public partial ClientViewModel ClientToClientViewModel(Client client);
+    public ClientViewModel ClientToClientViewModel(Client client, bool isDepot = false)
+    {
+        var clientViewModel = Map(client);
+        clientViewModel.IsDepot = isDepot;
+        return clientViewModel;
+    }
+
+    [MapperIgnoreTarget(nameof(ClientViewModel.IsDepot))]
+    private partial ClientViewModel Map(Client client);
 }

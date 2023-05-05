@@ -43,7 +43,7 @@ public partial class RoutesViewModel : ObservableObject
     private void StartVRPTW()
     {
         _solution!.GenerateRandomSolution();
-        _routesMapper.MapRoutesToRoutesViewModel(_solution, this);
+        _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
     }
 
@@ -62,7 +62,7 @@ public partial class RoutesViewModel : ObservableObject
         {
             var parser = new VrpParser();
             _solution = parser.ExtractVrpFile(dialog.FileName);
-            _routesMapper.MapRoutesToRoutesViewModel(_solution, this);
+            _routesMapper.RoutesToRoutesViewModel(_solution, this);
             IsSolutionLoaded = true;
         }
     }

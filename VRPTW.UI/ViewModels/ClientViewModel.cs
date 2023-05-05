@@ -9,4 +9,10 @@ public sealed class ClientViewModel
     public int DueTime { get; set; }
     public int Demand { get; set; }
     public int Service { get; set; }
+
+    public override string ToString() => IsDepot switch
+    {
+        true => $"{Id} (Dépôt)",
+        _ => Id
+    };
 }

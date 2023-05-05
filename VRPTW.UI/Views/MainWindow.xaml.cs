@@ -165,13 +165,12 @@ public partial class MainWindow : MetroWindow
 
         if (ViewModel.RoutesViewModel.SelectedClient is null) return;
 
-        var id = ViewModel.RoutesViewModel.SelectedClient.Id;
-        var coordinates = ViewModel.RoutesViewModel.SelectedClient.Coordinate;
+        var str = ViewModel.RoutesViewModel.SelectedClient.ToString();
         var demand = $"Demande : {ViewModel.RoutesViewModel.SelectedClient.Demand}";
         var readyTime = $"Heure min : {ViewModel.RoutesViewModel.SelectedClient.ReadyTime}";
         var dueTime = $"Heure max : {ViewModel.RoutesViewModel.SelectedClient.DueTime}";
         var service = $"Temps de chargement : {ViewModel.RoutesViewModel.SelectedClient.Service}";
-        PlotZone.Plot.AddTooltip($"{id} {coordinates}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
+        PlotZone.Plot.AddTooltip($"{str}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
     }
 
     private void PlotZone_LeftClicked(object sender, RoutedEventArgs e)
