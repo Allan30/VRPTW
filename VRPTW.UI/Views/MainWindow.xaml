@@ -25,7 +25,8 @@
 
         <ScottPlot:WpfPlot x:Name="PlotZone"
                            LeftClicked="OnPlotZoneLeftClicked"
-                           MouseMove="OnPlotZoneMouseMoved" />
+                           MouseMove="OnPlotZoneMouseMoved"
+                           MouseLeave="OnPlotZoneMouseLeft" />
 
         <StackPanel Grid.Column="1"
                     Margin="5">

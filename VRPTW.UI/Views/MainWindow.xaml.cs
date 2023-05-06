@@ -144,9 +144,8 @@ public partial class MainWindow : MetroWindow
 
     private void OnPlotZoneMouseLeft(object sender, MouseEventArgs e)
     {
-        _highlightedPoint.IsVisible = false;
-        _lastHighlightedIndex = -1;
-        PlotZone.Refresh();
+        if (_lastHighlightedIndex == -1) return;
+        ClearSelectedClient();
     }
 
     private void OnSelectedClientChanged(object sender, SelectionChangedEventArgs e)
@@ -184,11 +183,16 @@ public partial class MainWindow : MetroWindow
 
         if (!_allPlots.TryGetPointNearest(mouseCoordX, mouseCoordY, out var _, 5, xyRatio))
         {
-            _highlightedPoint.IsVisible = false;
-            _lastHighlightedIndex = -1;
-            ViewModel.RoutesViewModel.SelectedClient = null;
-            PlotZone.Plot.Clear(typeof(Tooltip));
-            PlotZone.Refresh();
+            ClearSelectedClient();
         }
+    }
+
+    private void ClearSelectedClient()
+    {
+        _highlightedPoint.IsVisible = false;
+        _lastHighlightedIndex = -1;
+        ViewModel.RoutesViewModel.SelectedClient = null;
+        PlotZone.Plot.Clear(typeof(Tooltip));
+        PlotZone.Refresh();
     }
 }
