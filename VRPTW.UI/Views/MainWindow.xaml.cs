@@ -38,11 +38,13 @@ public partial class MainWindow : MetroWindow
         InitializeComponent();
         ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
         ThemeManager.Current.SyncTheme();
-        PlotZone.Plot.Style(ScottPlot.Style.Default);
-        PlotZone.Plot.Frameless();
+        PlotZone.Plot.Style(ScottPlot.Style.Gray1);
+        PlotZone.Plot.XAxis.Label("X");
+        PlotZone.Plot.YAxis.Label("Y");
+        PlotZone.Plot.XAxis.MinimumTickSpacing(1);
+        PlotZone.Plot.YAxis.MinimumTickSpacing(1);
         ViewModel.RoutesViewModel.PropertyChanged += OnViewModelPropertyChanged;
         PlotZone.Refresh();
-
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -57,12 +59,11 @@ public partial class MainWindow : MetroWindow
         }
     }
 
-
     private void DrawClients()
     {
         PlotZone.Plot.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
-        SetDepotAxes();
+        ConfigurePlot();
 
         var xs = new double[ViewModel.RoutesViewModel.ClientsWithDepot.Count];
         var ys = new double[ViewModel.RoutesViewModel.ClientsWithDepot.Count];
@@ -83,7 +84,8 @@ public partial class MainWindow : MetroWindow
     {
         PlotZone.Plot.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
-        SetDepotAxes();
+        ConfigurePlot();
+
 
         var allXs = new List<double>();
         var allYs = new List<double>();
@@ -109,10 +111,21 @@ public partial class MainWindow : MetroWindow
         PlotZone.Refresh();
     }
 
-    private void SetDepotAxes()
+    private void ConfigurePlot()
     {
         PlotZone.Plot.AddHorizontalLine(ViewModel.RoutesViewModel.ClientsWithDepot[0].Coordinate.Y, color: Color.DimGray, style: LineStyle.DashDotDot);
         PlotZone.Plot.AddVerticalLine(ViewModel.RoutesViewModel.ClientsWithDepot[0].Coordinate.X, color: Color.DimGray, style: LineStyle.DashDotDot);
+
+        const int margin = 10;
+
+        PlotZone.Plot.XAxis.SetBoundary(
+            ViewModel.RoutesViewModel.ClientsWithDepot.Min(x => x.Coordinate.X - margin),
+            ViewModel.RoutesViewModel.ClientsWithDepot.Max(x => x.Coordinate.X + margin));
+        PlotZone.Plot.YAxis.SetBoundary(
+            ViewModel.RoutesViewModel.ClientsWithDepot.Min(x => x.Coordinate.Y - margin),
+            ViewModel.RoutesViewModel.ClientsWithDepot.Max(x => x.Coordinate.Y + margin));
+        PlotZone.Plot.XAxis.SetZoomInLimit(10);
+        PlotZone.Plot.YAxis.SetZoomInLimit(10);
     }
 
     private void OnPlotZoneMouseMoved(object sender, MouseEventArgs e)
@@ -130,7 +143,7 @@ public partial class MainWindow : MetroWindow
                 _highlightedPoint.X = point.x;
                 _highlightedPoint.Y = point.y;
                 _highlightedPoint.IsVisible = true;
-                
+
                 ViewModel.RoutesViewModel.SelectedClient =
                     ViewModel
                     .RoutesViewModel
@@ -177,7 +190,7 @@ public partial class MainWindow : MetroWindow
     private void OnPlotZoneLeftClicked(object sender, RoutedEventArgs e)
     {
         if (_allPlots is null) return;
-        
+
         (double mouseCoordX, double mouseCoordY) = PlotZone.GetMouseCoordinates();
         double xyRatio = PlotZone.Plot.XAxis.Dims.PxPerUnit / PlotZone.Plot.YAxis.Dims.PxPerUnit;
 
