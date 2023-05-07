@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
-using System;
 using System.Collections.ObjectModel;
-using System.IO;
+using System;
 using VRPTW.Concret;
 using VRPTW.UI.Mappers;
 using VRPTWCore.Parser;
+using System.IO;
 
 namespace VRPTW.UI.ViewModels;
 
@@ -15,7 +15,7 @@ public partial class RoutesViewModel : ObservableObject
     private readonly RoutesMapper _routesMapper = new();
 
     private Routes? _solution;
-    
+
     private ObservableCollection<ClientViewModel> _clientsWithDepot = new();
     public ObservableCollection<ClientViewModel> ClientsWithDepot
     {
@@ -31,7 +31,7 @@ public partial class RoutesViewModel : ObservableObject
     public int NbClients { get; set; }
     public int TotalDemand { get; set; }
     public int Capacity { get; set; }
-    
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(StartVRPTWCommand))]
     private bool _isSolutionLoaded;

@@ -15,8 +15,20 @@
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d">
     <mah:MetroWindow.DataContext>
-        <viewmodels:MainWindowViewModel />
+        <viewmodels:RoutesViewModel />
     </mah:MetroWindow.DataContext>
+    <mah:MetroWindow.Resources>
+        <Style TargetType="ComboBox"
+               x:Key="{x:Type ComboBox}"
+               BasedOn="{StaticResource MahApps.Styles.ComboBox}">
+            <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="True"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
+                    <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </mah:MetroWindow.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="600" />
@@ -31,18 +43,19 @@
         <StackPanel Grid.Column="1"
                     Margin="5">
             <Button Content="Choisir un fichier"
-                    Command="{Binding RoutesViewModel.ChooseFileCommand}" />
+                    Command="{Binding ChooseFileCommand}" />
             <Button Content="Démarrer"
-                    Command="{Binding RoutesViewModel.StartVRPTWCommand}"
+                    Command="{Binding StartVRPTWCommand}"
                     Margin="0,10,0,0" />
             <Label Content="Clients" />
-            <ComboBox ItemsSource="{Binding RoutesViewModel.ClientsWithDepot}"
-                      SelectedItem="{Binding RoutesViewModel.SelectedClient}"
+            <ComboBox ItemsSource="{Binding ClientsWithDepot}"
+                      SelectedItem="{Binding SelectedClient}"
                       SelectionChanged="OnSelectedClientChanged"
-                      IsEnabled="{Binding RoutesViewModel.IsSolutionLoaded}" />
+                      IsEnabled="{Binding IsSolutionLoaded}"
+                      PreviewMouseLeftButtonUp="OnClientsComboBoxPreviewMouseLeftButtonUp" />
             <Label Content="Routes" />
-            <ComboBox ItemsSource="{Binding RoutesViewModel.Vehicles}"
-                      IsEnabled="{Binding RoutesViewModel.IsSolutionCalculated}"
+            <ComboBox ItemsSource="{Binding Vehicles}"
+                      IsEnabled="{Binding IsSolutionCalculated}"
                       DisplayMemberPath="Id" />
         </StackPanel>
     </Grid>
