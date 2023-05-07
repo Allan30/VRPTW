@@ -55,8 +55,9 @@
                       PreviewMouseLeftButtonUp="OnClientsComboBoxPreviewMouseLeftButtonUp" />
             <Label Content="Routes" />
             <ComboBox ItemsSource="{Binding Vehicles}"
-                      IsEnabled="{Binding IsSolutionCalculated}"
-                      DisplayMemberPath="Id" />
+                      SelectedItem="{Binding SelectedVehicle}"
+                      SelectionChanged="OnSelectedVehicleChanged"
+                      IsEnabled="{Binding IsSolutionCalculated}" />
         </StackPanel>
     </Grid>
 </mah:MetroWindow>

@@ -26,7 +26,16 @@ public partial class RoutesViewModel : ObservableObject
     [ObservableProperty]
     private ClientViewModel? _selectedClient;
 
-    public ObservableCollection<VehicleViewModel> Vehicles { get; set; } = new();
+    private ObservableCollection<VehicleViewModel> _vehicles = new();
+    public ObservableCollection<VehicleViewModel> Vehicles
+    {
+        get => _vehicles;
+        set => SetProperty(ref _vehicles, value);
+    }
+
+    [ObservableProperty]
+    private VehicleViewModel? _selectedVehicle;
+
     public double Fitness { get; set; }
     public int NbClients { get; set; }
     public int TotalDemand { get; set; }

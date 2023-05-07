@@ -171,6 +171,11 @@ public partial class MainWindow : MetroWindow
         HighlightSelectedClient();
     }
 
+    private void OnSelectedVehicleChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ViewModel.SelectedVehicle is null) return;
+    }
+
     private void HighlightSelectedClient()
     {
         if (ViewModel.SelectedClient is null) return;
