@@ -58,27 +58,7 @@ public partial class MainWindow : MetroWindow
         }
         else if (e.PropertyName == nameof(RoutesViewModel.SelectedClient))
         {
-            if (ViewModel.SelectedClient is null)
-            {
-                _highlightedPoint.IsVisible = false;
-                _lastHighlightedIndex = -1;
-                PlotZone.Plot.Clear(typeof(CustomTooltip));
-            }
-            else
-            {
-                _highlightedPoint.X = ViewModel.SelectedClient.Coordinate.X;
-                _highlightedPoint.Y = ViewModel.SelectedClient.Coordinate.Y;
-                _highlightedPoint.IsVisible = true;
-                PlotZone.Plot.Clear(typeof(CustomTooltip));
-                var str = ViewModel.SelectedClient.ToString();
-                var pos = $"Position : {ViewModel.SelectedClient.Coordinate}";
-                var demand = $"Demande : {ViewModel.SelectedClient.Demand}";
-                var readyTime = $"Heure min : {ViewModel.SelectedClient.ReadyTime}";
-                var dueTime = $"Heure max : {ViewModel.SelectedClient.DueTime}";
-                var service = $"Temps de chargement : {ViewModel.SelectedClient.Service}";
-                PlotZone.Plot.AddCustomTooltip($"{str}\n{pos}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
-            }
-            PlotZone.Refresh();
+            HighlightSelectedClient();
         }
     }
 
@@ -130,6 +110,31 @@ public partial class MainWindow : MetroWindow
 
         }
         _allPlots = PlotZone.Plot.AddScatter(allXs.ToArray(), allYs.ToArray(), color: Color.Transparent);
+        PlotZone.Refresh();
+    }
+
+    private void HighlightSelectedClient()
+    {
+        if (ViewModel.SelectedClient is null)
+        {
+            _highlightedPoint.IsVisible = false;
+            _lastHighlightedIndex = -1;
+            PlotZone.Plot.Clear(typeof(CustomTooltip));
+        }
+        else
+        {
+            _highlightedPoint.X = ViewModel.SelectedClient.Coordinate.X;
+            _highlightedPoint.Y = ViewModel.SelectedClient.Coordinate.Y;
+            _highlightedPoint.IsVisible = true;
+            PlotZone.Plot.Clear(typeof(CustomTooltip));
+            var str = ViewModel.SelectedClient.ToString();
+            var pos = $"Position : {ViewModel.SelectedClient.Coordinate}";
+            var demand = $"Demande : {ViewModel.SelectedClient.Demand}";
+            var readyTime = $"Heure min : {ViewModel.SelectedClient.ReadyTime}";
+            var dueTime = $"Heure max : {ViewModel.SelectedClient.DueTime}";
+            var service = $"Temps de chargement : {ViewModel.SelectedClient.Service}";
+            PlotZone.Plot.AddCustomTooltip($"{str}\n{pos}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
+        }
         PlotZone.Refresh();
     }
 
