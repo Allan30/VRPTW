@@ -31,12 +31,8 @@ public partial class RoutesViewModel : ObservableObject
         set
         {
             SetProperty(ref _selectedClient, value);
-            SelectedVehicle = (value, value?.IsDepot) switch
-            {
-                (not null, true) => SelectedVehicle,
-                (not null, _) => Vehicles.SingleOrDefault(v => v.Clients.Contains(value)),
-                (null, _) => SelectedVehicle,
-            };
+            if (value is null || value.IsDepot) return;
+            SelectedVehicle = Vehicles.SingleOrDefault(v => v.Clients.Contains(value));
         }
     }
 
@@ -47,8 +43,19 @@ public partial class RoutesViewModel : ObservableObject
         set => SetProperty(ref _vehicles, value);
     }
 
-    [ObservableProperty]
     private VehicleViewModel? _selectedVehicle;
+    public VehicleViewModel? SelectedVehicle
+    {
+        get => _selectedVehicle;
+        set
+        {
+            SetProperty(ref _selectedVehicle, value);
+            if (SelectedClient?.IsDepot is true)
+            {
+                SelectedClient = null;
+            }
+        }
+    }
 
     public double Fitness { get; set; }
     public int NbClients { get; set; }
