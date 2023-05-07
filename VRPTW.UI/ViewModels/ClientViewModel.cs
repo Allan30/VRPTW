@@ -15,4 +15,9 @@ public sealed class ClientViewModel
         true => $"{Id} (Dépôt)",
         _ => Id
     };
+
+    public override bool Equals(object? obj) =>
+        obj is ClientViewModel clientViewModel &&
+        Id == clientViewModel.Id;
+
 }

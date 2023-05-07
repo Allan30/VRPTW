@@ -7,6 +7,7 @@ using VRPTW.Concret;
 using VRPTW.UI.Mappers;
 using VRPTWCore.Parser;
 using System.IO;
+using System.Linq;
 
 namespace VRPTW.UI.ViewModels;
 
@@ -30,10 +31,12 @@ public partial class RoutesViewModel : ObservableObject
         set
         {
             SetProperty(ref _selectedClient, value);
-            if (value is not null)
+            SelectedVehicle = (value, value?.IsDepot) switch
             {
-                SelectedVehicle = null;
-            }
+                (not null, true) => SelectedVehicle,
+                (not null, _) => Vehicles.SingleOrDefault(v => v.Clients.Contains(value)),
+                (null, _) => SelectedVehicle,
+            };
         }
     }
 
@@ -44,19 +47,8 @@ public partial class RoutesViewModel : ObservableObject
         set => SetProperty(ref _vehicles, value);
     }
 
+    [ObservableProperty]
     private VehicleViewModel? _selectedVehicle;
-    public VehicleViewModel? SelectedVehicle
-    {
-        get => _selectedVehicle;
-        set
-        {
-            SetProperty(ref _selectedVehicle, value);
-            if (value is not null)
-            {
-                SelectedClient = null;
-            }
-        }
-    }
 
     public double Fitness { get; set; }
     public int NbClients { get; set; }

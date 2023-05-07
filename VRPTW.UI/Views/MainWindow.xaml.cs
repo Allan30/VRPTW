@@ -207,9 +207,11 @@ public partial class MainWindow : MetroWindow
                     .First(x => x.Coordinate.X == point.x && x.Coordinate.Y == point.y);
             }
         }
+        else
+        {
+            ViewModel.SelectedClient = null;
+        }
     }
-
-    private void OnPlotZoneMouseLeft(object sender, MouseEventArgs e) => ViewModel.SelectedClient = null;
 
     private void OnPlotZoneLeftClicked(object sender, RoutedEventArgs e)
     {
