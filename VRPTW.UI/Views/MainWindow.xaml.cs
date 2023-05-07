@@ -148,13 +148,13 @@ public partial class MainWindow : MetroWindow
 
     private void HighlightSelectedVehicle()
     {
+        const int weight = 2;
         if (ViewModel.SelectedVehicle is null)
         {
             if (_lastSelectedVehicle != -1)
             {
-                _allScatters[_lastSelectedVehicle].LineWidth -= 2;
+                _allScatters[_lastSelectedVehicle].LineWidth -= weight;
                 PlotZone.Refresh();
-
             }
             _lastSelectedVehicle = -1;
 
@@ -163,9 +163,9 @@ public partial class MainWindow : MetroWindow
         {
             if (_lastSelectedVehicle != -1)
             {
-                _allScatters[_lastSelectedVehicle].LineWidth -= 2;
+                _allScatters[_lastSelectedVehicle].LineWidth -= weight;
             }
-            _allScatters[ViewModel.SelectedVehicle.Id].LineWidth += 2;
+            _allScatters[ViewModel.SelectedVehicle.Id].LineWidth += weight;
             _lastSelectedVehicle = ViewModel.SelectedVehicle.Id;
             PlotZone.Refresh();
         }
@@ -200,7 +200,6 @@ public partial class MainWindow : MetroWindow
             if (_lastHighlightedIndex != point.index)
             {
                 _lastHighlightedIndex = point.index;
-
                 ViewModel.SelectedClient =
                     ViewModel                    
                     .ClientsWithDepot
