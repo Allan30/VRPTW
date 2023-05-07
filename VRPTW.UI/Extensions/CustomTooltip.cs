@@ -8,7 +8,7 @@ using System.Drawing.Drawing2D;
 
 namespace VRPTW.UI.Extensions;
 
-public class CustomTooltip : IPlottable, IHasColor, IHittable
+public sealed class CustomTooltip : IPlottable, IHasColor, IHittable
 {
 
     private readonly Tooltip _tooltip;
