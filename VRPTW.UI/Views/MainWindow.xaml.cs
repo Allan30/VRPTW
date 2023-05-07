@@ -50,21 +50,22 @@ public partial class MainWindow : MetroWindow
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(RoutesViewModel.IsSolutionLoaded))
+        switch (e.PropertyName)
         {
-            DrawClients();
-        }
-        else if (e.PropertyName == nameof(RoutesViewModel.IsSolutionCalculated))
-        {
-            DrawRoutes();
-        }
-        else if (e.PropertyName == nameof(RoutesViewModel.SelectedClient))
-        {
-            HighlightSelectedClient();
-        }
-        else if (e.PropertyName == nameof(RoutesViewModel.SelectedVehicle))
-        {
-            HighlightSelectedVehicle();
+            case nameof(RoutesViewModel.IsSolutionLoaded):
+                DrawClients();
+                break;
+            case nameof(RoutesViewModel.IsSolutionCalculated):
+                DrawRoutes();
+                break;
+            case nameof(RoutesViewModel.SelectedClient):
+                HighlightSelectedClient();
+                break;
+            case nameof(RoutesViewModel.SelectedVehicle):
+                HighlightSelectedVehicle();
+                break;
+            default:
+                break;
         }
     }
 
