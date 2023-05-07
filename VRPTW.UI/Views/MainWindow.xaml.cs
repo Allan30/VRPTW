@@ -109,7 +109,7 @@ public partial class MainWindow : MetroWindow
             PlotZone.Plot.AddScatter(xs.ToArray(), ys.ToArray(), markerSize: MARKER_SIZE);
 
         }
-        _allPlots = PlotZone.Plot.AddScatter(allXs.ToArray(), allYs.ToArray(), color: Color.Transparent);
+        _allPlots = new ScatterPlot(allXs.ToArray(), allYs.ToArray());
         PlotZone.Refresh();
     }
 
