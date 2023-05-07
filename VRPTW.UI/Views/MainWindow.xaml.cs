@@ -72,9 +72,11 @@ public partial class MainWindow : MetroWindow
     private void DrawClients()
     {
         PlotZone.Plot.Clear();
-        _allScatters.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
+        PlotZone.Plot.Title(string.Empty);
         ConfigurePlot();
+
+        _allScatters.Clear();
 
         var xs = new double[ViewModel.ClientsWithDepot.Count];
         var ys = new double[ViewModel.ClientsWithDepot.Count];
@@ -94,9 +96,11 @@ public partial class MainWindow : MetroWindow
     private void DrawRoutes()
     {
         PlotZone.Plot.Clear();
-        _allScatters.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
+        PlotZone.Plot.Title($"Fitness : {ViewModel.Fitness:0.00}");
         ConfigurePlot();
+
+        _allScatters.Clear();
 
         var allXs = new List<double>();
         var allYs = new List<double>();
