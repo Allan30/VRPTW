@@ -102,17 +102,6 @@ public class CustomTooltip : IPlottable, IHasColor, IHittable
             float contentBoxTopEdge = upperArrowVertex.Y - _tooltip.LabelPadding;
             float contentBoxBottomEdge = Math.Max(contentBoxTopEdge + labelSize.Height, lowerArrowVertex.Y) + 2 * _tooltip.LabelPadding;
 
-            float bottomOverflow = contentBoxBottomEdge - dims.DataHeight;
-            if (yOverflow > 0)
-            {
-                // adjust content box and arrow location
-                //contentBoxTopEdge -= yOverflow;
-                //contentBoxBottomEdge -= yOverflow;
-                //arrowHeadLocation.Y -= yOverflow;
-                //upperArrowVertex.Y -= yOverflow;
-                //lowerArrowVertex.Y -= yOverflow;
-            }
-
             PointF[] points =
             {
                 arrowHeadLocation,
