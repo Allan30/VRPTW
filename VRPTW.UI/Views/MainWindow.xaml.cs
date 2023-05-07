@@ -176,14 +176,14 @@ public partial class MainWindow : MetroWindow
     {
         if (ViewModel.RoutesViewModel.SelectedClient is null) return;
 
-        PlotZone.Plot.Clear(typeof(Tooltip));
+        PlotZone.Plot.Clear(typeof(CustomTooltip));
         var str = ViewModel.RoutesViewModel.SelectedClient.ToString();
         var pos = $"Position : {ViewModel.RoutesViewModel.SelectedClient.Coordinate}";
         var demand = $"Demande : {ViewModel.RoutesViewModel.SelectedClient.Demand}";
         var readyTime = $"Heure min : {ViewModel.RoutesViewModel.SelectedClient.ReadyTime}";
         var dueTime = $"Heure max : {ViewModel.RoutesViewModel.SelectedClient.DueTime}";
         var service = $"Temps de chargement : {ViewModel.RoutesViewModel.SelectedClient.Service}";
-        PlotZone.Plot.AddTooltip($"{str}\n{pos}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
+        PlotZone.Plot.AddCustomTooltip($"{str}\n{pos}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
         PlotZone.Refresh();
     }
 
@@ -205,7 +205,7 @@ public partial class MainWindow : MetroWindow
         _highlightedPoint.IsVisible = false;
         _lastHighlightedIndex = -1;
         ViewModel.RoutesViewModel.SelectedClient = null;
-        PlotZone.Plot.Clear(typeof(Tooltip));
+        PlotZone.Plot.Clear(typeof(CustomTooltip));
         PlotZone.Refresh();
     }
 }

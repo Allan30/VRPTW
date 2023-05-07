@@ -1,4 +1,5 @@
-﻿using ScottPlot.Plottable;
+﻿using ScottPlot;
+using ScottPlot.Plottable;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,7 +34,14 @@ public static class ScatterPlotExtension
         }
 
         point = (plot.Xs[minIndex], plot.Ys[minIndex], minIndex);
-
+        
         return minDistance <= snapDistance;
+    }
+
+    public static CustomTooltip AddCustomTooltip(this Plot plot, string label, double x, double y)
+    {
+        var plottable = new CustomTooltip(new Tooltip { Label = label, X = x, Y = y });
+        plot.Add(plottable);
+        return plottable;
     }
 }
