@@ -150,26 +150,31 @@ public partial class MainWindow : MetroWindow
     private void HighlightSelectedVehicle()
     {
         const int weight = 2;
+        if (_lastSelectedVehicle != -1)
+        {
+            _allScatters[_lastSelectedVehicle].IsVisible = true;
+            PlotZone.Plot.Clear(typeof(ArrowCoordinated));
+        }
         if (ViewModel.SelectedVehicle is null)
         {
-            if (_lastSelectedVehicle != -1)
-            {
-                _allScatters[_lastSelectedVehicle].LineWidth -= weight;
-                PlotZone.Refresh();
-            }
             _lastSelectedVehicle = -1;
-
         }
         else
         {
-            if (_lastSelectedVehicle != -1)
+            _allScatters[ViewModel.SelectedVehicle.Id].IsVisible = false;
+            for (var i = 0; i < ViewModel.SelectedVehicle.Clients.Count - 1; i++)
             {
-                _allScatters[_lastSelectedVehicle].LineWidth -= weight;
+                var x1 = ViewModel.SelectedVehicle.Clients[i].Coordinate.X;
+                var y1 = ViewModel.SelectedVehicle.Clients[i].Coordinate.Y;
+                var x2 = ViewModel.SelectedVehicle.Clients[i + 1].Coordinate.X;
+                var y2 = ViewModel.SelectedVehicle.Clients[i + 1].Coordinate.Y;
+                var arrow = PlotZone.Plot.AddArrow(x1, y1, x2, y2, color: _allScatters[ViewModel.SelectedVehicle.Id].Color, lineWidth: weight);
+                arrow.ArrowheadLength = 7;
+                arrow.ArrowheadWidth = 7;
             }
-            _allScatters[ViewModel.SelectedVehicle.Id].LineWidth += weight;
             _lastSelectedVehicle = ViewModel.SelectedVehicle.Id;
-            PlotZone.Refresh();
         }
+        PlotZone.Refresh();
     }
 
     private void ConfigurePlot()
