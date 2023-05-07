@@ -18,7 +18,9 @@ namespace VRPTW.UI.Views;
 public partial class MainWindow : MetroWindow
 {
     private const int MARKER_SIZE = 10;
-    private ScatterPlot? _allPlots;
+    private ScatterPlot? _combinedScatters;
+    private readonly Dictionary<int, ScatterPlot> _allScatters = new();
+    private int _lastSelectedVehicle = -1;
     private int _lastHighlightedIndex = -1;
     private static readonly MarkerPlot _highlightedPoint = new()
     {
@@ -60,11 +62,16 @@ public partial class MainWindow : MetroWindow
         {
             HighlightSelectedClient();
         }
+        else if (e.PropertyName == nameof(RoutesViewModel.SelectedVehicle))
+        {
+            HighlightSelectedVehicle();
+        }
     }
 
     private void DrawClients()
     {
         PlotZone.Plot.Clear();
+        _allScatters.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
         ConfigurePlot();
 
@@ -79,13 +86,14 @@ public partial class MainWindow : MetroWindow
             ys[i] = ViewModel.ClientsWithDepot[i].Coordinate.Y;
         }
 
-        _allPlots = PlotZone.Plot.AddScatterPoints(xs, ys, markerSize: MARKER_SIZE, color: Color.Transparent);
+        _combinedScatters = PlotZone.Plot.AddScatterPoints(xs, ys, markerSize: MARKER_SIZE, color: Color.Transparent);
         PlotZone.Refresh();
     }
 
     private void DrawRoutes()
     {
         PlotZone.Plot.Clear();
+        _allScatters.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
         ConfigurePlot();
 
@@ -106,10 +114,10 @@ public partial class MainWindow : MetroWindow
             allXs.AddRange(xs);
             allYs.AddRange(ys);
 
-            PlotZone.Plot.AddScatter(xs.ToArray(), ys.ToArray(), markerSize: MARKER_SIZE);
-
+            var scatter = PlotZone.Plot.AddScatter(xs.ToArray(), ys.ToArray(), markerSize: MARKER_SIZE);
+            _allScatters.Add(vehicle.Id, scatter);
         }
-        _allPlots = new ScatterPlot(allXs.ToArray(), allYs.ToArray());
+        _combinedScatters = new ScatterPlot(allXs.ToArray(), allYs.ToArray());
         PlotZone.Refresh();
     }
 
@@ -138,6 +146,31 @@ public partial class MainWindow : MetroWindow
         PlotZone.Refresh();
     }
 
+    private void HighlightSelectedVehicle()
+    {
+        if (ViewModel.SelectedVehicle is null)
+        {
+            if (_lastSelectedVehicle != -1)
+            {
+                _allScatters[_lastSelectedVehicle].LineWidth -= 2;
+                PlotZone.Refresh();
+
+            }
+            _lastSelectedVehicle = -1;
+
+        }
+        else
+        {
+            if (_lastSelectedVehicle != -1)
+            {
+                _allScatters[_lastSelectedVehicle].LineWidth -= 2;
+            }
+            _allScatters[ViewModel.SelectedVehicle.Id].LineWidth += 2;
+            _lastSelectedVehicle = ViewModel.SelectedVehicle.Id;
+            PlotZone.Refresh();
+        }
+    }
+
     private void ConfigurePlot()
     {
         PlotZone.Plot.AddHorizontalLine(ViewModel.ClientsWithDepot[0].Coordinate.Y, color: Color.DimGray, style: LineStyle.DashDotDot);
@@ -157,12 +190,12 @@ public partial class MainWindow : MetroWindow
 
     private void OnPlotZoneMouseMoved(object sender, MouseEventArgs e)
     {
-        if (_allPlots is null) return;
+        if (_combinedScatters is null) return;
 
         (double mouseCoordX, double mouseCoordY) = PlotZone.GetMouseCoordinates();
         double xyRatio = PlotZone.Plot.XAxis.Dims.PxPerUnit / PlotZone.Plot.YAxis.Dims.PxPerUnit;
 
-        if (_allPlots.TryGetPointNearest(mouseCoordX, mouseCoordY, out var point, 5, xyRatio))
+        if (_combinedScatters.TryGetPointNearest(mouseCoordX, mouseCoordY, out var point, 5, xyRatio))
         {
             if (_lastHighlightedIndex != point.index)
             {
@@ -180,12 +213,12 @@ public partial class MainWindow : MetroWindow
 
     private void OnPlotZoneLeftClicked(object sender, RoutedEventArgs e)
     {
-        if (_allPlots is null || ViewModel.SelectedClient is null) return;
+        if (_combinedScatters is null || ViewModel.SelectedClient is null) return;
 
         (double mouseCoordX, double mouseCoordY) = PlotZone.GetMouseCoordinates();
         double xyRatio = PlotZone.Plot.XAxis.Dims.PxPerUnit / PlotZone.Plot.YAxis.Dims.PxPerUnit;
 
-        if (!_allPlots.TryGetPointNearest(mouseCoordX, mouseCoordY, out var _, 5, xyRatio))
+        if (!_combinedScatters.TryGetPointNearest(mouseCoordX, mouseCoordY, out var _, 5, xyRatio))
         {
             ViewModel.SelectedClient = null;
         }
