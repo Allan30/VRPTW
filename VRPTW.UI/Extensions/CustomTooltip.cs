@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System;
 using ScottPlot.Plottable;
+using System.Drawing.Drawing2D;
 
 namespace VRPTW.UI.Extensions;
 
@@ -88,6 +89,8 @@ public class CustomTooltip : IPlottable, IHasColor, IHittable
             SizeF labelSize = gfx.MeasureString(_tooltip.Label, font);
 
             bool labelIsOnRight = dims.DataWidth - dims.GetPixelX(_tooltip.X) - labelSize.Width > 0;
+            var yOverflow = dims.DataHeight - dims.GetPixelY(_tooltip.Y) - labelSize.Height;
+            yOverflow = yOverflow < 0 ? Math.Abs(yOverflow + 2 * _tooltip.LabelPadding) : 0;
             int sign = labelIsOnRight ? 1 : -1;
 
             PointF arrowHeadLocation = new PointF(dims.GetPixelX(_tooltip.X), dims.GetPixelY(_tooltip.Y));
@@ -99,30 +102,41 @@ public class CustomTooltip : IPlottable, IHasColor, IHittable
             float contentBoxTopEdge = upperArrowVertex.Y - _tooltip.LabelPadding;
             float contentBoxBottomEdge = Math.Max(contentBoxTopEdge + labelSize.Height, lowerArrowVertex.Y) + 2 * _tooltip.LabelPadding;
 
+            float bottomOverflow = contentBoxBottomEdge - dims.DataHeight;
+            if (yOverflow > 0)
+            {
+                // adjust content box and arrow location
+                //contentBoxTopEdge -= yOverflow;
+                //contentBoxBottomEdge -= yOverflow;
+                //arrowHeadLocation.Y -= yOverflow;
+                //upperArrowVertex.Y -= yOverflow;
+                //lowerArrowVertex.Y -= yOverflow;
+            }
+
             PointF[] points =
             {
-                    arrowHeadLocation,
-                    upperArrowVertex,
-                    new PointF(contentBoxInsideEdgeX, upperArrowVertex.Y - _tooltip.LabelPadding),
-                    new PointF(contentBoxInsideEdgeX + sign * (labelSize.Width + _tooltip.LabelPadding), upperArrowVertex.Y - _tooltip.LabelPadding),
-                    new PointF(contentBoxInsideEdgeX + sign * (labelSize.Width + _tooltip.LabelPadding), contentBoxBottomEdge),
-                    new PointF(contentBoxInsideEdgeX, contentBoxBottomEdge),
-                    lowerArrowVertex,
-                    arrowHeadLocation,
-                    // add one more point to prevent render artifacts where thick line ends meet
-                    upperArrowVertex,
-                };
+                arrowHeadLocation,
+                upperArrowVertex,
+                new PointF(contentBoxInsideEdgeX, upperArrowVertex.Y - _tooltip.LabelPadding - yOverflow),
+                new PointF(contentBoxInsideEdgeX + sign * (labelSize.Width + _tooltip.LabelPadding), upperArrowVertex.Y - _tooltip.LabelPadding - yOverflow),
+                new PointF(contentBoxInsideEdgeX + sign * (labelSize.Width + _tooltip.LabelPadding), contentBoxBottomEdge - yOverflow),
+                new PointF(contentBoxInsideEdgeX, contentBoxBottomEdge - yOverflow),
+                lowerArrowVertex,
+                arrowHeadLocation,
+                // add one more point to prevent render artifacts where thick line ends meet
+                upperArrowVertex,
+            };
 
-            byte[] pathPointTypes = Enumerable.Range(0, points.Length).Select(_ => (byte)System.Drawing.Drawing2D.PathPointType.Line).ToArray();
+            byte[] pathPointTypes = Enumerable.Range(0, points.Length).Select(_ => (byte)PathPointType.Line).ToArray();
 
-            var path = new System.Drawing.Drawing2D.GraphicsPath(points, pathPointTypes);
+            var path = new GraphicsPath(points, pathPointTypes);
 
             gfx.FillPath(fillBrush, path);
             gfx.DrawPath(pen, path);
 
             float labelOffsetX = labelIsOnRight ? 0 : -labelSize.Width;
             float labelX = contentBoxInsideEdgeX + labelOffsetX + sign * _tooltip.LabelPadding / 2;
-            float labelY = upperArrowVertex.Y;
+            float labelY = upperArrowVertex.Y - yOverflow;
             gfx.DrawString(_tooltip.Label, font, fontBrush, labelX, labelY);
 
             // calculate where the tooltip is in coordinate units and save it for later hit detection
