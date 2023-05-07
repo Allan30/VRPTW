@@ -110,7 +110,7 @@ public class Routes : ISolution, ICloneable
     
     public int NbClients => Vehicles.Sum(vehicle => vehicle.NbClients);
 
-    public int TotalDemand => Vehicles.Sum(vehicle => vehicle.GetTotalDemand);
+    public int TotalDemand => Vehicles.Sum(vehicle => vehicle.TotalDemand);
 
     public int Capacity => Vehicles.Sum(vehicle => vehicle.CurrentCapacity);
 }

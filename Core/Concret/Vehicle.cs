@@ -67,7 +67,7 @@ public class Vehicle : ICloneable
     
     public int NbClients => Clients.Count - 2;
     
-    public int GetTotalDemand => Clients.Sum(client => client.Demand);
+    public int TotalDemand => Clients.Sum(client => client.Demand);
     
     public override string ToString()
     {

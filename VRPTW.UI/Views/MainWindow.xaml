@@ -54,6 +54,10 @@
             <ComboBox ItemsSource="{Binding Vehicles}"
                       SelectedItem="{Binding SelectedVehicle}"
                       IsEnabled="{Binding IsSolutionCalculated}" />
+            <Label Content="{Binding SelectedVehicle.NbClients}" ContentStringFormat="Nombre de clients : {0}" Margin="0" />
+            <Label Content="{Binding SelectedVehicle.TravelledDistance}" ContentStringFormat="Distance parcourue : {0:0.00}" Margin="0" />
+            <Label Content="{Binding SelectedVehicle.MaxCapacity}" ContentStringFormat="Capacité maximale : {0}" Margin="0" />
+            <Label Content="{Binding SelectedVehicle.TotalDemand}" ContentStringFormat="Demande totale : {0}" Margin="0" />
         </StackPanel>
     </Grid>
 </mah:MetroWindow>

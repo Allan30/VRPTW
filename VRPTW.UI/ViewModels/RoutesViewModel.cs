@@ -81,7 +81,7 @@ public partial class RoutesViewModel : ObservableObject
             Filter = "Fichiers vrp (*.vrp)|*.vrp|Tous les fichiers (*.*)|*.*",
             InitialDirectory = Path.Combine(appPath, "Core", "Data")
         };
-        if (dialog.ShowDialog() == true)
+        if (dialog.ShowDialog() is true)
         {
             var parser = new VrpParser();
             _solution = parser.ExtractVrpFile(dialog.FileName);
