@@ -23,8 +23,19 @@ public partial class RoutesViewModel : ObservableObject
         set => SetProperty(ref _clientsWithDepot, value);
     }
 
-    [ObservableProperty]
     private ClientViewModel? _selectedClient;
+    public ClientViewModel? SelectedClient
+    {
+        get => _selectedClient;
+        set
+        {
+            SetProperty(ref _selectedClient, value);
+            if (value is not null)
+            {
+                SelectedVehicle = null;
+            }
+        }
+    }
 
     private ObservableCollection<VehicleViewModel> _vehicles = new();
     public ObservableCollection<VehicleViewModel> Vehicles
@@ -33,8 +44,19 @@ public partial class RoutesViewModel : ObservableObject
         set => SetProperty(ref _vehicles, value);
     }
 
-    [ObservableProperty]
     private VehicleViewModel? _selectedVehicle;
+    public VehicleViewModel? SelectedVehicle
+    {
+        get => _selectedVehicle;
+        set
+        {
+            SetProperty(ref _selectedVehicle, value);
+            if (value is not null)
+            {
+                SelectedClient = null;
+            }
+        }
+    }
 
     public double Fitness { get; set; }
     public int NbClients { get; set; }

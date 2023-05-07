@@ -50,13 +50,10 @@
             <Label Content="Clients" />
             <ComboBox ItemsSource="{Binding ClientsWithDepot}"
                       SelectedItem="{Binding SelectedClient}"
-                      SelectionChanged="OnSelectedClientChanged"
-                      IsEnabled="{Binding IsSolutionLoaded}"
-                      PreviewMouseLeftButtonUp="OnClientsComboBoxPreviewMouseLeftButtonUp" />
+                      IsEnabled="{Binding IsSolutionLoaded}" />
             <Label Content="Routes" />
             <ComboBox ItemsSource="{Binding Vehicles}"
                       SelectedItem="{Binding SelectedVehicle}"
-                      SelectionChanged="OnSelectedVehicleChanged"
                       IsEnabled="{Binding IsSolutionCalculated}" />
         </StackPanel>
     </Grid>

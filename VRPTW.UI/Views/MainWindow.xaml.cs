@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using VRPTW.UI.Extensions;
 using VRPTW.UI.ViewModels;
@@ -57,6 +56,30 @@ public partial class MainWindow : MetroWindow
         {
             DrawRoutes();
         }
+        else if (e.PropertyName == nameof(RoutesViewModel.SelectedClient))
+        {
+            if (ViewModel.SelectedClient is null)
+            {
+                _highlightedPoint.IsVisible = false;
+                _lastHighlightedIndex = -1;
+                PlotZone.Plot.Clear(typeof(CustomTooltip));
+            }
+            else
+            {
+                _highlightedPoint.X = ViewModel.SelectedClient.Coordinate.X;
+                _highlightedPoint.Y = ViewModel.SelectedClient.Coordinate.Y;
+                _highlightedPoint.IsVisible = true;
+                PlotZone.Plot.Clear(typeof(CustomTooltip));
+                var str = ViewModel.SelectedClient.ToString();
+                var pos = $"Position : {ViewModel.SelectedClient.Coordinate}";
+                var demand = $"Demande : {ViewModel.SelectedClient.Demand}";
+                var readyTime = $"Heure min : {ViewModel.SelectedClient.ReadyTime}";
+                var dueTime = $"Heure max : {ViewModel.SelectedClient.DueTime}";
+                var service = $"Temps de chargement : {ViewModel.SelectedClient.Service}";
+                PlotZone.Plot.AddCustomTooltip($"{str}\n{pos}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
+            }
+            PlotZone.Refresh();
+        }
     }
 
     private void DrawClients()
@@ -85,7 +108,6 @@ public partial class MainWindow : MetroWindow
         PlotZone.Plot.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
         ConfigurePlot();
-
 
         var allXs = new List<double>();
         var allYs = new List<double>();
@@ -140,84 +162,27 @@ public partial class MainWindow : MetroWindow
             if (_lastHighlightedIndex != point.index)
             {
                 _lastHighlightedIndex = point.index;
-                _highlightedPoint.X = point.x;
-                _highlightedPoint.Y = point.y;
-                _highlightedPoint.IsVisible = true;
 
                 ViewModel.SelectedClient =
                     ViewModel                    
                     .ClientsWithDepot
-                    .First(x => x.Coordinate.X == _highlightedPoint.X && x.Coordinate.Y == _highlightedPoint.Y);
-
-                HighlightSelectedClient();
+                    .First(x => x.Coordinate.X == point.x && x.Coordinate.Y == point.y);
             }
         }
     }
 
-    private void OnPlotZoneMouseLeft(object sender, MouseEventArgs e)
-    {
-        if (_lastHighlightedIndex == -1) return;
-        ClearSelectedClient();
-    }
-
-    private void OnSelectedClientChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (ViewModel.SelectedClient is null) return;
-
-        _highlightedPoint.X = ViewModel.SelectedClient.Coordinate.X;
-        _highlightedPoint.Y = ViewModel.SelectedClient.Coordinate.Y;
-        _highlightedPoint.IsVisible = true;
-
-        HighlightSelectedClient();
-    }
-
-    private void OnSelectedVehicleChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (ViewModel.SelectedVehicle is null) return;
-    }
-
-    private void HighlightSelectedClient()
-    {
-        if (ViewModel.SelectedClient is null) return;
-
-        PlotZone.Plot.Clear(typeof(CustomTooltip));
-        var str = ViewModel.SelectedClient.ToString();
-        var pos = $"Position : {ViewModel.SelectedClient.Coordinate}";
-        var demand = $"Demande : {ViewModel.SelectedClient.Demand}";
-        var readyTime = $"Heure min : {ViewModel.SelectedClient.ReadyTime}";
-        var dueTime = $"Heure max : {ViewModel.SelectedClient.DueTime}";
-        var service = $"Temps de chargement : {ViewModel.SelectedClient.Service}";
-        PlotZone.Plot.AddCustomTooltip($"{str}\n{pos}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
-        PlotZone.Refresh();
-    }
+    private void OnPlotZoneMouseLeft(object sender, MouseEventArgs e) => ViewModel.SelectedClient = null;
 
     private void OnPlotZoneLeftClicked(object sender, RoutedEventArgs e)
     {
-        if (_allPlots is null) return;
+        if (_allPlots is null || ViewModel.SelectedClient is null) return;
 
         (double mouseCoordX, double mouseCoordY) = PlotZone.GetMouseCoordinates();
         double xyRatio = PlotZone.Plot.XAxis.Dims.PxPerUnit / PlotZone.Plot.YAxis.Dims.PxPerUnit;
 
         if (!_allPlots.TryGetPointNearest(mouseCoordX, mouseCoordY, out var _, 5, xyRatio))
         {
-            ClearSelectedClient();
-        }
-    }
-
-    private void ClearSelectedClient()
-    {
-        _highlightedPoint.IsVisible = false;
-        _lastHighlightedIndex = -1;
-        ViewModel.SelectedClient = null;
-        PlotZone.Plot.Clear(typeof(CustomTooltip));
-        PlotZone.Refresh();
-    }
-
-    private void OnClientsComboBoxPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    {
-        if (e.OriginalSource is Button)
-        {
-            ClearSelectedClient();
+            ViewModel.SelectedClient = null;
         }
     }
 }
