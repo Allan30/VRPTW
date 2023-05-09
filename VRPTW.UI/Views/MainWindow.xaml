@@ -43,6 +43,9 @@
                     Margin="5">
             <Button Content="Choisir un fichier"
                     Command="{Binding ChooseFileCommand}" />
+            <Label Content="Heuristique"
+                   IsEnabled="{Binding IsSolutionLoaded}" />
+            <ComboBox />
             <Button Content="Démarrer"
                     Command="{Binding StartVRPTWCommand}"
                     Margin="0,10,0,0" />
