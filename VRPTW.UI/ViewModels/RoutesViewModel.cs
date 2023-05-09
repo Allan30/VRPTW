@@ -30,9 +30,11 @@ public partial class RoutesViewModel : ObservableObject
         get => _selectedClient;
         set
         {
+            if (!(value is null || value.IsDepot))
+            {
+                SelectedVehicle = Vehicles.SingleOrDefault(v => v.Clients.Contains(value));
+            }
             SetProperty(ref _selectedClient, value);
-            if (value is null || value.IsDepot) return;
-            SelectedVehicle = Vehicles.SingleOrDefault(v => v.Clients.Contains(value));
         }
     }
 
