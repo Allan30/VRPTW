@@ -6,7 +6,7 @@ using System;
 using ScottPlot.Plottable;
 using System.Drawing.Drawing2D;
 
-namespace VRPTW.UI.Extensions;
+namespace VRPTW.UI.ScottPlotExtended;
 
 public sealed class CustomTooltip : IPlottable, IHasColor, IHittable
 {

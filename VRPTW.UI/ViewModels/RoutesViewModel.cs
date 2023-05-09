@@ -92,8 +92,7 @@ public partial class RoutesViewModel : ObservableObject
         };
         if (dialog.ShowDialog() is true)
         {
-            var parser = new VrpParser();
-            _solution = parser.ExtractVrpFile(dialog.FileName);
+            _solution = VrpParser.ExtractVrpFile(dialog.FileName);
             _routesMapper.RoutesToRoutesViewModel(_solution, this);
             IsSolutionLoaded = true;
         }
