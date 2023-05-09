@@ -40,6 +40,7 @@ public partial class MainWindowViewModel : ObservableObject
     private void StartVRPTW()
     {
         Solution!.GenerateRandomSolution();
+        Console.WriteLine(Solution.GetFitness());
         IsSolutionCalculated = true;
     }
 

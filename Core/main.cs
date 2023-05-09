@@ -17,7 +17,13 @@ public class Test
         Console.WriteLine(solution.GetFitness());
         var metaH = new TabouResearch(solution);
         metaH.performSolution(1000);
+        Console.WriteLine(metaH.solution.GetFitness());
         Console.WriteLine(metaH.bestSolution.GetFitness());
+        foreach (var route in metaH.bestSolution.Vehicles)
+        {
+            Console.WriteLine($"{route.Id} : {route.RouteTime}");
+        }
+
         writer.WritePythonFile("C:\\Users\\epulapp\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.2.json", metaH.bestSolution);
         writer.WritePythonFile("C:\\Users\\epulapp\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.3.json", metaH.solution);
     }

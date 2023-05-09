@@ -43,17 +43,24 @@ public class Routes : ISolution, ICloneable
         var values = Enumerable.Range(0, Clients.Count).ToList();
         var rand = new Random();
         var shuffled = values.OrderBy(_ => rand.Next()).ToList();
-        var currentVehicle = new Vehicle(Vehicles.Count, MaxCapacity, Depot);
         foreach (var client in shuffled.Select(index => Clients[index]))
         {
-            if (!currentVehicle.AddClient(client))
+            var added = false;
+            foreach (var vehicle in Vehicles)
             {
-                Vehicles.Add(currentVehicle);
-                currentVehicle = new Vehicle(Vehicles.Count, MaxCapacity, Depot);
-                currentVehicle.AddClient(client);
-            };
+                if (vehicle.AddClientWithWindow(client))
+                {
+                    added = true;
+                    break;
+                    
+                };
+            }
+            if (!added)
+            {
+                Vehicles.Add(new Vehicle(Vehicles.Count, MaxCapacity, Depot));
+                Vehicles[Vehicles.Count-1].AddClientWithWindow(client);
+            }
         }
-        Vehicles.Add(currentVehicle);
     }
 
     public override string ToString()
