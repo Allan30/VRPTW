@@ -21,10 +21,13 @@
         <Style TargetType="ComboBox"
                x:Key="{x:Type ComboBox}"
                BasedOn="{StaticResource MahApps.Styles.ComboBox}">
-            <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="True"/>
+            <Setter Property="mah:TextBoxHelper.ClearTextButton"
+                    Value="True"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
-                    <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="False"/>
+                <DataTrigger Binding="{Binding SelectedItem, RelativeSource={RelativeSource Self}}"
+                             Value="{x:Null}">
+                    <Setter Property="mah:TextBoxHelper.ClearTextButton"
+                            Value="False"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -57,10 +60,18 @@
             <ComboBox ItemsSource="{Binding Vehicles}"
                       SelectedItem="{Binding SelectedVehicle}"
                       IsEnabled="{Binding IsSolutionCalculated}" />
-            <Label Content="{Binding SelectedVehicle.NbClients}" ContentStringFormat="Nombre de clients : {0}" Margin="0" />
-            <Label Content="{Binding SelectedVehicle.TravelledDistance}" ContentStringFormat="Distance parcourue : {0:0.00}" Margin="0" />
-            <Label Content="{Binding SelectedVehicle.MaxCapacity}" ContentStringFormat="Capacité maximale : {0}" Margin="0" />
-            <Label Content="{Binding SelectedVehicle.TotalDemand}" ContentStringFormat="Demande totale : {0}" Margin="0" />
+            <Label Content="{Binding SelectedVehicle.NbClients}"
+                   ContentStringFormat="Nombre de clients : {0}"
+                   Padding="5,5,5,0" />
+            <Label Content="{Binding SelectedVehicle.TravelledDistance}"
+                   ContentStringFormat="Distance parcourue : {0:0.00}"
+                   Padding="5,0" />
+            <Label Content="{Binding SelectedVehicle.MaxCapacity}"
+                   ContentStringFormat="Capacité maximale : {0}"
+                   Padding="5,0" />
+            <Label Content="{Binding SelectedVehicle.TotalDemand}"
+                   ContentStringFormat="Demande totale : {0}"
+                   Padding="5,0" />
         </StackPanel>
     </Grid>
 </mah:MetroWindow>
