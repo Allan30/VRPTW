@@ -11,6 +11,7 @@ public class DescentStrategy : IStrategy
         var relocateInter = new RelocateOperatorInter();
         var relocateIntra = new RelocateOperatorIntra();
         var exchangeIntra = new ExchangeOperatorIntra();
+        var twoOptIntra = new TwoOptOperatorIntra();
         var prevFitness = double.MaxValue;
         var prevSolution = (Routes) solution.Clone();
         var r = new Random();
@@ -35,8 +36,8 @@ public class DescentStrategy : IStrategy
                     solution = GetNewSolution(exchangeIntra.Execute(solution), solution);
                     break;
             }*/
-            solution = GetNewSolution(relocateInter.Execute(solution).Concat(exchangeInter.Execute(solution).Concat(exchangeIntra.Execute(solution).Concat(relocateIntra.Execute(solution)))).ToList(), solution);
-            //solution = GetNewSolution(relocateIntra.Execute(solution), solution);
+            solution = GetNewSolution(relocateInter.Execute(solution).Concat(exchangeInter.Execute(solution).Concat(exchangeIntra.Execute(solution).Concat(relocateIntra.Execute(solution).Concat(twoOptIntra.Execute(solution))))).ToList(), solution);
+            //solution = GetNewSolution(twoOptIntra.Execute(solution), solution);
             solution.DelEmptyVehicles();
             
         }
@@ -50,6 +51,11 @@ public class DescentStrategy : IStrategy
         {
             return newRoutes;
         }
+        Console.WriteLine(bestOperation.delta);
+        
+        Console.WriteLine(solution.Vehicles[bestOperation.trg.Id].ToStringClient());
+        Console.WriteLine(bestOperation.src.ToStringClient());
+        
         newRoutes.ChangeVehicle(bestOperation.src);
         newRoutes.ChangeVehicle(bestOperation.trg);
         bestOperation.trg.IsCorrect();
