@@ -10,6 +10,7 @@ public class DescentStrategy : IStrategy
         var exchangeInter = new ExchangeOperatorInter();
         var relocateInter = new RelocateOperatorInter();
         var relocateIntra = new RelocateOperatorIntra();
+        var exchangeIntra = new ExchangeOperatorIntra();
         var prevFitness = double.MaxValue;
         var prevSolution = (Routes) solution.Clone();
         var r = new Random();
@@ -18,40 +19,37 @@ public class DescentStrategy : IStrategy
             prevFitness = solution.Fitness;
             prevSolution = (Routes) solution.Clone();
             Console.WriteLine(prevFitness);
-            switch (r.Next(0, 1))
+            /*
+            switch (r.Next(0, 4))
             {
                 case 0:
                     solution = GetNewSolution(relocateInter.Execute(solution), solution);
-                    if(prevFitness <= solution.Fitness){
-                        solution = (Routes) prevSolution.Clone();
-                        exchangeInter.Execute(solution);
-                    }
                     break;
                 case 1:
-                    exchangeInter.Execute(solution);
-                    if(prevFitness <= solution.Fitness){
-                        solution = (Routes) prevSolution.Clone();
-                        relocateInter.Execute(solution);
-                    }
+                    solution = GetNewSolution(exchangeInter.Execute(solution), solution);
                     break;
                 case 2:
-                    relocateIntra.Execute(solution);
-                    if(prevFitness <= solution.Fitness){
-                        solution = (Routes) prevSolution.Clone();
-                        exchangeInter.Execute(solution);
-                    }
-
+                    solution = GetNewSolution(relocateIntra.Execute(solution), solution);
                     break;
-            }
+                case 3:
+                    solution = GetNewSolution(exchangeIntra.Execute(solution), solution);
+                    break;
+            }*/
+            solution = GetNewSolution(relocateInter.Execute(solution).Concat(exchangeInter.Execute(solution).Concat(exchangeIntra.Execute(solution).Concat(relocateIntra.Execute(solution)))).ToList(), solution);
+            //solution = GetNewSolution(relocateIntra.Execute(solution), solution);
             solution.DelEmptyVehicles();
+            
         }
-        solution = prevSolution;
     }
 
     public Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta)> vehicles, Routes solution)
     {
         var newRoutes = (Routes) solution.Clone();
         var bestOperation = vehicles.MaxBy(v => v.delta);
+        if (bestOperation.delta <= 0)
+        {
+            return newRoutes;
+        }
         newRoutes.ChangeVehicle(bestOperation.src);
         newRoutes.ChangeVehicle(bestOperation.trg);
         bestOperation.trg.IsCorrect();

@@ -10,11 +10,13 @@ public abstract class OperatorIntra : Operator
             while (IndexSrcCondition(indexSrc, vehicle))
             {
                 var indexTrg = GetIndexTrg();
-                if (indexSrc == indexTrg) continue;
-                while (IndexTrgCondition(indexSrc, vehicle))
+                if (indexSrc != indexTrg)
                 {
-                    PerformOperation(indexSrc, indexTrg, vehicle);
-                    indexTrg++;
+                    while (IndexTrgCondition(indexTrg, vehicle))
+                    {
+                        PerformOperation(indexSrc, indexTrg, vehicle);
+                        indexTrg++;
+                    }
                 }
                 indexSrc++;
             }

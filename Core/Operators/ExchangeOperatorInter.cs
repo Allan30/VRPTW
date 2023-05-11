@@ -26,10 +26,10 @@ public class ExchangeOperatorInter : OperatorInter
     {
         var newVehicleSrc = (Vehicle) vehicleSrc.Clone();
         var newVehicleTrg = (Vehicle) vehicleTrg.Clone();
+        newVehicleTrg.AddClientAfter(indexTrg, newVehicleSrc.Clients[indexSrc]);
+        newVehicleSrc.AddClientAfter(indexSrc, newVehicleTrg.Clients[indexTrg]);
         newVehicleSrc.RemoveClient(indexSrc);
         newVehicleTrg.RemoveClient(indexTrg);
-        newVehicleTrg.AddClientBefore(indexTrg, newVehicleSrc.Clients[indexSrc]);
-        newVehicleSrc.AddClientBefore(indexSrc, newVehicleTrg.Clients[indexTrg]);
         if (newVehicleSrc.IsCorrect() && newVehicleTrg.IsCorrect())
         {
             var delta = vehicleSrc.TravelledDistance - newVehicleSrc.TravelledDistance +

@@ -1,6 +1,6 @@
 namespace VRPTW.Concret;
 
-public class RelocateOperatorIntra : OperatorIntra
+public class ExchangeOperatorIntra : OperatorIntra
 {
     protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle)
     {
@@ -9,7 +9,7 @@ public class RelocateOperatorIntra : OperatorIntra
 
     protected override bool IndexTrgCondition(int indexTrg, Vehicle vehicle)
     {
-        return indexTrg != vehicle.Clients.Count - 2;
+        return indexTrg != vehicle.Clients.Count - 1;
     }
 
     protected override int GetIndexSrc()
@@ -19,15 +19,16 @@ public class RelocateOperatorIntra : OperatorIntra
 
     protected override int GetIndexTrg()
     {
-        return 0;
+        return 1;
     }
 
     protected override void PerformOperation(int indexSrc, int indexTrg, Vehicle vehicle)
     {
         var newVehicle = (Vehicle) vehicle.Clone();
-        var client = newVehicle.Clients[indexSrc];
-        newVehicle.RemoveClient(indexSrc);
-        newVehicle.AddClientAfter(indexTrg, client);
+        var client1 = newVehicle.Clients[indexSrc];
+        var client2 = newVehicle.Clients[indexTrg];
+        newVehicle.Clients[indexTrg] = client1;
+        newVehicle.Clients[indexSrc] = client2;
         if (newVehicle.IsCorrect())
         {
             var delta = vehicle.TravelledDistance - newVehicle.TravelledDistance;
