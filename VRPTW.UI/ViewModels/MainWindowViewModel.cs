@@ -39,7 +39,10 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(IsSolutionLoaded))]
     private void StartVRPTW()
     {
+        var strategy = new DescentStrategy();
         Solution!.GenerateRandomSolution();
+        var solution = Solution;
+        strategy.Execute(ref solution);
         Console.WriteLine(Solution.GetFitness());
         IsSolutionCalculated = true;
     }

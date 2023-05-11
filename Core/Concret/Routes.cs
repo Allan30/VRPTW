@@ -111,7 +111,7 @@ public class Routes : ISolution, ICloneable
     public object Clone()
     {
         var routes = new Routes();
-        routes.Clients = Clients;
+        routes.Clients = Clients.Select(client => (Client) client.Clone()).ToList();
         routes.Depot = Depot;
         routes.MaxCapacity = MaxCapacity;
         routes.Vehicles = Vehicles.Select(vehicle => (Vehicle) vehicle.Clone()).ToList();

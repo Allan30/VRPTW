@@ -2,7 +2,7 @@
 
 namespace VRPTW.Concret
 {
-    public class Client : IElement
+    public class Client : ICloneable
     {
         public string Id;
         public Coordinate Coordinate;
@@ -63,6 +63,19 @@ namespace VRPTW.Concret
         {
             return Coordinate.GetDistance(otherClient.Coordinate);
         }
-        
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Client client)
+            {
+                return Id == client.Id;
+            }
+            return false;
+        }
+
+        public object Clone()
+        {
+            return new Client(Id, Coordinate, ReadyTime, DueTime, Demand, Service);
+        }
     }
 }
