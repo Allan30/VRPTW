@@ -172,7 +172,7 @@ public partial class MainWindow : MetroWindow
                 var y1 = ViewModel.SelectedVehicle.Clients[i].Coordinate.Y;
                 var x2 = ViewModel.SelectedVehicle.Clients[i + 1].Coordinate.X;
                 var y2 = ViewModel.SelectedVehicle.Clients[i + 1].Coordinate.Y;
-                var arrow = PlotZone.Plot.AddArrow(x1, y1, x2, y2, color: _allScatters[ViewModel.SelectedVehicle.Id].Color, lineWidth: weight);
+                var arrow = PlotZone.Plot.AddArrow(x2, y2, x1, y1, color: _allScatters[ViewModel.SelectedVehicle.Id].Color, lineWidth: weight);
                 arrow.ArrowheadLength = 7;
                 arrow.ArrowheadWidth = 7;
             }
