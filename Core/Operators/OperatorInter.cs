@@ -8,26 +8,22 @@ public abstract class OperatorInter : Operator
     {
         foreach (var vehicleSrc in Solution.Vehicles)
         {
-            var nodeSrc = GetNodeSrc(vehicleSrc);
-            while (NodeSrcCondition(nodeSrc, vehicleSrc))
+            var indexSrc = GetIndexSrc();
+            while (IndexSrcCondition(indexSrc, vehicleSrc))
             {
                 foreach (var vehicleTrg in Solution.Vehicles.Where(x => x != vehicleSrc))
                 {
-                    var nodeTrg = GetNodeTrg(vehicleTrg);
-                    while (NodeTrgCondition(nodeTrg, vehicleTrg))
+                    var indexTrg = GetIndexTrg();
+                    while (IndexTrgCondition(indexTrg, vehicleTrg))
                     {
-                        var deltaValue = CheckDelta(nodeSrc, nodeTrg, vehicleSrc, vehicleTrg);
-                        if (!double.IsNaN(deltaValue))
-                        {
-                            Delta = deltaValue;
-                            Vehicles = (vehicleSrc, vehicleTrg);
-                            Nodes = (nodeSrc, nodeTrg);
-                        }
-                        nodeTrg = nodeTrg.Next;
+                        PerformOperation(indexSrc, indexTrg, vehicleSrc, vehicleTrg);
+                        indexTrg++;
                     }
                 }
-                nodeSrc = nodeSrc.Next;
+                indexSrc++;
             }
         }
     }
+    
+    protected abstract void PerformOperation(int indexSrc, int indexTrg, Vehicle vehicleSrc, Vehicle vehicleTrg);
 }

@@ -6,23 +6,20 @@ public abstract class OperatorIntra : Operator
     {
         foreach (var vehicle in Solution.Vehicles)
         {
-            var nodeSrc = GetNodeSrc(vehicle);
-            while (NodeSrcCondition(nodeSrc, vehicle))
+            var indexSrc = GetIndexSrc();
+            while (IndexSrcCondition(indexSrc, vehicle))
             {
-                var nodeTrg = GetNodeTrg(vehicle);
-                while (NodeTrgCondition(nodeTrg, vehicle))
+                var indexTrg = GetIndexTrg();
+                if (indexSrc == indexTrg) continue;
+                while (IndexTrgCondition(indexSrc, vehicle))
                 {
-                    var deltaValue = CheckDelta(nodeSrc, nodeTrg, vehicle, vehicle);
-                    if (!double.IsNaN(deltaValue))
-                    {
-                        Delta = deltaValue;
-                        Vehicles = (vehicle, vehicle)!;
-                        Nodes = (nodeSrc, nodeTrg)!;
-                    }
-                    nodeTrg = nodeTrg.Next;
+                    PerformOperation(indexSrc, indexTrg, vehicle);
+                    indexTrg++;
                 }
-                nodeSrc = nodeSrc.Next;
+                indexSrc++;
             }
         }
     }
+    
+    protected abstract void PerformOperation(int indexSrc, int indexTrg, Vehicle vehicle);
 }

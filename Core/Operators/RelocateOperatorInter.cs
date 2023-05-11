@@ -2,59 +2,37 @@ namespace VRPTW.Concret;
 
 public class RelocateOperatorInter : OperatorInter
 {
-    protected override void SetNewSolution()
+    protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle)
     {
-        if (Nodes.src is null) return;
-        Vehicles.src.RemoveClient(Nodes.src);
-        Vehicles.trg.AddClientAfter(Nodes.trg, Nodes.src);
+        return indexSrc != vehicle.Clients.Count - 1;
     }
 
-    protected override bool NodeSrcCondition(LinkedListNode<Client> nodeSrc, Vehicle vehicle)
+    protected override bool IndexTrgCondition(int indexTrg, Vehicle vehicle)
     {
-        return !nodeSrc.Value.Equals(vehicle.Clients.Last.Value);
+        return indexTrg != vehicle.Clients.Count - 1;
     }
 
-    protected override bool NodeTrgCondition(LinkedListNode<Client> nodeTrg, Vehicle vehicle)
+    protected override int GetIndexSrc()
     {
-        return !nodeTrg.Value.Equals(vehicle.Clients.Last.Value);
+        return 1;
     }
 
-    protected override LinkedListNode<Client> GetNodeSrc(Vehicle vehicle)
+    protected override int GetIndexTrg()
     {
-        return vehicle.Clients.First.Next;
+        return 0;
     }
 
-    protected override LinkedListNode<Client> GetNodeTrg(Vehicle vehicle)
+    protected override void PerformOperation(int indexSrc, int indexTrg, Vehicle vehicleSrc, Vehicle vehicleTrg)
     {
-        return vehicle.Clients.First;
-    }
-
-    protected override double CheckDelta(LinkedListNode<Client> nodeSrc, LinkedListNode<Client> nodeTrg, Vehicle vehicleSrc, Vehicle vehicleTrg)
-    {
-        var currentDistance = nodeSrc.Value.GetDistance(nodeSrc.Previous.Value) +
-                              nodeSrc.Value.GetDistance(nodeSrc.Next.Value)
-                              + nodeTrg.Value.GetDistance(nodeTrg.Next.Value);
-                        
-        var newTimeSrc = nodeSrc.Previous.Value.GetDistance(nodeSrc.Next.Value)
-                         - nodeSrc.Value.GetDistance(nodeTrg.Value)
-                         - nodeSrc.Value.GetDistance(nodeTrg.Next.Value)
-                         - nodeSrc.Value.Service;
-                        
-        var newTimeTrg = nodeSrc.Value.GetDistance(nodeTrg.Value)
-                         + nodeSrc.Value.GetDistance(nodeTrg.Next.Value)
-                         + nodeSrc.Value.Service
-                         - nodeTrg.Value.GetDistance(nodeTrg.Next.Value);
-
-        var newDistance = nodeSrc.Previous.Value.GetDistance(nodeSrc.Next.Value) +
-                          nodeSrc.Value.GetDistance(nodeTrg.Value)
-                          + nodeSrc.Value.GetDistance(nodeTrg.Next.Value);
-        var delta = newDistance - currentDistance;
-
-        if (delta > Delta || !vehicleSrc.StayCorrectWindow(newTimeSrc, -nodeSrc.Value.Demand, nodeSrc.Next, vehicleSrc.Clients.Last) || !vehicleTrg.StayCorrectWindow(newTimeTrg, nodeSrc.Value.Demand, nodeTrg, vehicleTrg.Clients.Last))
+        var newVehicleSrc = (Vehicle) vehicleSrc.Clone();
+        var newVehicleTrg = (Vehicle) vehicleTrg.Clone();
+        newVehicleTrg.AddClientAfter(indexTrg, newVehicleSrc.Clients[indexSrc]);
+        newVehicleSrc.RemoveClient(indexSrc);
+        if (newVehicleSrc.IsCorrect() && newVehicleTrg.IsCorrect())
         {
-            return double.NaN;
+            var delta = vehicleSrc.TravelledDistance - newVehicleSrc.TravelledDistance +
+                        vehicleTrg.TravelledDistance - newVehicleTrg.TravelledDistance;
+            OperateVehicles.Add((newVehicleSrc, newVehicleTrg, delta));
         }
-
-        return delta;
     }
 }

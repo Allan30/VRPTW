@@ -2,29 +2,20 @@ namespace VRPTW.Concret;
 
 public abstract class Operator
 {
-    
-    protected double Delta;
-    protected double PreviousFitness;
-    protected (Vehicle src, Vehicle trg) Vehicles;
-    protected (LinkedListNode<Client> src, LinkedListNode<Client> trg) Nodes;
+    protected List<(Vehicle src, Vehicle trg, double delta)> OperateVehicles;
     public Routes Solution;
     
-    public void Execute(Routes solution)
+    public List<(Vehicle src, Vehicle trg, double delta)> Execute(Routes solution)
     {
-        Delta = double.MaxValue;
-        PreviousFitness = solution.GetFitness();
-        Vehicles = (null, null)!;
-        Nodes = (null, null)!;
+        OperateVehicles = new List<(Vehicle src, Vehicle trg, double delta)>();
         Solution = solution;
         Browse();
-        SetNewSolution();
+        return OperateVehicles;
     }
     protected abstract void Browse();
-    protected abstract void SetNewSolution();
     
-    protected abstract bool NodeSrcCondition(LinkedListNode<Client> nodeSrc, Vehicle vehicle);
-    protected abstract bool NodeTrgCondition(LinkedListNode<Client> nodeTrg, Vehicle vehicle);
-    protected abstract LinkedListNode<Client> GetNodeSrc(Vehicle vehicle);
-    protected abstract LinkedListNode<Client> GetNodeTrg(Vehicle vehicle);
-    protected abstract double CheckDelta(LinkedListNode<Client> nodeSrc, LinkedListNode<Client> nodeTrg, Vehicle vehicleSrc, Vehicle vehicleTrg);
+    protected abstract bool IndexSrcCondition(int indexSrc, Vehicle vehicle);
+    protected abstract bool IndexTrgCondition(int indexTrg, Vehicle vehicle);
+    protected abstract int GetIndexSrc();
+    protected abstract int GetIndexTrg();
 }

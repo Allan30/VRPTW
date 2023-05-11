@@ -27,6 +27,20 @@ public class Routes : ISolution, ICloneable
         Vehicles.Add(new Vehicle(Vehicles.Count, MaxCapacity, Depot));
     }
     
+    public void DelEmptyVehicles()
+    {
+        Vehicles.RemoveAll(vehicle => vehicle.Clients.Count == 2);
+        for (var i = 0; i < Vehicles.Count; i++)
+        {
+            Vehicles[i].Id = i;
+        }
+    }
+    
+    public void ChangeVehicle(Vehicle vehicle)
+    {
+        Vehicles[vehicle.Id] = vehicle;
+    }
+    
     public double GetFitness()
     {
         return Vehicles.Sum(vehicle => vehicle.TravelledDistance);
