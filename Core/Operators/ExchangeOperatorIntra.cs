@@ -32,7 +32,7 @@ public class ExchangeOperatorIntra : OperatorIntra
         if (newVehicle.IsCorrect())
         {
             var delta = vehicle.TravelledDistance - newVehicle.TravelledDistance;
-            OperateVehicles.Add((newVehicle, newVehicle, delta));
+            OperateVehicles.Add((newVehicle, newVehicle, delta, "ExchangeIntra"+"_"+indexSrc+"_"+indexTrg));
         }
     }
 }

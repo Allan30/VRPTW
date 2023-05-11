@@ -2,12 +2,12 @@ namespace VRPTW.Concret;
 
 public abstract class Operator
 {
-    protected List<(Vehicle src, Vehicle trg, double delta)> OperateVehicles;
+    protected List<(Vehicle src, Vehicle trg, double delta, string operation)> OperateVehicles;
     public Routes Solution;
     
-    public List<(Vehicle src, Vehicle trg, double delta)> Execute(Routes solution)
+    public List<(Vehicle src, Vehicle trg, double delta, string operation)> Execute(Routes solution)
     {
-        OperateVehicles = new List<(Vehicle src, Vehicle trg, double delta)>();
+        OperateVehicles = new List<(Vehicle src, Vehicle trg, double delta, string operation)>();
         Solution = solution;
         Browse();
         return OperateVehicles;

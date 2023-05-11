@@ -36,7 +36,7 @@ public class TwoOptOperatorIntra : OperatorIntra
         if (newVehicle.IsCorrect())
         {
             var delta = vehicle.TravelledDistance - newVehicle.TravelledDistance;
-            OperateVehicles.Add((newVehicle, newVehicle, delta));
+            OperateVehicles.Add((newVehicle, newVehicle, delta, "TwoOpt"+"_"+indexSrc+"_"+indexTrg));
         }
         
         

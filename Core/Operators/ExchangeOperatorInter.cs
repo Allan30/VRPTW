@@ -34,7 +34,7 @@ public class ExchangeOperatorInter : OperatorInter
         {
             var delta = vehicleSrc.TravelledDistance - newVehicleSrc.TravelledDistance +
                         vehicleTrg.TravelledDistance - newVehicleTrg.TravelledDistance;
-            OperateVehicles.Add((newVehicleSrc, newVehicleTrg, delta));
+            OperateVehicles.Add((newVehicleSrc, newVehicleTrg, delta, "ExchangeInter"+"_"+indexSrc+"_"+indexTrg));
         }
     }
 }

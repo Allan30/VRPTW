@@ -38,12 +38,13 @@ public class DescentStrategy : IStrategy
             }*/
             solution = GetNewSolution(relocateInter.Execute(solution).Concat(exchangeInter.Execute(solution).Concat(exchangeIntra.Execute(solution).Concat(relocateIntra.Execute(solution).Concat(twoOptIntra.Execute(solution))))).ToList(), solution);
             //solution = GetNewSolution(twoOptIntra.Execute(solution), solution);
+            Console.WriteLine(exchangeIntra.Execute(solution).Count);
             solution.DelEmptyVehicles();
             
         }
     }
 
-    public Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta)> vehicles, Routes solution)
+    public Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, string operation)> vehicles, Routes solution)
     {
         var newRoutes = (Routes) solution.Clone();
         var bestOperation = vehicles.MaxBy(v => v.delta);
@@ -51,10 +52,12 @@ public class DescentStrategy : IStrategy
         {
             return newRoutes;
         }
+        Console.WriteLine(bestOperation.operation);
         Console.WriteLine(bestOperation.delta);
-        
-        Console.WriteLine(solution.Vehicles[bestOperation.trg.Id].ToStringClient());
-        Console.WriteLine(bestOperation.src.ToStringClient());
+        Console.WriteLine("src      : " + solution.Vehicles[bestOperation.src.Id].ToStringClient());
+        Console.WriteLine("trg      : " + solution.Vehicles[bestOperation.trg.Id].ToStringClient());
+        Console.WriteLine("new src  : " + bestOperation.src.ToStringClient());
+        Console.WriteLine("new trg  : " + bestOperation.trg.ToStringClient());
         
         newRoutes.ChangeVehicle(bestOperation.src);
         newRoutes.ChangeVehicle(bestOperation.trg);
