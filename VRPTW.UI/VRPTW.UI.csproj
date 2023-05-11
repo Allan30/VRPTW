@@ -8,13 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+	<SupportedPlatform Include="windows7.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
+    <PackageReference Include="Riok.Mapperly" Version="2.8.0" />
     <PackageReference Include="ScottPlot.WPF" Version="4.1.63" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core\VRPTWCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ViewModels\MainWindowViewModel.cs" />
   </ItemGroup>
 
 </Project>

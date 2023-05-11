@@ -3,7 +3,7 @@
 public interface ISolution
 {
     
-    double GetFitness();
+    double Fitness { get; }
     List<ISolution> GetNeighbours();
     
     void GenerateRandomSolution();

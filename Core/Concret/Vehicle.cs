@@ -54,7 +54,7 @@ public class Vehicle : ICloneable
             return false;
         }
         var currentTime = 0.0;
-        for (var i = 0; i < Clients.Count - 2; i++)
+        for (var i = 0; i < Clients.Count - 1; i++)
         {
             
             var currentClient = Clients[i];
@@ -94,7 +94,7 @@ public class Vehicle : ICloneable
     
     public int NbClients => Clients.Count - 2;
     
-    public int GetTotalDemand => Clients.Sum(client => client.Demand);
+    public int TotalDemand => Clients.Sum(client => client.Demand);
     
     public override string ToString()
     {

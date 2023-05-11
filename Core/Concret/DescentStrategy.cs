@@ -13,30 +13,30 @@ public class DescentStrategy : IStrategy
         var prevFitness = double.MaxValue;
         var prevSolution = (Routes) solution.Clone();
         var r = new Random();
-        while(prevFitness > solution.GetFitness())
+        while(prevFitness > solution.Fitness)
         {
-            prevFitness = solution.GetFitness();
+            prevFitness = solution.Fitness;
             prevSolution = (Routes) solution.Clone();
             Console.WriteLine(prevFitness);
             switch (r.Next(0, 1))
             {
                 case 0:
                     solution = GetNewSolution(relocateInter.Execute(solution), solution);
-                    if(prevFitness <= solution.GetFitness()){
+                    if(prevFitness <= solution.Fitness){
                         solution = (Routes) prevSolution.Clone();
                         exchangeInter.Execute(solution);
                     }
                     break;
                 case 1:
                     exchangeInter.Execute(solution);
-                    if(prevFitness <= solution.GetFitness()){
+                    if(prevFitness <= solution.Fitness){
                         solution = (Routes) prevSolution.Clone();
                         relocateInter.Execute(solution);
                     }
                     break;
                 case 2:
                     relocateIntra.Execute(solution);
-                    if(prevFitness <= solution.GetFitness()){
+                    if(prevFitness <= solution.Fitness){
                         solution = (Routes) prevSolution.Clone();
                         exchangeInter.Execute(solution);
                     }
@@ -54,6 +54,7 @@ public class DescentStrategy : IStrategy
         var bestOperation = vehicles.MaxBy(v => v.delta);
         newRoutes.ChangeVehicle(bestOperation.src);
         newRoutes.ChangeVehicle(bestOperation.trg);
+        bestOperation.trg.IsCorrect();
         return newRoutes;
     }
 }
