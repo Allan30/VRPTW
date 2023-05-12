@@ -8,11 +8,19 @@ using VRPTW.UI.Mappers;
 using VRPTWCore.Parser;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace VRPTW.UI.ViewModels;
 
 public partial class RoutesViewModel : ObservableObject
 {
+    public static List<HeuristicViewModel> AvailableHeuristics => new()
+    {
+        new("Foo"),
+        new("Bar"),
+    };
+    public HeuristicViewModel? SelectedHeuristic { get; set; }
+    
     private readonly RoutesMapper _routesMapper = new();
 
     private Routes? _solution;
@@ -59,6 +67,11 @@ public partial class RoutesViewModel : ObservableObject
         }
     }
 
+    [ObservableProperty]
+    private int _wantedIterations = 1_000;
+    public const int ITERATIONS_MAX = 1_000_000;
+    public const int ITERATIONS_MIN = 100;
+
     public double Fitness { get; set; }
     public int NbClients { get; set; }
     public int TotalDemand { get; set; }
@@ -71,7 +84,18 @@ public partial class RoutesViewModel : ObservableObject
     [ObservableProperty]
     private bool _isSolutionCalculated;
 
-    [RelayCommand(CanExecute = nameof(IsSolutionLoaded))]
+    private bool _isSolutionCalculable;
+    public bool IsSolutionCalculable => IsSolutionLoaded && SelectedHeuristic is not null;
+    //{
+    //    get => _isSolutionCalculable;
+    //    set
+    //    {
+    //        var val = IsSolutionLoaded && SelectedHeuristic is not null;
+    //        SetProperty(ref _isSolutionCalculable, val);
+    //    }
+    //}
+
+    [RelayCommand(CanExecute = nameof(IsSolutionCalculable))]
     private void StartVRPTW()
     {
         _solution!.GenerateRandomSolution();
