@@ -1,8 +1,9 @@
-using VRPTW.AbstractObjects;
 
-namespace VRPTW.Concret;
+using VRPTW.Concret;
 
-public class RecuitSimuleStrategy : IStrategy
+namespace VRPTW.Heuristics;
+
+public class RandomStrategy : IStrategy
 {
     public void Execute(ref Routes solution)
     {

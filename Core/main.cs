@@ -1,4 +1,5 @@
 ﻿using VRPTW.Concret;
+using VRPTW.Heuristics;
 using VRPTWCore.Parser;
 
 namespace VRPTWCore;
@@ -9,14 +10,14 @@ public class Test
     {
         Console.WriteLine("Hello World!");
         var writer = new PythonParser();
-        var solution = VrpParser.ExtractVrpFile("C:\\Users\\epulapp\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.vrp");
+        var solution = VrpParser.ExtractVrpFile("C:\\Users\\allan\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.vrp");
         solution.GenerateRandomSolution();
-        writer.WritePythonFile("C:\\Users\\epulapp\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.json", solution);
+        writer.WritePythonFile("C:\\Users\\allan\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.json", solution);
         Console.WriteLine(solution.Fitness);
         var descent = new DescentStrategy();
         descent.Execute(ref solution);
         Console.WriteLine(solution.Fitness);
-        writer.WritePythonFile("C:\\Users\\epulapp\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.2.json", solution);
+        writer.WritePythonFile("C:\\Users\\allan\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.2.json", solution);
     }
     
 }

@@ -1,7 +1,6 @@
-using System.Runtime.InteropServices;
-using VRPTW.AbstractObjects;
+using VRPTW.Concret;
 
-namespace VRPTW.Concret;
+namespace VRPTW.Heuristics;
 
 public class DescentStrategy : IStrategy
 {

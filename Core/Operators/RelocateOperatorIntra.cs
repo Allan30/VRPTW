@@ -2,6 +2,11 @@ namespace VRPTW.Concret;
 
 public class RelocateOperatorIntra : OperatorIntra
 {
+    protected override OperatorName GetName()
+    {
+        return OperatorName.RelocateIntra;
+    }
+
     protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle)
     {
         return indexSrc != vehicle.Clients.Count - 1;
@@ -39,7 +44,7 @@ public class RelocateOperatorIntra : OperatorIntra
         if (newVehicle.IsCorrect())
         {
             var delta = vehicle.TravelledDistance - newVehicle.TravelledDistance;
-            OperateVehicles.Add((newVehicle, newVehicle, delta, "RelocateIntra"+"_"+indexSrc+"_"+indexTrg));
+            OperateVehicles.Add((newVehicle, newVehicle, delta, GetName()+"_"+indexSrc+"_"+indexTrg));
         }
     }
 }

@@ -1,6 +1,6 @@
 using VRPTW.Concret;
 
-namespace VRPTW.AbstractObjects;
+namespace VRPTW.Heuristics;
 
 public interface IStrategy
 {
