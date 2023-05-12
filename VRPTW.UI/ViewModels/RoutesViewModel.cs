@@ -95,7 +95,7 @@ public partial class RoutesViewModel : ObservableObject
     //    }
     //}
 
-    [RelayCommand(CanExecute = nameof(IsSolutionCalculable))]
+    [RelayCommand(CanExecute = nameof(IsSolutionLoaded))]
     private void StartVRPTW()
     {
         _solution!.GenerateRandomSolution();
