@@ -4,45 +4,40 @@ namespace VRPTW.Heuristics;
 
 public class DescentStrategy : IStrategy
 {
-    public void Execute(ref Routes solution)
+
+    public void RandomWithSelectedOperators(ref Routes solution, List<OperatorName> operatorsName)
     {
-        var exchangeInter = new ExchangeOperatorInter();
-        var relocateInter = new RelocateOperatorInter();
-        var relocateIntra = new RelocateOperatorIntra();
-        var exchangeIntra = new ExchangeOperatorIntra();
-        var twoOptIntra = new TwoOptOperatorIntra();
         var prevFitness = double.MaxValue;
-        var prevSolution = (Routes) solution.Clone();
+        var operators = GetOperatorsFromName(operatorsName).ToList();
+        var nbOperators = operators.Count();
         var r = new Random();
-        while(prevFitness > solution.Fitness)
+        while (prevFitness > solution.Fitness)
         {
             prevFitness = solution.Fitness;
-            prevSolution = (Routes) solution.Clone();
-            Console.WriteLine(prevFitness);
-            /*
-            switch (r.Next(0, 4))
-            {
-                case 0:
-                    solution = GetNewSolution(relocateInter.Execute(solution), solution);
-                    break;
-                case 1:
-                    solution = GetNewSolution(exchangeInter.Execute(solution), solution);
-                    break;
-                case 2:
-                    solution = GetNewSolution(relocateIntra.Execute(solution), solution);
-                    break;
-                case 3:
-                    solution = GetNewSolution(exchangeIntra.Execute(solution), solution);
-                    break;
-            }*/
-            solution = GetNewSolution(relocateInter.Execute(solution).Concat(exchangeInter.Execute(solution).Concat(exchangeIntra.Execute(solution).Concat(relocateIntra.Execute(solution).Concat(twoOptIntra.Execute(solution))))).ToList(), solution);
-            //solution = GetNewSolution(twoOptIntra.Execute(solution), solution);
+            solution = GetNewSolution(operators[r.Next(0, nbOperators)].Execute(solution), solution);
             solution.DelEmptyVehicles();
-            
         }
     }
 
-    public Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, string operation)> vehicles, Routes solution)
+    public void BestOfSelectedOperators(ref Routes solution, List<OperatorName> operatorsName)
+    {
+        var prevFitness = double.MaxValue;
+        var operators = GetOperatorsFromName(operatorsName);
+        while (prevFitness > solution.Fitness)
+        {
+            prevFitness = solution.Fitness;
+            var neighbors = new List<(Vehicle, Vehicle, double, string)>();
+            foreach (var op in operators)
+            {
+                neighbors = neighbors.Concat(op.Execute(solution)).ToList();
+            }
+
+            solution = GetNewSolution(neighbors, solution);
+            solution.DelEmptyVehicles();
+        }
+    }
+
+    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, string operation)> vehicles, Routes solution)
     {
         if (vehicles.Count == 0)
         {

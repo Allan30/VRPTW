@@ -101,7 +101,13 @@ public partial class RoutesViewModel : ObservableObject
     {
         _solution!.GenerateRandomSolution();
         var descent = new DescentStrategy();
-        descent.Execute(ref _solution);
+        var operators = new List<OperatorName>();
+        operators.Add(OperatorName.ExchangeInter);
+        operators.Add(OperatorName.ExchangeIntra);
+        operators.Add(OperatorName.RelocateInter);
+        operators.Add(OperatorName.RelocateIntra);
+        operators.Add(OperatorName.TwoOpt);
+        descent.BestOfSelectedOperators(ref _solution, operators);
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
     }

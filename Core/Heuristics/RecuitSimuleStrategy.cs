@@ -5,7 +5,7 @@ namespace VRPTW.Concret;
 
 public class RecuitSimuleStrategy : IStrategy
 {
-    public void Execute(ref Routes solution)
+    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, string operation)> vehicles, Routes solution)
     {
         throw new NotImplementedException();
     }
