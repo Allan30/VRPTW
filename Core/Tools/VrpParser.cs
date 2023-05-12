@@ -2,10 +2,9 @@
 
 namespace VRPTWCore.Parser;
 
-public class VrpParser
+public static class VrpParser
 {
-    
-    public Routes ExtractVrpFile(string vrpFile)
+    public static Routes ExtractVrpFile(string vrpFile)
     {
         var solution = new Routes();
         var lines = File.ReadAllLines(vrpFile);

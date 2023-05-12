@@ -3,7 +3,7 @@ using ScottPlot.Plottable;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace VRPTW.UI.Extensions;
+namespace VRPTW.UI.ScottPlotExtended;
 
 public static class ScatterPlotExtension
 {

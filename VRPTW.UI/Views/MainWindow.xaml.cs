@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using VRPTW.UI.Extensions;
+using VRPTW.UI.ScottPlotExtended;
 using VRPTW.UI.ViewModels;
 namespace VRPTW.UI.Views;
 
