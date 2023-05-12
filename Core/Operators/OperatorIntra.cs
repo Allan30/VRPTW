@@ -14,7 +14,7 @@ public abstract class OperatorIntra : Operator
                 {
                     while (IndexTrgCondition(indexTrg, vehicle))
                     {
-                        PerformOperation(indexSrc, indexTrg, vehicle);
+                        if (indexSrc != indexTrg) PerformOperation(indexSrc, indexTrg, vehicle);
                         indexTrg++;
                     }
                 }

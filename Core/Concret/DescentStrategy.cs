@@ -38,7 +38,6 @@ public class DescentStrategy : IStrategy
             }*/
             solution = GetNewSolution(relocateInter.Execute(solution).Concat(exchangeInter.Execute(solution).Concat(exchangeIntra.Execute(solution).Concat(relocateIntra.Execute(solution).Concat(twoOptIntra.Execute(solution))))).ToList(), solution);
             //solution = GetNewSolution(twoOptIntra.Execute(solution), solution);
-            Console.WriteLine(exchangeIntra.Execute(solution).Count);
             solution.DelEmptyVehicles();
             
         }
@@ -46,6 +45,10 @@ public class DescentStrategy : IStrategy
 
     public Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, string operation)> vehicles, Routes solution)
     {
+        if (vehicles.Count == 0)
+        {
+            return solution;
+        }
         var newRoutes = (Routes) solution.Clone();
         var bestOperation = vehicles.MaxBy(v => v.delta);
         if (bestOperation.delta <= 0)
