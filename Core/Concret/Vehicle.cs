@@ -7,62 +7,89 @@ public class Vehicle : ICloneable
     public int Id { get; set; }
     public int MaxCapacity { get; init; }
     public int CurrentCapacity { get; private set; }
-    public LinkedList<Client> Clients { get; set; }
+    public List<Client> Clients { get; set; }
+
+    public Client Depot;
     
     public Vehicle(int id, int capacity, Client depot)
     {
         Id = id;
         CurrentCapacity = 0;
         MaxCapacity = capacity;
-        Clients = new LinkedList<Client>();
-        Clients.AddFirst(depot);
-        Clients.AddLast(new Client(depot.Id+"_bis", depot.Coordinate, depot.Demand, depot.DueTime));
+        Clients = new List<Client>();
+        Depot = depot;
+        Clients.Add(depot);
+        Clients.Add(new Client(depot.Id+"_bis", depot.Coordinate, depot.ReadyTime, depot.DueTime));
     }
 
-    public bool AddClient(Client client)
+    public bool AddClientWithWindow(Client client)
     {
-        if (client.Demand + CurrentCapacity > MaxCapacity || TravelledDistance + client.GetDistance(Clients.Last.Value) + client.GetDistance(Clients.Last.Previous.Value) - Clients.Last.Value.GetDistance(Clients.Last.Previous.Value) > 230)
+        AddClientBefore(Clients.Count, client);
+        if (IsCorrect())
         {
-            return false;
+            return true;
         }
-        Clients.AddBefore(Clients.Last, client);
-        CurrentCapacity += client.Demand;
-        return true;
+        RemoveClient(Clients.Count - 2);
+        return false;
     }
     
-    public double TravelledDistance => Clients.Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.Coordinate.GetDistance(nextClient.Coordinate)).Sum();
+    public double TravelledDistance => Clients.Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.GetDistance(nextClient)).Sum();
+    
+    public double RouteTime => Clients.Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.Service + prevClient.GetDistance(nextClient)).Sum();
 
     public object Clone()
     {
-        var vehicle = new Vehicle(Id, MaxCapacity, Clients.First.Value)
+        var vehicle = new Vehicle(Id, MaxCapacity, Depot)
         {
             CurrentCapacity = CurrentCapacity,
-            Clients = new LinkedList<Client>(Clients)
+            Clients = new List<Client>(Clients)
         };
         return vehicle;
     }
     
-    public bool StayCorrect(double deltaDist, double deltaCap)
+    public bool IsCorrect()
     {
-        return deltaDist + TravelledDistance <= 230 && deltaCap + CurrentCapacity <= MaxCapacity;
+        if (CurrentCapacity > MaxCapacity)
+        {
+            return false;
+        }
+        var currentTime = 0.0;
+        for (var i = 0; i < Clients.Count - 1; i++)
+        {
+            
+            var currentClient = Clients[i];
+            var nextClient = Clients[i + 1];
+            
+            currentTime += currentClient.Service + currentClient.GetDistance(nextClient);
+            if (currentTime > nextClient.DueTime)
+            {
+                return false;
+            }
+            if (currentTime < nextClient.ReadyTime)
+            {
+                currentTime = nextClient.ReadyTime;
+            }
+        }
+        return true;
     }
     
-    public void RemoveClient(LinkedListNode<Client> client)
+    
+    public void RemoveClient(int index)
     {
-        Clients.Remove(client);
-        CurrentCapacity -= client.Value.Demand;
+        CurrentCapacity -= Clients[index].Demand;
+        Clients.RemoveAt(index);
+    }
+
+    public void AddClientAfter(int index, Client client)
+    {
+        Clients.Insert(index + 1, client);
+        CurrentCapacity += client.Demand;
     }
     
-    public void AddClientAfter(LinkedListNode<Client>  after, LinkedListNode<Client> client)
+    public void AddClientBefore(int index, Client client)
     {
-        Clients.AddAfter(after, client);
-        CurrentCapacity += client.Value.Demand;
-    }
-    
-    public void AddClientBefore(LinkedListNode<Client> before, LinkedListNode<Client> client)
-    {
-        Clients.AddBefore(before, client);
-        CurrentCapacity += client.Value.Demand;
+        Clients.Insert(index - 1, client);
+        CurrentCapacity += client.Demand;
     }
     
     public int NbClients => Clients.Count - 2;

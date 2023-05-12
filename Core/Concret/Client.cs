@@ -1,26 +1,46 @@
 ﻿using VRPTW.AbstractObjects;
 
-namespace VRPTW.Concret;
-
-public class Client : IElement
+namespace VRPTW.Concret
 {
-    public string Id;
-    public Coordinate Coordinate;
-    public int ReadyTime;
-    public int DueTime;
-    public int Demand;
-    public int Service;
-
-    public Client(string id, Coordinate coordinate, int readyTime, int dueTime, int demand = 0, int service = 0)
+    public class Client : ICloneable
     {
-        Id = id;
-        Coordinate = coordinate;
-        ReadyTime = readyTime;
-        DueTime = dueTime;
-        Demand = demand;
-        Service = service;
-    }
+        public string Id;
+        public Coordinate Coordinate;
+        public int ReadyTime;
+        public int DueTime;
+        public int Demand;
+        public int Service;
 
-    public double GetDistance(Client otherClient) =>
-        Coordinate.GetDistance(otherClient.Coordinate);    
+        public double TimeOnIt { get; set; }
+
+        public double TimeAfterService => TimeOnIt + Service;
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Client client)
+            {
+                return Id == client.Id;
+            }
+
+            return false;
+        }
+
+        public object Clone()
+        {
+            return new Client(Id, Coordinate, ReadyTime, DueTime, Demand, Service);
+        }
+
+        public Client(string id, Coordinate coordinate, int readyTime, int dueTime, int demand = 0, int service = 0)
+        {
+            Id = id;
+            Coordinate = coordinate;
+            ReadyTime = readyTime;
+            DueTime = dueTime;
+            Demand = demand;
+            Service = service;
+        }
+
+        public double GetDistance(Client otherClient) =>
+            Coordinate.GetDistance(otherClient.Coordinate);
+    }
 }

@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Core\VRPTWCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="ViewModels\MainWindowViewModel.cs" />
+  </ItemGroup>
+
 </Project>
