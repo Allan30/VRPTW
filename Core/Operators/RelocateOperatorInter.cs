@@ -37,7 +37,7 @@ public class RelocateOperatorInter : OperatorInter
         {
             var delta = vehicleSrc.TravelledDistance - newVehicleSrc.TravelledDistance +
                         vehicleTrg.TravelledDistance - newVehicleTrg.TravelledDistance;
-            OperateVehicles.Add((newVehicleSrc, newVehicleTrg, delta, GetName()+"_"+indexSrc+"_"+indexTrg));
+            OperateVehicles.Add((newVehicleSrc, newVehicleTrg, delta, (GetName(), new List<int> {indexSrc, indexTrg})));
         }
     }
 }

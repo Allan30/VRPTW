@@ -26,7 +26,7 @@ public class DescentStrategy : IStrategy
         while (prevFitness > solution.Fitness)
         {
             prevFitness = solution.Fitness;
-            var neighbors = new List<(Vehicle, Vehicle, double, string)>();
+            var neighbors = new List<(Vehicle, Vehicle, double, (OperatorName , List<int>))>();
             foreach (var op in operators)
             {
                 neighbors = neighbors.Concat(op.Execute(solution)).ToList();
@@ -37,7 +37,7 @@ public class DescentStrategy : IStrategy
         }
     }
 
-    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, string operation)> vehicles, Routes solution)
+    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorName name, List<int> clientsIndex) operation)> vehicles, Routes solution)
     {
         if (vehicles.Count == 0)
         {
@@ -49,7 +49,7 @@ public class DescentStrategy : IStrategy
         {
             return newRoutes;
         }
-        Console.WriteLine(bestOperation.operation);
+        Console.WriteLine(bestOperation.operation.name+" : "+solution.Vehicles[bestOperation.src.Id].Clients[bestOperation.operation.clientsIndex[0]].Id+" <-> "+solution.Vehicles[bestOperation.trg.Id].Clients[bestOperation.operation.clientsIndex[1]].Id);
         Console.WriteLine(bestOperation.delta);
         Console.WriteLine("src      : " + solution.Vehicles[bestOperation.src.Id].ToStringClient());
         Console.WriteLine("trg      : " + solution.Vehicles[bestOperation.trg.Id].ToStringClient());

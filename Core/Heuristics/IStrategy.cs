@@ -21,7 +21,7 @@ public abstract class IStrategy
         var operators = GetOperatorsFromName(operatorsName);
         for(var i = 0; i < nbSteps; i++)
         {
-            var neighbors = new List<(Vehicle, Vehicle, double, string)>();
+            var neighbors = new List<(Vehicle, Vehicle, double, (OperatorName, List<int>))>();
             foreach (var op in operators)
             {
                 neighbors = neighbors.Concat(op.Execute(solution)).ToList();
@@ -66,7 +66,7 @@ public abstract class IStrategy
         return operators;
     }
 
-    protected abstract Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, string operation)> vehicles,
+    protected abstract Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorName name, List<int> clientsIndex) operation)> vehicles,
         Routes solution);
 
 

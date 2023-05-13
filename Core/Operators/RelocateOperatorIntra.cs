@@ -44,7 +44,7 @@ public class RelocateOperatorIntra : OperatorIntra
         if (newVehicle.IsCorrect())
         {
             var delta = vehicle.TravelledDistance - newVehicle.TravelledDistance;
-            OperateVehicles.Add((newVehicle, newVehicle, delta, GetName()+"_"+indexSrc+"_"+indexTrg));
+            OperateVehicles.Add((newVehicle, newVehicle, delta, (GetName(), new List<int> {indexSrc, indexTrg})));
         }
     }
 }
