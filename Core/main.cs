@@ -15,15 +15,16 @@ public class Test
         writer.WritePythonFile("C:\\Users\\allan\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data1202.json", solution);
         Console.WriteLine(solution.Fitness);
         var descent = new DescentStrategy();
+        var tabou = new TabouResearchStrategy();
         var operators = new List<OperatorName>();
         operators.Add(OperatorName.ExchangeInter);
         operators.Add(OperatorName.ExchangeIntra);
         operators.Add(OperatorName.RelocateInter);
         operators.Add(OperatorName.RelocateIntra);
         operators.Add(OperatorName.TwoOpt);
-        descent.BestOfSelectedOperators(ref solution, operators);
+        tabou.BestOfSelectedOperators(ref solution, operators, 300);
         Console.WriteLine(solution.Fitness);
-        writer.WritePythonFile("C:\\Users\\allan\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.2.json", solution);
+        //writer.WritePythonFile("C:\\Users\\allan\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.2.json", solution);
     }
     
 }

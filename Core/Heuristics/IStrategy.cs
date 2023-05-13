@@ -4,6 +4,8 @@ namespace VRPTW.Heuristics;
 
 public abstract class IStrategy
 {
+    protected double bestFitness = double.MaxValue;
+    protected Routes bestSolution = new();
     public void RandomWithSelectedOperators(ref Routes solution, List<OperatorName> operatorsNames, int nbSteps)
     {
         var operators = GetOperatorsFromName(operatorsNames).ToList();
@@ -18,6 +20,7 @@ public abstract class IStrategy
 
     public void BestOfSelectedOperators(ref Routes solution, List<OperatorName> operatorsName, int nbSteps)
     {
+        bestSolution = (Routes) solution.Clone();
         var operators = GetOperatorsFromName(operatorsName);
         for(var i = 0; i < nbSteps; i++)
         {
@@ -28,7 +31,15 @@ public abstract class IStrategy
             }
             solution = GetNewSolution(neighbors, solution);
             solution.DelEmptyVehicles();
+            var newFitness = solution.Fitness;
+            if(newFitness < bestFitness)
+            {
+                bestFitness = newFitness;
+                bestSolution = (Routes) solution.Clone();
+            }
         }
+        Console.WriteLine(solution.Fitness);
+        solution = bestSolution;
     }
 
     protected List<Operator> GetOperatorsFromName(List<OperatorName> operatorsName)

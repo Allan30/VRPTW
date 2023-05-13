@@ -58,7 +58,6 @@ public class DescentStrategy : IStrategy
         
         newRoutes.ChangeVehicle(bestOperation.src);
         newRoutes.ChangeVehicle(bestOperation.trg);
-        bestOperation.trg.IsCorrect();
         return newRoutes;
     }
 }
