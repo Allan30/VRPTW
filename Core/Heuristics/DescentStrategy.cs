@@ -4,41 +4,17 @@ namespace VRPTW.Heuristics;
 
 public class DescentStrategy : IStrategy
 {
-
-    public void RandomWithSelectedOperators(ref Routes solution, List<OperatorName> operatorsName)
+    
+    private double prevFitness = 0;
+    private double currentFitness = -1;
+    protected override bool LoopConditon()
     {
-        var prevFitness = double.MaxValue;
-        var operators = GetOperatorsFromName(operatorsName).ToList();
-        var nbOperators = operators.Count();
-        var r = new Random();
-        while (prevFitness > solution.Fitness)
-        {
-            prevFitness = solution.Fitness;
-            solution = GetNewSolution(operators[r.Next(0, nbOperators)].Execute(solution), solution);
-            solution.DelEmptyVehicles();
-        }
-    }
-
-    public void BestOfSelectedOperators(ref Routes solution, List<OperatorName> operatorsName)
-    {
-        var prevFitness = double.MaxValue;
-        var operators = GetOperatorsFromName(operatorsName);
-        while (prevFitness > solution.Fitness)
-        {
-            prevFitness = solution.Fitness;
-            var neighbors = new List<(Vehicle, Vehicle, double, (OperatorName , List<int>))>();
-            foreach (var op in operators)
-            {
-                neighbors = neighbors.Concat(op.Execute(solution)).ToList();
-            }
-
-            solution = GetNewSolution(neighbors, solution);
-            solution.DelEmptyVehicles();
-        }
+        return prevFitness > currentFitness;
     }
 
     protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorName name, List<int> clientsIndex) operation)> vehicles, Routes solution)
     {
+        prevFitness = solution.Fitness;
         if (vehicles.Count == 0)
         {
             return solution;
@@ -58,6 +34,7 @@ public class DescentStrategy : IStrategy
         
         newRoutes.ChangeVehicle(bestOperation.src);
         newRoutes.ChangeVehicle(bestOperation.trg);
+        currentFitness = newRoutes.Fitness;
         return newRoutes;
     }
 }

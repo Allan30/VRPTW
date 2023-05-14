@@ -6,23 +6,31 @@ public abstract class IStrategy
 {
     protected double bestFitness = double.MaxValue;
     protected Routes bestSolution = new();
-    public void RandomWithSelectedOperators(ref Routes solution, List<OperatorName> operatorsNames, int nbSteps)
+
+    protected abstract bool LoopConditon();
+    public void RandomWithSelectedOperators(ref Routes solution, List<OperatorName> operatorsNames)
     {
         var operators = GetOperatorsFromName(operatorsNames).ToList();
         var nbOperators = operators.Count();
         var r = new Random();
-        for(var i = 0; i < nbSteps; i++)
+        while(LoopConditon())
         {
             solution = GetNewSolution(operators[r.Next(0, nbOperators)].Execute(solution), solution);
             solution.DelEmptyVehicles();
+            var newFitness = solution.Fitness;
+            if(newFitness < bestFitness)
+            {
+                bestFitness = newFitness;
+                bestSolution = (Routes) solution.Clone();
+            }
         }
     }
 
-    public void BestOfSelectedOperators(ref Routes solution, List<OperatorName> operatorsName, int nbSteps)
+    public void BestOfSelectedOperators(ref Routes solution, List<OperatorName> operatorsName)
     {
         bestSolution = (Routes) solution.Clone();
         var operators = GetOperatorsFromName(operatorsName);
-        for(var i = 0; i < nbSteps; i++)
+        while(LoopConditon())
         {
             var neighbors = new List<(Vehicle, Vehicle, double, (OperatorName, List<int>))>();
             foreach (var op in operators)

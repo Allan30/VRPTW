@@ -108,7 +108,7 @@ public partial class RoutesViewModel : ObservableObject
         operators.Add(OperatorName.RelocateInter);
         operators.Add(OperatorName.RelocateIntra);
         operators.Add(OperatorName.TwoOpt);
-        tabou.BestOfSelectedOperators(ref _solution, operators, 1000);
+        tabou.RandomWithSelectedOperators(ref _solution, operators, 5000);
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
     }

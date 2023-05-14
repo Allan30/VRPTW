@@ -6,10 +6,19 @@ namespace VRPTW.Concret;
 public class TabouResearchStrategy : IStrategy
 {
     public int tabouSize = 80;
+    private int currentStep = 0;
+    private int nbStep = 1000;
     
     private List<(OperatorName operatorName, List<string> clientName)> _tabouList = new();
+    protected override bool LoopConditon()
+    {
+        Console.WriteLine(currentStep);
+        return currentStep < nbStep;
+    }
+
     protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorName name, List<int> clientsIndex) operation)> vehicles, Routes solution)
     {
+        currentStep++;
         if (vehicles.Count == 0)
         {
             return solution;
