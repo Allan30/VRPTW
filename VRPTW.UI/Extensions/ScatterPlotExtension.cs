@@ -1,6 +1,7 @@
 ﻿using ScottPlot;
 using ScottPlot.Plottable;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace VRPTW.UI.ScottPlotExtended;
@@ -40,7 +41,7 @@ public static class ScatterPlotExtension
 
     public static CustomTooltip AddCustomTooltip(this Plot plot, string label, double x, double y)
     {
-        var plottable = new CustomTooltip(new Tooltip { Label = label, X = x, Y = y });
+        var plottable = new CustomTooltip(new Tooltip { Label = label, X = x, Y = y});
         plot.Add(plottable);
         return plottable;
     }

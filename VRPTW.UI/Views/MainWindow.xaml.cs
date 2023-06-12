@@ -22,6 +22,8 @@ public partial class MainWindow : MetroWindow
     private readonly Dictionary<int, ScatterPlot> _allScatters = new();
     private int _lastSelectedVehicle = -1;
     private int _lastHighlightedIndex = -1;
+    private CustomTooltip? _selectedClientTooltip;
+    private readonly List<CustomTooltip> _selectedRouteTooltips = new();
     private static readonly MarkerPlot _highlightedPoint = new()
     {
         X = 0,
@@ -56,6 +58,7 @@ public partial class MainWindow : MetroWindow
                 DrawClients();
                 break;
             case nameof(RoutesViewModel.IsSolutionCalculated):
+                GiveColorsToRoutes();
                 DrawRoutes();
                 break;
             case nameof(RoutesViewModel.SelectedClient):
@@ -112,6 +115,18 @@ public partial class MainWindow : MetroWindow
         PlotZone.Refresh();
     }
 
+    private void GiveColorsToRoutes()
+    {
+        var i = 0;
+        foreach (var vehicle in ViewModel.Vehicles)
+        {
+            var color = PlotZone.Plot.AddPoint(i, i).Color;
+            vehicle.ARGBColor = color.ToArgb();
+            i++;
+        }
+        PlotZone.Plot.Clear();
+    }
+
     private void DrawRoutes(bool all = true)
     {
         PlotZone.Plot.Clear();
@@ -137,8 +152,8 @@ public partial class MainWindow : MetroWindow
 
             allXs.AddRange(xs);
             allYs.AddRange(ys);
-
-            var scatter = PlotZone.Plot.AddScatter(xs.ToArray(), ys.ToArray(), markerSize: MARKER_SIZE);
+            
+            var scatter = PlotZone.Plot.AddScatter(xs.ToArray(), ys.ToArray(), color: Color.FromArgb(vehicle.ARGBColor), markerSize: MARKER_SIZE);
             _allScatters.Add(vehicle.Id, scatter);
         }
         
@@ -157,14 +172,14 @@ public partial class MainWindow : MetroWindow
             _highlightedPoint.X = ViewModel.SelectedClient.Coordinate.X;
             _highlightedPoint.Y = ViewModel.SelectedClient.Coordinate.Y;
             _highlightedPoint.IsVisible = true;
-            PlotZone.Plot.Clear(typeof(CustomTooltip));
+            PlotZone.Plot.Remove(_selectedClientTooltip);
             var str = ViewModel.SelectedClient.ToString();
             var pos = $"Position : {ViewModel.SelectedClient.Coordinate}";
             var demand = $"Demande : {ViewModel.SelectedClient.Demand}";
             var readyTime = $"Heure min : {ViewModel.SelectedClient.ReadyTime}";
             var dueTime = $"Heure max : {ViewModel.SelectedClient.DueTime}";
             var service = $"Temps de chargement : {ViewModel.SelectedClient.Service}";
-            PlotZone.Plot.AddCustomTooltip($"{str}\n{pos}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
+            _selectedClientTooltip = PlotZone.Plot.AddCustomTooltip($"{str}\n{pos}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
         }
         PlotZone.Refresh();
     }
@@ -173,7 +188,7 @@ public partial class MainWindow : MetroWindow
     {
         _highlightedPoint.IsVisible = false;
         _lastHighlightedIndex = -1;
-        PlotZone.Plot.Clear(typeof(CustomTooltip));
+        PlotZone.Plot.Remove(_selectedClientTooltip);
     }
 
     private void HighlightSelectedVehicle()
@@ -183,6 +198,10 @@ public partial class MainWindow : MetroWindow
         {
             _allScatters[_lastSelectedVehicle].IsVisible = true;
             PlotZone.Plot.Clear(typeof(ArrowCoordinated));
+            foreach (var tooltip in _selectedRouteTooltips)
+            {
+                PlotZone.Plot.Remove(tooltip);
+            }
         }
         if (ViewModel.SelectedVehicle is null)
         {
@@ -200,6 +219,16 @@ public partial class MainWindow : MetroWindow
                 var arrow = PlotZone.Plot.AddArrow(x2, y2, x1, y1, color: _allScatters[ViewModel.SelectedVehicle.Id].Color, lineWidth: weight);
                 arrow.ArrowheadLength = 7;
                 arrow.ArrowheadWidth = 7;
+
+                if (!ViewModel.DisplayAllRoutes)
+                {
+                    var tooltip = PlotZone.Plot.AddCustomTooltip((i + 1).ToString(), x2, y2);
+                    tooltip.Color = Color.Transparent;
+                    tooltip.BorderColor = Color.Transparent;
+                    tooltip.Font.Color = Color.White;
+                    tooltip.Font.Size += 1;
+                    _selectedRouteTooltips.Add(tooltip);
+                }
             }
             _lastSelectedVehicle = ViewModel.SelectedVehicle.Id;
         }
