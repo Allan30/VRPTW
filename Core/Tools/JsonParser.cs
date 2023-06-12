@@ -8,6 +8,6 @@ public class PythonParser
     
     public void WritePythonFile(String pythonFile, Routes solution)
     {
-        File.WriteAllText(pythonFile, solution.ToString());
+        //File.WriteAllText(pythonFile, solution.ToString());
     }
 }

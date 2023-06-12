@@ -64,6 +64,9 @@ public partial class MainWindow : MetroWindow
             case nameof(RoutesViewModel.SelectedVehicle):
                 HighlightSelectedVehicle();
                 break;
+            case nameof(RoutesViewModel.DisplayAllRoutes):
+                DrawRoutes(ViewModel.DisplayAllRoutes);
+                break;
             default:
                 break;
         }
@@ -93,7 +96,7 @@ public partial class MainWindow : MetroWindow
         PlotZone.Refresh();
     }
 
-    private void DrawRoutes()
+    private void DrawRoutes(bool all = true)
     {
         PlotZone.Plot.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
@@ -105,7 +108,7 @@ public partial class MainWindow : MetroWindow
         var allXs = new List<double>();
         var allYs = new List<double>();
 
-        foreach (var vehicle in ViewModel.Vehicles)
+        foreach (var vehicle in ViewModel.Vehicles.Where(v => all || v == ViewModel.SelectedVehicle))
         {
             var xs = new List<double>(ViewModel.Vehicles.Count);
             var ys = new List<double>(ViewModel.Vehicles.Count);
@@ -122,6 +125,7 @@ public partial class MainWindow : MetroWindow
             var scatter = PlotZone.Plot.AddScatter(xs.ToArray(), ys.ToArray(), markerSize: MARKER_SIZE);
             _allScatters.Add(vehicle.Id, scatter);
         }
+        
         _combinedScatters = new ScatterPlot(allXs.ToArray(), allYs.ToArray());
         PlotZone.Refresh();
     }
@@ -153,8 +157,12 @@ public partial class MainWindow : MetroWindow
 
     private void HighlightSelectedVehicle()
     {
+        if (!ViewModel.DisplayAllRoutes)
+        {
+            DrawRoutes(false);
+        }
         const int weight = 2;
-        if (_lastSelectedVehicle != -1)
+        if (_lastSelectedVehicle != -1 && ViewModel.DisplayAllRoutes)
         {
             _allScatters[_lastSelectedVehicle].IsVisible = true;
             PlotZone.Plot.Clear(typeof(ArrowCoordinated));

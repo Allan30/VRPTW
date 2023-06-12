@@ -62,6 +62,9 @@
             <ComboBox ItemsSource="{Binding ClientsWithDepot}"
                       SelectedItem="{Binding SelectedClient}"
                       IsEnabled="{Binding IsSolutionLoaded}" />
+            <CheckBox Content="Afficher toutes les routes"
+                      IsChecked="{Binding DisplayAllRoutes}"
+                      Padding="5,10" />
             <Label Content="Routes" />
             <ComboBox ItemsSource="{Binding Vehicles}"
                       SelectedItem="{Binding SelectedVehicle}"

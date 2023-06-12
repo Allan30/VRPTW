@@ -95,6 +95,9 @@ public partial class RoutesViewModel : ObservableObject
     //    }
     //}
 
+    [ObservableProperty]
+    private bool _displayAllRoutes = true;
+
     [RelayCommand(CanExecute = nameof(IsSolutionLoaded))]
     private void StartVRPTW()
     {
