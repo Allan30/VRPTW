@@ -9,6 +9,7 @@ using VRPTWCore.Parser;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using VRPTW.Heuristics;
 
 namespace VRPTW.UI.ViewModels;
 
@@ -103,9 +104,17 @@ public partial class RoutesViewModel : ObservableObject
     {
         _solution!.GenerateRandomSolution();
         var descent = new DescentStrategy();
-        descent.Execute(ref _solution);
-        var writer = new PythonParser();
-        writer.WritePythonFile("C:\\Users\\epulapp\\OneDrive\\Bureau\\S8\\OD\\VRPTW\\Core\\Data\\data101.2.json", _solution);
+        var tabou = new TabouResearchStrategy();
+        var recuit = new RecuitSimuleStrategy();
+        var operators = new List<OperatorName>();
+        operators.Add(OperatorName.ExchangeInter);
+        operators.Add(OperatorName.ExchangeIntra);
+        operators.Add(OperatorName.RelocateInter);
+        operators.Add(OperatorName.RelocateIntra);
+        operators.Add(OperatorName.TwoOpt);
+        //descent.BestOfSelectedOperators(ref _solution, operators);
+        tabou.BestOfSelectedOperators(ref _solution, operators);
+        //recuit.RandomWithSelectedOperators(ref _solution, operators);
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
     }

@@ -2,6 +2,11 @@ namespace VRPTW.Concret;
 
 public class TwoOptOperatorIntra : OperatorIntra
 {
+    protected override OperatorName GetName()
+    {
+        return OperatorName.TwoOpt;
+    }
+
     protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle)
     {
         return indexSrc != vehicle.Clients.Count - 2;
@@ -36,7 +41,7 @@ public class TwoOptOperatorIntra : OperatorIntra
         if (newVehicle.IsCorrect())
         {
             var delta = vehicle.TravelledDistance - newVehicle.TravelledDistance;
-            OperateVehicles.Add((newVehicle, newVehicle, delta, "TwoOpt"+"_"+indexSrc+"_"+indexTrg));
+            OperateVehicles.Add((newVehicle, newVehicle, delta, (GetName(), new List<int> {indexSrc, indexTrg})));
         }
         
         

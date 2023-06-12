@@ -2,6 +2,11 @@ namespace VRPTW.Concret;
 
 public class RelocateOperatorInter : OperatorInter
 {
+    protected override OperatorName GetName()
+    {
+        return OperatorName.RelocateInter;
+    }
+
     protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle)
     {
         return indexSrc != vehicle.Clients.Count - 1;
@@ -32,7 +37,7 @@ public class RelocateOperatorInter : OperatorInter
         {
             var delta = vehicleSrc.TravelledDistance - newVehicleSrc.TravelledDistance +
                         vehicleTrg.TravelledDistance - newVehicleTrg.TravelledDistance;
-            OperateVehicles.Add((newVehicleSrc, newVehicleTrg, delta, "RelocateInter"+"_"+indexSrc+"_"+indexTrg));
+            OperateVehicles.Add((newVehicleSrc, newVehicleTrg, delta, (GetName(), new List<int> {indexSrc, indexTrg})));
         }
     }
 }
