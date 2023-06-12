@@ -7,9 +7,9 @@ public class RecuitSimuleStrategy : IStrategy
 {
     
     private double temperature = 100;
-    private double mu = 0.999;
+    private static double mu = 0.999;
     private int currentStep = 0;
-    private int nbStep = 1000;
+    private int nbStep = 1000;//Math.Round(Math.Log(Math.Log(0.8)/Math.Log(0.1))/Math.Log(mu));
 
     protected override bool LoopConditon()
     {

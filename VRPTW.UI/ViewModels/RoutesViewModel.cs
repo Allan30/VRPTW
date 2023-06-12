@@ -102,13 +102,16 @@ public partial class RoutesViewModel : ObservableObject
         _solution!.GenerateRandomSolution();
         var descent = new DescentStrategy();
         var tabou = new TabouResearchStrategy();
+        var recuit = new RecuitSimuleStrategy();
         var operators = new List<OperatorName>();
         operators.Add(OperatorName.ExchangeInter);
         operators.Add(OperatorName.ExchangeIntra);
         operators.Add(OperatorName.RelocateInter);
         operators.Add(OperatorName.RelocateIntra);
         operators.Add(OperatorName.TwoOpt);
-        tabou.RandomWithSelectedOperators(ref _solution, operators);
+        //descent.BestOfSelectedOperators(ref _solution, operators);
+        tabou.BestOfSelectedOperators(ref _solution, operators);
+        //recuit.RandomWithSelectedOperators(ref _solution, operators);
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
     }
