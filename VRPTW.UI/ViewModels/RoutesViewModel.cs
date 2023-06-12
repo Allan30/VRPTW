@@ -60,7 +60,7 @@ public partial class RoutesViewModel : ObservableObject
         set
         {
             SetProperty(ref _selectedVehicle, value);
-            if (SelectedClient?.IsDepot is true)
+            if (SelectedVehicle is null || SelectedClient?.IsDepot is true || (SelectedClient is not null && SelectedVehicle is not null && !SelectedVehicle.Clients.Contains(SelectedClient)))
             {
                 SelectedClient = null;
             }

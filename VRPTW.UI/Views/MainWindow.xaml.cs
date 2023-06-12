@@ -62,10 +62,26 @@ public partial class MainWindow : MetroWindow
                 HighlightSelectedClient();
                 break;
             case nameof(RoutesViewModel.SelectedVehicle):
+                if (!ViewModel.DisplayAllRoutes)
+                {
+                    ResetHighlightedPoint();
+                    DrawRoutes(false);
+                }
                 HighlightSelectedVehicle();
                 break;
             case nameof(RoutesViewModel.DisplayAllRoutes):
-                DrawRoutes(ViewModel.DisplayAllRoutes);
+                if (ViewModel.IsSolutionCalculated)
+                {
+                    DrawRoutes(ViewModel.DisplayAllRoutes || ViewModel.SelectedVehicle is null);
+                    if (ViewModel.SelectedVehicle is not null)
+                    {
+                        HighlightSelectedVehicle();
+                    }
+                    if (ViewModel.SelectedClient is not null)
+                    {
+                        HighlightSelectedClient();
+                    }
+                }
                 break;
             default:
                 break;
@@ -134,9 +150,7 @@ public partial class MainWindow : MetroWindow
     {
         if (ViewModel.SelectedClient is null)
         {
-            _highlightedPoint.IsVisible = false;
-            _lastHighlightedIndex = -1;
-            PlotZone.Plot.Clear(typeof(CustomTooltip));
+            ResetHighlightedPoint();
         }
         else
         {
@@ -155,12 +169,15 @@ public partial class MainWindow : MetroWindow
         PlotZone.Refresh();
     }
 
+    private void ResetHighlightedPoint()
+    {
+        _highlightedPoint.IsVisible = false;
+        _lastHighlightedIndex = -1;
+        PlotZone.Plot.Clear(typeof(CustomTooltip));
+    }
+
     private void HighlightSelectedVehicle()
     {
-        if (!ViewModel.DisplayAllRoutes)
-        {
-            DrawRoutes(false);
-        }
         const int weight = 2;
         if (_lastSelectedVehicle != -1 && ViewModel.DisplayAllRoutes)
         {

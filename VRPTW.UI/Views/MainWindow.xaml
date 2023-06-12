@@ -66,9 +66,25 @@
                       IsChecked="{Binding DisplayAllRoutes}"
                       Padding="5,10" />
             <Label Content="Routes" />
+            <!--<ComboBox ItemsSource="{Binding Vehicles}"
+                      SelectedItem="{Binding SelectedVehicle}"
+                      IsEnabled="{Binding IsSolutionCalculated}" />-->
+
             <ComboBox ItemsSource="{Binding Vehicles}"
                       SelectedItem="{Binding SelectedVehicle}"
-                      IsEnabled="{Binding IsSolutionCalculated}" />
+                      IsEnabled="{Binding IsSolutionCalculated}">
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
+                        <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="True" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DisplayAllRoutes}" Value="False">
+                                <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="False" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+            </ComboBox>
+
             <Label Content="{Binding SelectedVehicle.NbClients}"
                    ContentStringFormat="Nombre de clients : {0}"
                    Padding="5,5,5,0" />
