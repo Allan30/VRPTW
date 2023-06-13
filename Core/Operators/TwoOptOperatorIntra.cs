@@ -17,15 +17,9 @@ public class TwoOptOperatorIntra : OperatorIntra
         return indexTrg != vehicle.Clients.Count - 1;
     }
 
-    protected override int GetIndexSrc()
-    {
-        return 0;
-    }
+    protected override int IndexSrc => 0;
 
-    protected override int GetIndexTrg()
-    {
-        return 1;
-    }
+    protected override int IndexTrg => 1;
 
     protected override void PerformOperation(int indexSrc, int indexTrg, Vehicle vehicle)
     {
@@ -43,7 +37,5 @@ public class TwoOptOperatorIntra : OperatorIntra
             var delta = vehicle.TravelledDistance - newVehicle.TravelledDistance;
             OperateVehicles.Add((newVehicle, newVehicle, delta, (GetName(), new List<int> {indexSrc, indexTrg})));
         }
-        
-        
     }
 }

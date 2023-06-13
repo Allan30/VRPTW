@@ -18,6 +18,6 @@ public abstract class Operator
     
     protected abstract bool IndexSrcCondition(int indexSrc, Vehicle vehicle);
     protected abstract bool IndexTrgCondition(int indexTrg, Vehicle vehicle);
-    protected abstract int GetIndexSrc();
-    protected abstract int GetIndexTrg();
+    protected abstract int IndexSrc { get; }
+    protected abstract int IndexTrg { get; }
 }

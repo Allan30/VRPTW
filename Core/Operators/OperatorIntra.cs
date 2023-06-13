@@ -6,10 +6,10 @@ public abstract class OperatorIntra : Operator
     {
         foreach (var vehicle in Solution.Vehicles)
         {
-            var indexSrc = GetIndexSrc();
+            var indexSrc = IndexSrc;
             while (IndexSrcCondition(indexSrc, vehicle))
             {
-                var indexTrg = GetIndexTrg();
+                var indexTrg = IndexTrg;
                 if (indexSrc != indexTrg)
                 {
                     while (IndexTrgCondition(indexTrg, vehicle))

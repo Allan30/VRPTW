@@ -8,12 +8,12 @@ public abstract class OperatorInter : Operator
     {
         foreach (var vehicleSrc in Solution.Vehicles)
         {
-            var indexSrc = GetIndexSrc();
+            var indexSrc = IndexSrc;
             while (IndexSrcCondition(indexSrc, vehicleSrc))
             {
                 foreach (var vehicleTrg in Solution.Vehicles.Where(x => x != vehicleSrc))
                 {
-                    var indexTrg = GetIndexTrg();
+                    var indexTrg = IndexTrg;
                     while (IndexTrgCondition(indexTrg, vehicleTrg))
                     {
                         PerformOperation(indexSrc, indexTrg, vehicleSrc, vehicleTrg);

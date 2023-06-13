@@ -17,15 +17,9 @@ public class ExchangeOperatorIntra : OperatorIntra
         return indexTrg != vehicle.Clients.Count - 1;
     }
 
-    protected override int GetIndexSrc()
-    {
-        return 1;
-    }
+    protected override int IndexSrc => 1;
 
-    protected override int GetIndexTrg()
-    {
-        return 1;
-    }
+    protected override int IndexTrg => 1;
 
     protected override void PerformOperation(int indexSrc, int indexTrg, Vehicle vehicle)
     {

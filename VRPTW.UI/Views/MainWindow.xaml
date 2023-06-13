@@ -46,45 +46,44 @@
                     Margin="5">
             <Button Content="Choisir un fichier"
                     Command="{Binding ChooseFileCommand}" />
-            <Label Content="Heuristique" />
-            <ComboBox ItemsSource="{Binding AvailableHeuristics}"
+            <StackPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Label Content="Heuristique" />
+                <ComboBox ItemsSource="{Binding AvailableHeuristics}"
                       SelectedItem="{Binding SelectedHeuristic}" />
-            <Label Content="Itérations" />
-            <mah:NumericUpDown Value="{Binding WantedIterations}"
+                <Label Content="Itérations" />
+                <mah:NumericUpDown Value="{Binding WantedIterations}"
                                Minimum="{Binding ITERATIONS_MIN}"
                                Maximum="{Binding ITERATIONS_MAX}"
                                IsEnabled="{Binding IsSolutionLoaded}" />
-            <Button Content="Démarrer"
+                <Button Content="Démarrer"
                     Command="{Binding StartVRPTWCommand}"
                     Margin="0,10,0,0" />
-            <Separator Margin="0,20,0,10" />
-            <Label Content="Clients" />
-            <ComboBox ItemsSource="{Binding ClientsWithDepot}"
+                <Separator Margin="0,20,0,10" />
+                <Label Content="Clients" />
+                <ComboBox ItemsSource="{Binding ClientsWithDepot}"
                       SelectedItem="{Binding SelectedClient}"
                       IsEnabled="{Binding IsSolutionLoaded}" />
-            <CheckBox Content="Afficher toutes les routes"
+            </StackPanel>
+            <StackPanel Visibility="{Binding IsSolutionCalculated, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <CheckBox Content="Afficher toutes les routes"
                       IsChecked="{Binding DisplayAllRoutes}"
                       Padding="5,10" />
-            <Label Content="Routes" />
-            <!--<ComboBox ItemsSource="{Binding Vehicles}"
-                      SelectedItem="{Binding SelectedVehicle}"
-                      IsEnabled="{Binding IsSolutionCalculated}" />-->
-
-            <ComboBox ItemsSource="{Binding Vehicles}"
-                      SelectedItem="{Binding SelectedVehicle}"
-                      IsEnabled="{Binding IsSolutionCalculated}">
-                <ComboBox.Style>
-                    <Style TargetType="ComboBox" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
-                        <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="True" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding DisplayAllRoutes}" Value="False">
-                                <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="False" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ComboBox.Style>
-            </ComboBox>
-
+                <Label Content="Routes" />
+                <ComboBox ItemsSource="{Binding Vehicles}"
+                      SelectedItem="{Binding SelectedVehicle}">
+                    <ComboBox.Style>
+                        <Style TargetType="ComboBox" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
+                            <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="True" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DisplayAllRoutes}" Value="False">
+                                    <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.Style>
+                </ComboBox>
+            </StackPanel>
+            
             <Label Content="{Binding SelectedVehicle.NbClients}"
                    ContentStringFormat="Nombre de clients : {0}"
                    Padding="5,5,5,0" />

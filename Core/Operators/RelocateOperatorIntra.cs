@@ -17,15 +17,9 @@ public class RelocateOperatorIntra : OperatorIntra
         return indexTrg != vehicle.Clients.Count - 2;
     }
 
-    protected override int GetIndexSrc()
-    {
-        return 1;
-    }
+    protected override int IndexSrc => 1;
 
-    protected override int GetIndexTrg()
-    {
-        return 0;
-    }
+    protected override int IndexTrg => 0;
 
     protected override void PerformOperation(int indexSrc, int indexTrg, Vehicle vehicle)
     {

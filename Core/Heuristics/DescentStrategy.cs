@@ -5,16 +5,13 @@ namespace VRPTW.Heuristics;
 public class DescentStrategy : IStrategy
 {
     
-    private double prevFitness = 0;
-    private double currentFitness = -1;
-    protected override bool LoopConditon()
-    {
-        return prevFitness > currentFitness;
-    }
+    private double _prevFitness = 0;
+    private double _currentFitness = -1;
+    protected override bool LoopConditon => _prevFitness > _currentFitness;
 
     protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorName name, List<int> clientsIndex) operation)> vehicles, Routes solution)
     {
-        prevFitness = solution.Fitness;
+        _prevFitness = solution.Fitness;
         if (vehicles.Count == 0)
         {
             return solution;
@@ -34,7 +31,7 @@ public class DescentStrategy : IStrategy
         
         newRoutes.ChangeVehicle(bestOperation.src);
         newRoutes.ChangeVehicle(bestOperation.trg);
-        currentFitness = newRoutes.Fitness;
+        _currentFitness = newRoutes.Fitness;
         return newRoutes;
     }
 }

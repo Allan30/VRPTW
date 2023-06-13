@@ -7,18 +7,18 @@ public abstract class IStrategy
     protected double bestFitness = double.MaxValue;
     protected Routes bestSolution = new();
 
-    protected abstract bool LoopConditon();
+    protected abstract bool LoopConditon { get; }
     public void RandomWithSelectedOperators(ref Routes solution, List<OperatorName> operatorsNames)
     {
         var operators = GetOperatorsFromName(operatorsNames).ToList();
-        var nbOperators = operators.Count();
+        var nbOperators = operators.Count;
         var r = new Random();
-        while(LoopConditon())
+        while (LoopConditon)
         {
             solution = GetNewSolution(operators[r.Next(0, nbOperators)].Execute(solution), solution);
             solution.DelEmptyVehicles();
             var newFitness = solution.Fitness;
-            if(newFitness < bestFitness)
+            if (newFitness < bestFitness)
             {
                 bestFitness = newFitness;
                 bestSolution = (Routes) solution.Clone();
@@ -30,7 +30,7 @@ public abstract class IStrategy
     {
         bestSolution = (Routes) solution.Clone();
         var operators = GetOperatorsFromName(operatorsName);
-        while(LoopConditon())
+        while(LoopConditon)
         {
             var neighbors = new List<(Vehicle, Vehicle, double, (OperatorName, List<int>))>();
             foreach (var op in operators)
@@ -78,7 +78,7 @@ public abstract class IStrategy
                     break;
                     
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(operatorName));
             }
         }
 
