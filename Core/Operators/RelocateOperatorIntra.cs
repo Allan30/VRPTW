@@ -2,9 +2,9 @@ namespace VRPTW.Concret;
 
 public class RelocateOperatorIntra : OperatorIntra
 {
-    protected override OperatorName GetName()
+    protected override OperatorEnum GetName()
     {
-        return OperatorName.RelocateIntra;
+        return OperatorEnum.RelocateIntra;
     }
 
     protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle)

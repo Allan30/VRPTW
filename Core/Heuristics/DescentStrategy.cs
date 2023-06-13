@@ -2,14 +2,14 @@ using VRPTW.Concret;
 
 namespace VRPTW.Heuristics;
 
-public class DescentStrategy : IStrategy
+public class DescentStrategy : StrategyBase
 {
     
     private double _prevFitness = 0;
     private double _currentFitness = -1;
     protected override bool LoopConditon => _prevFitness > _currentFitness;
 
-    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorName name, List<int> clientsIndex) operation)> vehicles, Routes solution)
+    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution)
     {
         _prevFitness = solution.Fitness;
         if (vehicles.Count == 0)

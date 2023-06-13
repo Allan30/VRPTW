@@ -1,6 +1,6 @@
 namespace VRPTW.Concret;
 
-public enum OperatorName
+public enum OperatorEnum
 {
     RelocateInter,
     RelocateIntra,

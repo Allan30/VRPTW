@@ -3,7 +3,7 @@ using VRPTW.Heuristics;
 
 namespace VRPTW.Concret;
 
-public class RecuitSimuleStrategy : IStrategy
+public class RecuitSimuleStrategy : StrategyBase
 {
     
     private double _temperature = 100;
@@ -13,7 +13,7 @@ public class RecuitSimuleStrategy : IStrategy
 
     protected override bool LoopConditon => _currentStep < _nbStep;
 
-    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorName name, List<int> clientsIndex) operation)> vehicles, Routes solution)
+    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution)
     {
         _currentStep++;
         if (vehicles.Count == 0)

@@ -2,9 +2,9 @@ namespace VRPTW.Concret;
 
 public class TwoOptOperatorIntra : OperatorIntra
 {
-    protected override OperatorName GetName()
+    protected override OperatorEnum GetName()
     {
-        return OperatorName.TwoOpt;
+        return OperatorEnum.TwoOpt;
     }
 
     protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle)

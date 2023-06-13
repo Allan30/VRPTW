@@ -2,9 +2,9 @@ namespace VRPTW.Concret;
 
 public class ExchangeOperatorIntra : OperatorIntra
 {
-    protected override OperatorName GetName()
+    protected override OperatorEnum GetName()
     {
-        return OperatorName.ExchangeIntra;
+        return OperatorEnum.ExchangeIntra;
     }
 
     protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle)

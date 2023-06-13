@@ -2,13 +2,13 @@ using VRPTW.Concret;
 
 namespace VRPTW.Heuristics;
 
-public abstract class IStrategy
+public abstract class StrategyBase
 {
     protected double bestFitness = double.MaxValue;
     protected Routes bestSolution = new();
 
     protected abstract bool LoopConditon { get; }
-    public void RandomWithSelectedOperators(ref Routes solution, List<OperatorName> operatorsNames)
+    public void RandomWithSelectedOperators(ref Routes solution, List<OperatorEnum> operatorsNames)
     {
         var operators = GetOperatorsFromName(operatorsNames).ToList();
         var nbOperators = operators.Count;
@@ -26,13 +26,13 @@ public abstract class IStrategy
         }
     }
 
-    public void BestOfSelectedOperators(ref Routes solution, List<OperatorName> operatorsName)
+    public void BestOfSelectedOperators(ref Routes solution, List<OperatorEnum> operatorsName)
     {
         bestSolution = (Routes) solution.Clone();
         var operators = GetOperatorsFromName(operatorsName);
         while(LoopConditon)
         {
-            var neighbors = new List<(Vehicle, Vehicle, double, (OperatorName, List<int>))>();
+            var neighbors = new List<(Vehicle, Vehicle, double, (OperatorEnum, List<int>))>();
             foreach (var op in operators)
             {
                 neighbors = neighbors.Concat(op.Execute(solution)).ToList();
@@ -50,30 +50,30 @@ public abstract class IStrategy
         solution = bestSolution;
     }
 
-    protected List<Operator> GetOperatorsFromName(List<OperatorName> operatorsName)
+    protected static List<Operator> GetOperatorsFromName(List<OperatorEnum> operatorsName)
     {
         var operators = new List<Operator>();
         foreach (var operatorName in operatorsName)
         {
             switch (operatorName)
             {
-                case OperatorName.ExchangeInter: 
+                case OperatorEnum.ExchangeInter: 
                     operators.Add(new ExchangeOperatorInter());
                     break;
                     
-                case OperatorName.ExchangeIntra:
+                case OperatorEnum.ExchangeIntra:
                     operators.Add(new ExchangeOperatorIntra());
                     break;
                     
-                case OperatorName.RelocateInter:
+                case OperatorEnum.RelocateInter:
                     operators.Add(new RelocateOperatorInter());
                     break;
                     
-                case OperatorName.RelocateIntra:
+                case OperatorEnum.RelocateIntra:
                     operators.Add(new RelocateOperatorIntra());
                     break;
                     
-                case OperatorName.TwoOpt:
+                case OperatorEnum.TwoOpt:
                     operators.Add(new TwoOptOperatorIntra());
                     break;
                     
@@ -85,7 +85,7 @@ public abstract class IStrategy
         return operators;
     }
 
-    protected abstract Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorName name, List<int> clientsIndex) operation)> vehicles,
+    protected abstract Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles,
         Routes solution);
 
 

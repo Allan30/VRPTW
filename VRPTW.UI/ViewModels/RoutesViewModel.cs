@@ -15,11 +15,7 @@ namespace VRPTW.UI.ViewModels;
 
 public partial class RoutesViewModel : ObservableObject
 {
-    public static List<HeuristicViewModel> AvailableHeuristics => new()
-    {
-        new("Foo"),
-        new("Bar"),
-    };
+    public static List<HeuristicViewModel> AvailableHeuristics { get; set; } = new();
     public HeuristicViewModel? SelectedHeuristic { get; set; }
     
     private readonly RoutesMapper _routesMapper = new();
@@ -106,12 +102,14 @@ public partial class RoutesViewModel : ObservableObject
         var descent = new DescentStrategy();
         var tabou = new TabouResearchStrategy();
         var recuit = new RecuitSimuleStrategy();
-        var operators = new List<OperatorName>();
-        operators.Add(OperatorName.ExchangeInter);
-        operators.Add(OperatorName.ExchangeIntra);
-        operators.Add(OperatorName.RelocateInter);
-        operators.Add(OperatorName.RelocateIntra);
-        operators.Add(OperatorName.TwoOpt);
+        var operators = new List<OperatorEnum>
+        {
+            OperatorEnum.ExchangeInter,
+            OperatorEnum.ExchangeIntra,
+            OperatorEnum.RelocateInter,
+            OperatorEnum.RelocateIntra,
+            OperatorEnum.TwoOpt
+        };
         //descent.BestOfSelectedOperators(ref _solution, operators);
         tabou.BestOfSelectedOperators(ref _solution, operators);
         //recuit.RandomWithSelectedOperators(ref _solution, operators);

@@ -3,13 +3,13 @@ using VRPTW.Heuristics;
 
 namespace VRPTW.Concret;
 
-public class TabouResearchStrategy : IStrategy
+public class TabouResearchStrategy : StrategyBase
 {
     private int _tabouSize = 80;
     private int _currentStep = 0;
     private int _nbStep = 1000;
 
-    private List<(OperatorName operatorName, List<string> clientName)> _tabouList = new();
+    private List<(OperatorEnum operatorName, List<string> clientName)> _tabouList = new();
     protected override bool LoopConditon
     {
         get
@@ -19,7 +19,7 @@ public class TabouResearchStrategy : IStrategy
         }
     }
 
-    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorName name, List<int> clientsIndex) operation)> vehicles, Routes solution)
+    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution)
     {
         _currentStep++;
         if (vehicles.Count == 0)

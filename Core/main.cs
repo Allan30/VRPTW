@@ -17,12 +17,12 @@ public class Test
         var descent = new DescentStrategy();
         var tabou = new TabouResearchStrategy();
         var recuit = new RecuitSimuleStrategy();
-        var operators = new List<OperatorName>();
-        operators.Add(OperatorName.ExchangeInter);
-        operators.Add(OperatorName.ExchangeIntra);
-        operators.Add(OperatorName.RelocateInter);
-        operators.Add(OperatorName.RelocateIntra);
-        operators.Add(OperatorName.TwoOpt);
+        var operators = new List<OperatorEnum>();
+        operators.Add(OperatorEnum.ExchangeInter);
+        operators.Add(OperatorEnum.ExchangeIntra);
+        operators.Add(OperatorEnum.RelocateInter);
+        operators.Add(OperatorEnum.RelocateIntra);
+        operators.Add(OperatorEnum.TwoOpt);
         //tabou.BestOfSelectedOperators(ref solution, operators);
         recuit.RandomWithSelectedOperators(ref solution, operators);
         Console.WriteLine(solution.Fitness);
