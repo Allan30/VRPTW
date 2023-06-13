@@ -1,6 +1,4 @@
-﻿using VRPTW.AbstractObjects;
-
-namespace VRPTW.Concret
+﻿namespace VRPTW.Concret
 {
     public class Client : ICloneable
     {

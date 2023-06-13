@@ -2,7 +2,7 @@ using VRPTW.Concret;
 
 namespace VRPTW.Heuristics;
 
-public class DescentStrategy : StrategyBase
+public class DescentStrategy : HeuristicStrategyBase
 {
     
     private double _prevFitness = 0;

@@ -1,6 +1,6 @@
 namespace VRPTW.Concret;
 
-public abstract class Operator
+public abstract class OperatorBase
 {
     protected List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum operation, List<int> clientsIndex))> OperateVehicles;
     public Routes Solution;

@@ -1,36 +1,36 @@
 using VRPTW.Concret;
+using VRPTWCore.NeighborhoodStrategies;
 
 namespace VRPTW.Heuristics;
 
-public abstract class StrategyBase
+public abstract class HeuristicStrategyBase
 {
-    protected double bestFitness = double.MaxValue;
-    protected Routes bestSolution = new();
+    protected double BestFitness { get; set; } = double.MaxValue;
+    protected Routes BestSolution = new();
 
     protected abstract bool LoopConditon { get; }
-    public void RandomWithSelectedOperators(ref Routes solution, List<OperatorEnum> operatorsNames)
+    public void RandomWithSelectedOperators(ref Routes solution, List<OperatorEnum> ops)
     {
-        var operators = GetOperatorsFromName(operatorsNames).ToList();
-        var nbOperators = operators.Count;
         var r = new Random();
+        var operators = GetOperatorsFromName(ops);
         while (LoopConditon)
         {
-            solution = GetNewSolution(operators[r.Next(0, nbOperators)].Execute(solution), solution);
-            solution.DelEmptyVehicles();
+            solution = GetNewSolution(operators[r.Next(0, operators.Count)].Execute(solution), solution);
+            solution.DeleteEmptyVehicles();
             var newFitness = solution.Fitness;
-            if (newFitness < bestFitness)
+            if (newFitness < BestFitness)
             {
-                bestFitness = newFitness;
-                bestSolution = (Routes) solution.Clone();
+                BestFitness = newFitness;
+                BestSolution = (Routes) solution.Clone();
             }
         }
     }
 
-    public void BestOfSelectedOperators(ref Routes solution, List<OperatorEnum> operatorsName)
+    public void BestOfSelectedOperators(ref Routes solution, List<OperatorEnum> ops)
     {
-        bestSolution = (Routes) solution.Clone();
-        var operators = GetOperatorsFromName(operatorsName);
-        while(LoopConditon)
+        BestSolution = (Routes) solution.Clone();
+        var operators = GetOperatorsFromName(ops);
+        while (LoopConditon)
         {
             var neighbors = new List<(Vehicle, Vehicle, double, (OperatorEnum, List<int>))>();
             foreach (var op in operators)
@@ -38,45 +38,45 @@ public abstract class StrategyBase
                 neighbors = neighbors.Concat(op.Execute(solution)).ToList();
             }
             solution = GetNewSolution(neighbors, solution);
-            solution.DelEmptyVehicles();
+            solution.DeleteEmptyVehicles();
             var newFitness = solution.Fitness;
-            if(newFitness < bestFitness)
+            if (newFitness < BestFitness)
             {
-                bestFitness = newFitness;
-                bestSolution = (Routes) solution.Clone();
+                BestFitness = newFitness;
+                BestSolution = (Routes) solution.Clone();
             }
         }
         Console.WriteLine(solution.Fitness);
-        solution = bestSolution;
+        solution = BestSolution;
     }
 
-    protected static List<Operator> GetOperatorsFromName(List<OperatorEnum> operatorsName)
+    protected static List<OperatorBase> GetOperatorsFromName(List<OperatorEnum> operatorsName)
     {
-        var operators = new List<Operator>();
+        var operators = new List<OperatorBase>();
         foreach (var operatorName in operatorsName)
         {
             switch (operatorName)
             {
-                case OperatorEnum.ExchangeInter: 
+                case OperatorEnum.ExchangeInter:
                     operators.Add(new ExchangeOperatorInter());
                     break;
-                    
+
                 case OperatorEnum.ExchangeIntra:
                     operators.Add(new ExchangeOperatorIntra());
                     break;
-                    
+
                 case OperatorEnum.RelocateInter:
                     operators.Add(new RelocateOperatorInter());
                     break;
-                    
+
                 case OperatorEnum.RelocateIntra:
                     operators.Add(new RelocateOperatorIntra());
                     break;
-                    
+
                 case OperatorEnum.TwoOpt:
                     operators.Add(new TwoOptOperatorIntra());
                     break;
-                    
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(operatorName));
             }
@@ -85,8 +85,8 @@ public abstract class StrategyBase
         return operators;
     }
 
-    protected abstract Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles,
-        Routes solution);
-
-
+    protected abstract Routes GetNewSolution(
+        List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles,
+        Routes solution
+    );
 }

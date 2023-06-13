@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace VRPTW.Concret;
 
-public abstract class OperatorInter : Operator
+public abstract class OperatorInter : OperatorBase
 {
     protected override void Browse()
     {

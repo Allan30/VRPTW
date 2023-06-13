@@ -6,7 +6,7 @@ using System;
 using ScottPlot.Plottable;
 using System.Drawing.Drawing2D;
 
-namespace VRPTW.UI.ScottPlotExtended;
+namespace VRPTW.UI.Plottable;
 
 public sealed class CustomTooltip : IPlottable, IHasColor, IHittable
 {
@@ -123,6 +123,6 @@ public sealed class CustomTooltip : IPlottable, IHasColor, IHittable
         var prop = typeof(Tooltip).GetField("LastRenderRect", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
         prop!.SetValue(_tooltip, CoordinateRect.BoundingBox(corners));
     }
-    
+
     public void ValidateData(bool deep = false) => _tooltip.ValidateData(deep);
 }

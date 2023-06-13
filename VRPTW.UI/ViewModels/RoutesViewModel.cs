@@ -10,14 +10,43 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using VRPTW.Heuristics;
+using VRPTW.UI.ViewModels.Neighborhood;
+using VRPTW.UI.ViewModels.Heuristics;
 
 namespace VRPTW.UI.ViewModels;
 
 public partial class RoutesViewModel : ObservableObject
 {
-    public static List<HeuristicViewModel> AvailableHeuristics { get; set; } = new();
-    public HeuristicViewModel? SelectedHeuristic { get; set; }
-    
+    public static readonly List<NeighborhoodStrategyViewModel> NeighborhoodStrategies = new()
+    {
+        new(NeighborhoodStrategyEnum.Best),
+        new(NeighborhoodStrategyEnum.Random)
+    };
+
+    [ObservableProperty]
+    private NeighborhoodStrategyViewModel _selectedNeighborhoodStrategy = NeighborhoodStrategies.First();
+
+    public static readonly List<HeuristicStrategyViewModel> HeuristicStrategies = new()
+    {
+        new(HeuristicStrategyEnum.Descent),
+        new(HeuristicStrategyEnum.SimulatedAnnealing),
+        new(HeuristicStrategyEnum.Tabu)
+    };
+
+    [ObservableProperty]
+    private HeuristicStrategyViewModel _selectedHeuristicStrategy = HeuristicStrategies.First();
+
+    public static readonly List<OperatorViewModel> Operators = new()
+    {
+        new(OperatorEnum.ExchangeInter),
+        new(OperatorEnum.ExchangeIntra),
+        new(OperatorEnum.RelocateInter),
+        new(OperatorEnum.RelocateIntra),
+        new(OperatorEnum.TwoOpt)
+    };
+
+    public List<OperatorViewModel> SelectedOperators { get; set; } = new();
+
     private readonly RoutesMapper _routesMapper = new();
 
     private Routes? _solution;
@@ -82,7 +111,7 @@ public partial class RoutesViewModel : ObservableObject
     private bool _isSolutionCalculated;
 
     private bool _isSolutionCalculable;
-    public bool IsSolutionCalculable => IsSolutionLoaded && SelectedHeuristic is not null;
+    public bool IsSolutionCalculable => IsSolutionLoaded && SelectedHeuristicStrategy is not null;
     //{
     //    get => _isSolutionCalculable;
     //    set
@@ -100,18 +129,11 @@ public partial class RoutesViewModel : ObservableObject
     {
         _solution!.GenerateRandomSolution();
         var descent = new DescentStrategy();
-        var tabou = new TabouResearchStrategy();
-        var recuit = new RecuitSimuleStrategy();
-        var operators = new List<OperatorEnum>
-        {
-            OperatorEnum.ExchangeInter,
-            OperatorEnum.ExchangeIntra,
-            OperatorEnum.RelocateInter,
-            OperatorEnum.RelocateIntra,
-            OperatorEnum.TwoOpt
-        };
+        var tabou = new TabuStrategy();
+        var recuit = new SimulatedAnnealingStrategy();
+        
         //descent.BestOfSelectedOperators(ref _solution, operators);
-        tabou.BestOfSelectedOperators(ref _solution, operators);
+        tabou.BestOfSelectedOperators(ref _solution, SelectedOperators.Select(o => o.OperatorType).ToList());
         //recuit.RandomWithSelectedOperators(ref _solution, operators);
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;

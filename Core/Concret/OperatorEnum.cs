@@ -1,10 +1,17 @@
+using System.ComponentModel;
+
 namespace VRPTW.Concret;
 
 public enum OperatorEnum
 {
-    RelocateInter,
-    RelocateIntra,
+    [Description("Échange inter")]
     ExchangeInter,
+    [Description("Échange intra")]
     ExchangeIntra,
-    TwoOpt,
+    [Description("Relocate inter")]
+    RelocateInter,
+    [Description("Relocate intra")]
+    RelocateIntra,
+    [Description("Two-opt")]
+    TwoOpt
 }

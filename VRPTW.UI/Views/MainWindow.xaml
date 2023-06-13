@@ -19,7 +19,7 @@
     </mah:MetroWindow.DataContext>
     <mah:MetroWindow.Resources>
         <Style TargetType="ComboBox"
-               x:Key="{x:Type ComboBox}"
+               x:Key="ClearableComboBox"
                BasedOn="{StaticResource MahApps.Styles.ComboBox}">
             <Setter Property="mah:TextBoxHelper.ClearTextButton"
                     Value="True"/>
@@ -41,31 +41,54 @@
         <ScottPlot:WpfPlot x:Name="PlotZone"
                            LeftClicked="OnPlotZoneLeftClicked"
                            MouseMove="OnPlotZoneMouseMoved" />
-
+        
         <StackPanel Grid.Column="1"
                     Margin="5">
+            
             <Button Content="Choisir un fichier"
-                    Command="{Binding ChooseFileCommand}" />
-            <StackPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Label Content="Heuristique" />
-                <ComboBox ItemsSource="{Binding AvailableHeuristics}"
-                          SelectedItem="{Binding SelectedHeuristic}" />
-                <Label Content="Opérateurs" />
+                    Command="{Binding ChooseFileCommand}"
+                    Margin="0,0,0,15" />
+            
+            <StackPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Margin="0,15,0,15">
                 
-                <Label Content="Itérations" />
-                <mah:NumericUpDown Value="{Binding WantedIterations}"
+                <Expander Header="Configuration">
+                    <StackPanel>
+                        <Label Content="Heuristique" />
+                        <ComboBox ItemsSource="{Binding Source={x:Static viewmodels:RoutesViewModel.HeuristicStrategies}, Mode=OneWay}"
+                                  SelectedItem="{Binding SelectedHeuristicStrategy}"
+                                  Margin="0,0,0,5" />
+                        <Label Content="Stratégie de voisinage" />
+                        <ComboBox ItemsSource="{Binding Source={x:Static viewmodels:RoutesViewModel.NeighborhoodStrategies}, Mode=OneWay}"
+                                  SelectedItem="{Binding SelectedNeighborhoodStrategy}"
+                                  Margin="0,0,0,5" />
+                        <Label Content="Opérateurs" />
+                        <ListView ItemsSource="{Binding Source={x:Static viewmodels:RoutesViewModel.Operators}, Mode=OneWay}"
+                                  SelectionMode="Multiple"
+                                  Name="OperatorsListView"
+                                  SelectionChanged="OnOperatorsSelectionChanged" />
+                        <Label Content="Itérations" />
+                        <mah:NumericUpDown Value="{Binding WantedIterations}"
                                Minimum="{Binding ITERATIONS_MIN}"
                                Maximum="{Binding ITERATIONS_MAX}"
                                IsEnabled="{Binding IsSolutionLoaded}" />
+                    </StackPanel>
+                </Expander>
+                
                 <Button Content="Démarrer"
                         Command="{Binding StartVRPTWCommand}"
-                        Margin="0,10,0,0" />
+                        Margin="0,15,0,0" />
+                
                 <Separator Margin="0,20,0,10" />
+                
                 <Label Content="Clients" />
                 <ComboBox ItemsSource="{Binding ClientsWithDepot}"
                           SelectedItem="{Binding SelectedClient}"
-                          IsEnabled="{Binding IsSolutionLoaded}" />
+                          IsEnabled="{Binding IsSolutionLoaded}"
+                          Style="{StaticResource ClearableComboBox}"/>
+                
             </StackPanel>
+            
             <StackPanel Visibility="{Binding IsSolutionCalculated, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <CheckBox Content="Afficher toutes les routes"
                           IsChecked="{Binding DisplayAllRoutes}"

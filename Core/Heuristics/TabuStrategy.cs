@@ -1,23 +1,15 @@
-using VRPTW.AbstractObjects;
 using VRPTW.Heuristics;
 
 namespace VRPTW.Concret;
 
-public class TabouResearchStrategy : StrategyBase
+public class TabuStrategy : HeuristicStrategyBase
 {
-    private int _tabouSize = 80;
+    private readonly int _tabouSize = 80;
     private int _currentStep = 0;
-    private int _nbStep = 1000;
+    private readonly int _nbStep = 1000;
 
-    private List<(OperatorEnum operatorName, List<string> clientName)> _tabouList = new();
-    protected override bool LoopConditon
-    {
-        get
-        {
-            Console.WriteLine(_currentStep);
-            return _currentStep < _nbStep;
-        }
-    }
+    private readonly List<(OperatorEnum operatorName, List<string> clientName)> _tabouList = new();
+    protected override bool LoopConditon => _currentStep < _nbStep;
 
     protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution)
     {

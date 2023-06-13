@@ -1,6 +1,6 @@
 namespace VRPTW.Concret;
 
-public abstract class OperatorIntra : Operator
+public abstract class OperatorIntra : OperatorBase
 {
     protected override void Browse()
     {

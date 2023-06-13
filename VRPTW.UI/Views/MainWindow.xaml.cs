@@ -7,7 +7,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using VRPTW.UI.Plottable;
 using VRPTW.UI.ScottPlotExtended;
 using VRPTW.UI.ViewModels;
 namespace VRPTW.UI.Views;
@@ -287,5 +289,10 @@ public partial class MainWindow : MetroWindow
         {
             ViewModel.SelectedClient = null;
         }
+    }
+
+    private void OnOperatorsSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        ViewModel.SelectedOperators = OperatorsListView.SelectedItems.Cast<OperatorViewModel>().ToList();
     }
 }

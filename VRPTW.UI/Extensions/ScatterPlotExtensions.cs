@@ -1,12 +1,12 @@
 ﻿using ScottPlot;
 using ScottPlot.Plottable;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
+using VRPTW.UI.Plottable;
 
 namespace VRPTW.UI.ScottPlotExtended;
 
-public static class ScatterPlotExtension
+public static class ScatterPlotExtensions
 {
     public static bool TryGetPointNearest(this ScatterPlot plot, double x, double y, out (double x, double y, int index) point, int snapDistance, double xyRatio = 1)
     {

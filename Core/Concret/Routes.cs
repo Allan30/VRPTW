@@ -1,9 +1,8 @@
 ﻿using System.Text;
-using VRPTW.AbstractObjects;
 
 namespace VRPTW.Concret;
 
-public class Routes : ISolution, ICloneable
+public class Routes : ICloneable
 {
     public Client Depot { get; set; }
     public List<Client> Clients { get; set; }
@@ -26,7 +25,7 @@ public class Routes : ISolution, ICloneable
     {
         Vehicles.Add(new Vehicle(Vehicles.Count, MaxCapacity, Depot));
     }
-    public void DelEmptyVehicles()
+    public void DeleteEmptyVehicles()
     {
         Vehicles.RemoveAll(vehicle => vehicle.Clients.Count == 2);
         for (var i = 0; i < Vehicles.Count; i++)
@@ -40,12 +39,6 @@ public class Routes : ISolution, ICloneable
         Vehicles[vehicle.Id] = vehicle;
     }
     public double Fitness => Vehicles.Sum(vehicle => vehicle.TravelledDistance);
-
-    public List<ISolution> GetNeighbours()
-    {
-        //TODO: Implement this method
-        throw new System.NotImplementedException();
-    }
 
     public void GenerateRandomSolution()
     {

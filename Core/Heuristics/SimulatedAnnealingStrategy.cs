@@ -1,13 +1,12 @@
-using VRPTW.AbstractObjects;
 using VRPTW.Heuristics;
 
 namespace VRPTW.Concret;
 
-public class RecuitSimuleStrategy : StrategyBase
+public class SimulatedAnnealingStrategy : HeuristicStrategyBase
 {
     
     private double _temperature = 100;
-    private static double _mu = 0.999;
+    private static readonly double _mu = 0.999;
     private int _currentStep = 0;
     private int _nbStep = 1000;//Math.Round(Math.Log(Math.Log(0.8)/Math.Log(0.1))/Math.Log(mu));
 
