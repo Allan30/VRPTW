@@ -131,7 +131,6 @@ public partial class RoutesViewModel : ObservableObject
         IsSolutionCalculated = false;
         _solution!.Reset();
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
-        
     }
 
     [RelayCommand(CanExecute = nameof(IsSolutionCalculable))]

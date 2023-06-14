@@ -9,7 +9,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using VRPTW.UI.Plottable;
+using VRPTW.UI.Plottables;
 using VRPTW.UI.ScottPlotExtended;
 using VRPTW.UI.ViewModels;
 namespace VRPTW.UI.Views;
@@ -73,6 +73,10 @@ public partial class MainWindow : MetroWindow
                     GiveColorsToRoutes();
                     DrawRoutes();
                 }
+                else
+                {
+                    DrawClients();
+                }
                 break;
             case nameof(RoutesViewModel.SelectedClient):
                 HighlightSelectedClient();
@@ -81,14 +85,14 @@ public partial class MainWindow : MetroWindow
                 if (!ViewModel.DisplayAllRoutes)
                 {
                     ResetHighlightedPoint();
-                    DrawRoutes(false);
+                    DrawRoutes();
                 }
                 HighlightSelectedVehicle();
                 break;
             case nameof(RoutesViewModel.DisplayAllRoutes):
                 if (ViewModel.IsSolutionCalculated)
                 {
-                    DrawRoutes(ViewModel.DisplayAllRoutes || ViewModel.SelectedVehicle is null);
+                    DrawRoutes();
                     if (ViewModel.SelectedVehicle is not null)
                     {
                         HighlightSelectedVehicle();
@@ -106,6 +110,7 @@ public partial class MainWindow : MetroWindow
 
     private void DrawClients()
     {
+        _lastSelectedVehicle = -1;
         PlotZone.Plot.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
         PlotZone.Plot.Title(string.Empty);
@@ -140,8 +145,9 @@ public partial class MainWindow : MetroWindow
         PlotZone.Plot.Clear();
     }
 
-    private void DrawRoutes(bool all = true)
+    private void DrawRoutes()
     {
+        _lastSelectedVehicle = -1;
         PlotZone.Plot.Clear();
         PlotZone.Plot.Add(_highlightedPoint);
         PlotZone.Plot.Title($"Fitness : {ViewModel.Fitness:0.00}");
@@ -152,7 +158,7 @@ public partial class MainWindow : MetroWindow
         var allXs = new List<double>();
         var allYs = new List<double>();
 
-        foreach (var vehicle in ViewModel.Vehicles.Where(v => all || v == ViewModel.SelectedVehicle))
+        foreach (var vehicle in ViewModel.Vehicles.Where(v => ViewModel.DisplayAllRoutes || ViewModel.SelectedVehicle is null || v == ViewModel.SelectedVehicle))
         {
             var xs = new List<double>(ViewModel.Vehicles.Count);
             var ys = new List<double>(ViewModel.Vehicles.Count);
