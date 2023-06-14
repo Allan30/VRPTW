@@ -1,4 +1,6 @@
-﻿namespace VRPTW.Core;
+﻿using VRPTW.Core.Extensions;
+
+namespace VRPTW.Core;
 
 public class Routes : ICloneable
 {
@@ -40,10 +42,9 @@ public class Routes : ICloneable
 
     public void GenerateRandomSolution()
     {
-        var values = Enumerable.Range(0, Clients.Count).ToList();
-        var rand = new Random();
-        var shuffled = values.OrderBy(_ => rand.Next()).ToList();
-        foreach (var client in shuffled.Select(index => Clients[index]))
+        var clientIndices = Enumerable.Range(0, Clients.Count).ToList();
+        clientIndices.Shuffle();
+        foreach (var client in clientIndices.Select(index => Clients[index]))
         {
             var added = false;
             foreach (var vehicle in Vehicles)
@@ -52,7 +53,6 @@ public class Routes : ICloneable
                 {
                     added = true;
                     break;
-
                 };
             }
             if (!added)

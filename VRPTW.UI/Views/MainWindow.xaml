@@ -47,8 +47,11 @@
             
             <Button Content="Choisir un fichier"
                     Command="{Binding ChooseFileCommand}"
-                    Margin="0,0,0,15" />
-            
+                    Margin="0,0,0,8" />
+            <Button Content="Solution aléatoire"
+                    Command="{Binding RandomSolutionCommand}"
+                    Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
             <StackPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
                         Margin="0,15,0,15">
                 

@@ -104,6 +104,7 @@ public partial class RoutesViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(StartVRPTWCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RandomSolutionCommand))]
     private bool _isSolutionLoaded;
 
     [ObservableProperty]
@@ -113,6 +114,16 @@ public partial class RoutesViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _displayAllRoutes = true;
+
+    [RelayCommand(CanExecute = nameof(IsSolutionLoaded))]
+    private void RandomSolution()
+    {
+        _solution!.GenerateRandomSolution();
+        var foo = _solution.Clients.Select(x => _solution.Vehicles.SingleOrDefault(c => c.Clients.Contains(x))).ToList();
+        
+        _routesMapper.RoutesToRoutesViewModel(_solution, this);
+        IsSolutionCalculated = true;
+    }
 
     [RelayCommand(CanExecute = nameof(IsSolutionCalculable))]
     private void StartVRPTW()
