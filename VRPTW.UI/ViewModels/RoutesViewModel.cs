@@ -136,6 +136,7 @@ public partial class RoutesViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(IsSolutionCalculable))]
     private void StartVRPTW()
     {
+        IsSolutionCalculated = false;
         _solution!.GenerateRandomSolution();
         var strategy = _heuristicStrategyMapper.HeuristicStrategyViewModelToHeuristicStrategyBase(SelectedHeuristicStrategy);
         strategy.NeighborhoodStrategy = SelectedNeighborhoodStrategy.NeighborhoodStrategyType;

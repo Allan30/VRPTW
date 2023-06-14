@@ -66,7 +66,7 @@
                             Margin="0,8,0,8">
                 
                     <Expander Header="Configuration">
-                        <StackPanel>
+                        <StackPanel Margin="0,0,8,0">
                             <StackPanel Margin="0,4">
                                 <Label Content="Heuristique"
                                        Style="{StaticResource Subtitle}" />
