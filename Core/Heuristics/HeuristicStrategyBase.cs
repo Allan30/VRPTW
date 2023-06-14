@@ -1,5 +1,5 @@
 using VRPTW.Concret;
-using VRPTWCore.NeighborhoodStrategies;
+using VRPTWCore.Neighborhood;
 
 namespace VRPTW.Heuristics;
 
@@ -9,7 +9,22 @@ public abstract class HeuristicStrategyBase
     protected Routes BestSolution = new();
 
     protected abstract bool LoopConditon { get; }
-    public void RandomWithSelectedOperators(ref Routes solution, List<OperatorEnum> ops)
+
+    public NeighborhoodStrategyEnum NeighborhoodStrategy { get; set; } = NeighborhoodStrategyEnum.Best;
+
+    public void Calculate(ref Routes solution, List<OperatorEnum> ops)
+    {
+        if (NeighborhoodStrategy == NeighborhoodStrategyEnum.Best)
+        {
+            BestOfSelectedOperators(ref solution, ops);
+        }
+        else
+        {
+            RandomWithSelectedOperators(ref solution, ops);
+        }
+    }
+
+    private void RandomWithSelectedOperators(ref Routes solution, List<OperatorEnum> ops)
     {
         var r = new Random();
         var operators = GetOperatorsFromName(ops);
@@ -21,14 +36,14 @@ public abstract class HeuristicStrategyBase
             if (newFitness < BestFitness)
             {
                 BestFitness = newFitness;
-                BestSolution = (Routes) solution.Clone();
+                BestSolution = (Routes)solution.Clone();
             }
         }
     }
 
-    public void BestOfSelectedOperators(ref Routes solution, List<OperatorEnum> ops)
+    private void BestOfSelectedOperators(ref Routes solution, List<OperatorEnum> ops)
     {
-        BestSolution = (Routes) solution.Clone();
+        BestSolution = (Routes)solution.Clone();
         var operators = GetOperatorsFromName(ops);
         while (LoopConditon)
         {
@@ -43,7 +58,7 @@ public abstract class HeuristicStrategyBase
             if (newFitness < BestFitness)
             {
                 BestFitness = newFitness;
-                BestSolution = (Routes) solution.Clone();
+                BestSolution = (Routes)solution.Clone();
             }
         }
         Console.WriteLine(solution.Fitness);
@@ -53,33 +68,19 @@ public abstract class HeuristicStrategyBase
     protected static List<OperatorBase> GetOperatorsFromName(List<OperatorEnum> operatorsName)
     {
         var operators = new List<OperatorBase>();
-        foreach (var operatorName in operatorsName)
+        foreach (var operatorName in operatorsName.Distinct())
         {
-            switch (operatorName)
+            OperatorBase @operator = operatorName switch
             {
-                case OperatorEnum.ExchangeInter:
-                    operators.Add(new ExchangeOperatorInter());
-                    break;
+                OperatorEnum.ExchangeInter => new ExchangeOperatorInter(),
+                OperatorEnum.ExchangeIntra => new ExchangeOperatorIntra(),
+                OperatorEnum.RelocateInter => new RelocateOperatorInter(),
+                OperatorEnum.RelocateIntra => new RelocateOperatorIntra(),
+                OperatorEnum.TwoOpt => new TwoOptOperatorIntra(),
+                _ => throw new NotImplementedException(),
+            };
 
-                case OperatorEnum.ExchangeIntra:
-                    operators.Add(new ExchangeOperatorIntra());
-                    break;
-
-                case OperatorEnum.RelocateInter:
-                    operators.Add(new RelocateOperatorInter());
-                    break;
-
-                case OperatorEnum.RelocateIntra:
-                    operators.Add(new RelocateOperatorIntra());
-                    break;
-
-                case OperatorEnum.TwoOpt:
-                    operators.Add(new TwoOptOperatorIntra());
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(operatorName));
-            }
+            operators.Add(@operator);
         }
 
         return operators;

@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace VRPTW.Concret;
 
 public abstract class OperatorInter : OperatorBase

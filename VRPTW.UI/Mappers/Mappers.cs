@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using VRPTW.Concret;
+using VRPTW.Heuristics;
 using VRPTW.UI.ViewModels;
 
 namespace VRPTW.UI.Mappers;
@@ -42,4 +43,17 @@ public partial class ClientMapper
 
     [MapperIgnoreTarget(nameof(ClientViewModel.IsDepot))]
     private partial ClientViewModel Map(Client client);
+}
+
+[Mapper]
+public partial class HeuristicStrategyMapper
+{
+    public HeuristicStrategyBase HeuristicStrategyViewModelToHeuristicStrategyBase(HeuristicStrategyViewModel heuristicStrategy) =>
+        heuristicStrategy.HeuristicStrategyType switch
+        {
+            ViewModels.Heuristics.HeuristicStrategyEnum.Descent => new DescentStrategy(),
+            ViewModels.Heuristics.HeuristicStrategyEnum.SimulatedAnnealing => new SimulatedAnnealingStrategy(),
+            ViewModels.Heuristics.HeuristicStrategyEnum.Tabu => new TabuStrategy(),
+            _ => throw new System.NotImplementedException(),
+        };
 }

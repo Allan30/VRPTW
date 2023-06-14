@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace VRPTW.UI.ViewModels.Neighborhood;
+namespace VRPTWCore.Neighborhood;
 
 public enum NeighborhoodStrategyEnum
 {

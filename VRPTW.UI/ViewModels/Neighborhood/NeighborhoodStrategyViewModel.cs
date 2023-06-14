@@ -1,5 +1,5 @@
 ﻿using VRPTW.UI.Extensions;
-using VRPTW.UI.ViewModels.Neighborhood;
+using VRPTWCore.Neighborhood;
 
 namespace VRPTW.UI.ViewModels;
 

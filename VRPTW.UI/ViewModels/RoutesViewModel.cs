@@ -9,9 +9,8 @@ using VRPTWCore.Parser;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using VRPTW.Heuristics;
-using VRPTW.UI.ViewModels.Neighborhood;
 using VRPTW.UI.ViewModels.Heuristics;
+using VRPTWCore.Neighborhood;
 
 namespace VRPTW.UI.ViewModels;
 
@@ -32,6 +31,8 @@ public partial class RoutesViewModel : ObservableObject
         new(HeuristicStrategyEnum.SimulatedAnnealing),
         new(HeuristicStrategyEnum.Tabu)
     };
+
+    private readonly HeuristicStrategyMapper _heuristicStrategyMapper = new();
 
     [ObservableProperty]
     private HeuristicStrategyViewModel _selectedHeuristicStrategy = HeuristicStrategies.First();
@@ -128,13 +129,8 @@ public partial class RoutesViewModel : ObservableObject
     private void StartVRPTW()
     {
         _solution!.GenerateRandomSolution();
-        var descent = new DescentStrategy();
-        var tabou = new TabuStrategy();
-        var recuit = new SimulatedAnnealingStrategy();
-        
-        //descent.BestOfSelectedOperators(ref _solution, operators);
-        tabou.BestOfSelectedOperators(ref _solution, SelectedOperators.Select(o => o.OperatorType).ToList());
-        //recuit.RandomWithSelectedOperators(ref _solution, operators);
+        var strategy = _heuristicStrategyMapper.HeuristicStrategyViewModelToHeuristicStrategyBase(SelectedHeuristicStrategy);
+        strategy.Calculate(ref _solution, SelectedOperators.Select(op => op.OperatorType).ToList());
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
     }
@@ -142,8 +138,8 @@ public partial class RoutesViewModel : ObservableObject
     [RelayCommand]
     private void ChooseFile()
     {
-        IsSolutionLoaded = false;
-        IsSolutionCalculated = false;
+        //IsSolutionLoaded = false;
+        //IsSolutionCalculated = false;
         var appPath = AppDomain.CurrentDomain.BaseDirectory;
         var dialog = new OpenFileDialog()
         {
@@ -155,6 +151,7 @@ public partial class RoutesViewModel : ObservableObject
             _solution = VrpParser.ExtractVrpFile(dialog.FileName);
             _routesMapper.RoutesToRoutesViewModel(_solution, this);
             IsSolutionLoaded = true;
+            IsSolutionCalculated = false;
         }
     }
 }
