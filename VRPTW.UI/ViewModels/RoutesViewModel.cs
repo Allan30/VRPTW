@@ -47,7 +47,9 @@ public partial class RoutesViewModel : ObservableObject
         new(OperatorEnum.TwoOpt)
     };
 
-    public List<OperatorViewModel> SelectedOperators { get; set; } = new();
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(StartVRPTWCommand))]
+    private ObservableCollection<OperatorViewModel> _selectedOperators = new();
 
     private readonly RoutesMapper _routesMapper = new();
 
@@ -107,21 +109,12 @@ public partial class RoutesViewModel : ObservableObject
     [ObservableProperty]
     private bool _isSolutionCalculated;
 
-    private bool _isSolutionCalculable;
-    public bool IsSolutionCalculable => IsSolutionLoaded && SelectedHeuristicStrategy is not null;
-    //{
-    //    get => _isSolutionCalculable;
-    //    set
-    //    {
-    //        var val = IsSolutionLoaded && SelectedHeuristic is not null;
-    //        SetProperty(ref _isSolutionCalculable, val);
-    //    }
-    //}
+    public bool IsSolutionCalculable => IsSolutionLoaded && SelectedOperators.Any();
 
     [ObservableProperty]
     private bool _displayAllRoutes = true;
 
-    [RelayCommand(CanExecute = nameof(IsSolutionLoaded))]
+    [RelayCommand(CanExecute = nameof(IsSolutionCalculable))]
     private void StartVRPTW()
     {
         _solution!.GenerateRandomSolution();

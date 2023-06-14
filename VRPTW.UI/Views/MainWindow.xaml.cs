@@ -3,6 +3,7 @@ using MahApps.Metro.Controls;
 using ScottPlot;
 using ScottPlot.Plottable;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -293,6 +294,6 @@ public partial class MainWindow : MetroWindow
 
     private void OnOperatorsSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ViewModel.SelectedOperators = OperatorsListView.SelectedItems.Cast<OperatorViewModel>().ToList();
+        ViewModel.SelectedOperators = new(OperatorsListView.SelectedItems.Cast<OperatorViewModel>());
     }
 }

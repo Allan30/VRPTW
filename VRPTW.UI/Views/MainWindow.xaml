@@ -85,6 +85,8 @@
                 
                 <Button Content="Démarrer"
                         Command="{Binding StartVRPTWCommand}"
+                        ToolTip="Veuillez sélectionner un ou plusieurs opérateurs"
+                        ToolTipService.ShowOnDisabled="True"
                         Margin="0,15,0,0" />
                 
                 <Separator Margin="0,20,0,10" />
