@@ -119,7 +119,7 @@ public partial class RoutesViewModel : ObservableObject
     private void RandomSolution()
     {
         _solution!.GenerateRandomSolution();
-        var foo = _solution.Clients.Select(x => _solution.Vehicles.SingleOrDefault(c => c.Clients.Contains(x))).ToList();
+        //var foo = _solution.Clients.Select(x => _solution.Vehicles.SingleOrDefault(c => c.Clients.Contains(x))).ToList();
         
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
