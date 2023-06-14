@@ -1,4 +1,4 @@
-﻿namespace VRPTW.Core.Concret;
+﻿namespace VRPTW.Core;
 
 public class Routes : ICloneable
 {

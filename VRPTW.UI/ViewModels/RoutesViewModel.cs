@@ -9,9 +9,9 @@ using System.Linq;
 using System.Collections.Generic;
 using VRPTW.UI.Enums;
 using VRPTW.Core.Neighborhood;
-using VRPTW.Core.Concret;
 using VRPTW.Core.Operators;
 using VRPTW.Core.Tools;
+using VRPTW.Core;
 
 namespace VRPTW.UI.ViewModels;
 

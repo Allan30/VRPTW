@@ -1,5 +1,3 @@
-using VRPTW.Core.Concret;
-
 namespace VRPTW.Core.Operators;
 
 public abstract class InterOperator : OperatorBase

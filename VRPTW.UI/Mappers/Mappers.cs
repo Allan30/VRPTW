@@ -1,7 +1,7 @@
 ﻿using Riok.Mapperly.Abstractions;
 using System.Collections.ObjectModel;
 using System.Linq;
-using VRPTW.Core.Concret;
+using VRPTW.Core;
 using VRPTW.Core.Heuristics;
 using VRPTW.UI.Enums;
 using VRPTW.UI.ViewModels;

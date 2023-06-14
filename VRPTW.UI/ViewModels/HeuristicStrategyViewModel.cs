@@ -11,4 +11,6 @@ public sealed class HeuristicStrategyViewModel
     }
     public HeuristicStrategyEnum HeuristicStrategyType { get; }
     public override string ToString() => HeuristicStrategyType.GetFriendlyName();
+
+    
 }

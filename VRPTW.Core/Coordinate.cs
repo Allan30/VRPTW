@@ -1,4 +1,4 @@
-﻿namespace VRPTW.Core.Concret;
+﻿namespace VRPTW.Core;
 
 public record struct Coordinate(double X, double Y)
 {

@@ -1,4 +1,3 @@
-using VRPTW.Core.Concret;
 using VRPTW.Core.Operators;
 
 namespace VRPTW.Core.Heuristics;

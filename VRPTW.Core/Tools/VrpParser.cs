@@ -1,6 +1,4 @@
-﻿using VRPTW.Core.Concret;
-
-namespace VRPTW.Core.Tools;
+﻿namespace VRPTW.Core.Tools;
 
 public static class VrpParser
 {
