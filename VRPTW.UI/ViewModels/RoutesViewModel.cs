@@ -3,14 +3,15 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System;
-using VRPTW.Concret;
 using VRPTW.UI.Mappers;
-using VRPTWCore.Parser;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using VRPTW.UI.ViewModels.Heuristics;
-using VRPTWCore.Neighborhood;
+using VRPTW.UI.Enums;
+using VRPTW.Core.Neighborhood;
+using VRPTW.Core.Concret;
+using VRPTW.Core.Operators;
+using VRPTW.Core.Tools;
 
 namespace VRPTW.UI.ViewModels;
 
@@ -144,7 +145,7 @@ public partial class RoutesViewModel : ObservableObject
         var dialog = new OpenFileDialog()
         {
             Filter = "Fichiers vrp (*.vrp)|*.vrp|Tous les fichiers (*.*)|*.*",
-            InitialDirectory = Path.Combine(appPath, "Core", "Data")
+            InitialDirectory = Path.Combine(appPath, "Data")
         };
         if (dialog.ShowDialog() is true)
         {

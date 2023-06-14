@@ -1,8 +1,9 @@
 ﻿using Riok.Mapperly.Abstractions;
 using System.Collections.ObjectModel;
 using System.Linq;
-using VRPTW.Concret;
-using VRPTW.Heuristics;
+using VRPTW.Core.Concret;
+using VRPTW.Core.Heuristics;
+using VRPTW.UI.Enums;
 using VRPTW.UI.ViewModels;
 
 namespace VRPTW.UI.Mappers;
@@ -51,9 +52,9 @@ public partial class HeuristicStrategyMapper
     public HeuristicStrategyBase HeuristicStrategyViewModelToHeuristicStrategyBase(HeuristicStrategyViewModel heuristicStrategy) =>
         heuristicStrategy.HeuristicStrategyType switch
         {
-            ViewModels.Heuristics.HeuristicStrategyEnum.Descent => new DescentStrategy(),
-            ViewModels.Heuristics.HeuristicStrategyEnum.SimulatedAnnealing => new SimulatedAnnealingStrategy(),
-            ViewModels.Heuristics.HeuristicStrategyEnum.Tabu => new TabuStrategy(),
+            HeuristicStrategyEnum.Descent => new DescentStrategy(),
+            HeuristicStrategyEnum.SimulatedAnnealing => new SimulatedAnnealingStrategy(),
+            HeuristicStrategyEnum.Tabu => new TabuStrategy(),
             _ => throw new System.NotImplementedException(),
         };
 }

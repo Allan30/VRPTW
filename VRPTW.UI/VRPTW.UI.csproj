@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<SupportedPlatform Include="windows7.0" />
+	  <SupportedPlatform Include="windows7.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="Riok.Mapperly" Version="2.8.0" />
@@ -16,11 +16,43 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\VRPTWCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="ViewModels\MainWindowViewModel.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VRPTW.Core\VRPTW.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\data101.vrp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\data102.vrp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\data1101.vrp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\data1102.vrp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\data111.vrp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\data112.vrp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\data1201.vrp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\data1202.vrp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\data201.vrp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\data202.vrp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

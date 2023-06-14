@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VRPTWCore", "Core\VRPTWCore.csproj", "{12E6E1CC-D011-4AB7-9972-521582A5F47A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VRPTW.Core", "VRPTW.Core\VRPTW.Core.csproj", "{12E6E1CC-D011-4AB7-9972-521582A5F47A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VRPTW.UI", "VRPTW.UI\VRPTW.UI.csproj", "{0132AF29-D1E0-4B1A-BAE2-B1C9AADA4F78}"
 EndProject
