@@ -17,6 +17,13 @@ namespace VRPTW.UI.ViewModels;
 
 public partial class RoutesViewModel : ObservableObject
 {
+    #region Mappers
+    private readonly HeuristicStrategyMapper _heuristicStrategyMapper = new();
+    private readonly RoutesMapper _routesMapper = new();
+    #endregion
+
+    private Routes? _solution;
+
     public static readonly List<NeighborhoodStrategyViewModel> NeighborhoodStrategies = new()
     {
         new(NeighborhoodStrategyEnum.Best),
@@ -33,8 +40,6 @@ public partial class RoutesViewModel : ObservableObject
         new(HeuristicStrategyEnum.Tabu)
     };
 
-    private readonly HeuristicStrategyMapper _heuristicStrategyMapper = new();
-
     [ObservableProperty]
     private HeuristicStrategyViewModel _selectedHeuristicStrategy = HeuristicStrategies.First();
 
@@ -50,10 +55,6 @@ public partial class RoutesViewModel : ObservableObject
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(StartVRPTWCommand))]
     private ObservableCollection<OperatorViewModel> _selectedOperators = new();
-
-    private readonly RoutesMapper _routesMapper = new();
-
-    private Routes? _solution;
 
     private ObservableCollection<ClientViewModel> _clientsWithDepot = new();
     public ObservableCollection<ClientViewModel> ClientsWithDepot
@@ -108,6 +109,7 @@ public partial class RoutesViewModel : ObservableObject
     private bool _isSolutionLoaded;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ResetCommand))]
     private bool _isSolutionCalculated;
 
     public bool IsSolutionCalculable => IsSolutionLoaded && SelectedOperators.Any();
@@ -118,11 +120,18 @@ public partial class RoutesViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(IsSolutionLoaded))]
     private void RandomSolution()
     {
-        _solution!.GenerateRandomSolution();
-        var foo = _solution.Clients.Select(x => _solution.Vehicles.SingleOrDefault(c => c.Clients.Contains(x))).ToList();
-        
+        _solution!.GenerateRandomSolution();        
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
+    }
+
+    [RelayCommand(CanExecute = nameof(IsSolutionCalculated))]
+    private void Reset()
+    {
+        IsSolutionCalculated = false;
+        _solution!.Reset();
+        _routesMapper.RoutesToRoutesViewModel(_solution, this);
+        
     }
 
     [RelayCommand(CanExecute = nameof(IsSolutionCalculable))]
@@ -139,7 +148,6 @@ public partial class RoutesViewModel : ObservableObject
     [RelayCommand]
     private void ChooseFile()
     {
-        //IsSolutionCalculated = false;
         var appPath = AppDomain.CurrentDomain.BaseDirectory;
         var dialog = new OpenFileDialog()
         {

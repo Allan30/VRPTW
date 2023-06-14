@@ -41,11 +41,16 @@ public class Routes : ICloneable
     }
     public double Fitness => Vehicles.Sum(vehicle => vehicle.TravelledDistance);
 
+    public void Reset()
+    {
+        Vehicles.Clear();
+    }
+
     public void GenerateRandomSolution()
     {
         if (Vehicles.Any())
         {
-            Vehicles.Clear();
+            Reset();
         }
 
         var clientIndices = Enumerable.Range(0, Clients.Count).ToList();

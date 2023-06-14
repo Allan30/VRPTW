@@ -48,7 +48,11 @@
                     Margin="0,0,0,8" />
             <Button Content="Solution aléatoire"
                     Command="{Binding RandomSolutionCommand}"
-                    Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Margin="0,0,0,8" />
+            <Button Content="Réinitialiser"
+                    Command="{Binding ResetCommand}"
+                    Visibility="{Binding IsSolutionCalculated,Converter={StaticResource BooleanToVisibilityConverter}}" />
 
             <StackPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
                         Margin="0,15,0,15">
