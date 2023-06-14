@@ -38,9 +38,7 @@
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
-        <ScottPlot:WpfPlot x:Name="PlotZone"
-                           LeftClicked="OnPlotZoneLeftClicked"
-                           MouseMove="OnPlotZoneMouseMoved" />
+        <ScottPlot:WpfPlot x:Name="PlotZone" />
         
         <StackPanel Grid.Column="1"
                     Margin="5">

@@ -119,7 +119,7 @@ public partial class RoutesViewModel : ObservableObject
     private void RandomSolution()
     {
         _solution!.GenerateRandomSolution();
-        //var foo = _solution.Clients.Select(x => _solution.Vehicles.SingleOrDefault(c => c.Clients.Contains(x))).ToList();
+        var foo = _solution.Clients.Select(x => _solution.Vehicles.SingleOrDefault(c => c.Clients.Contains(x))).ToList();
         
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
@@ -139,7 +139,6 @@ public partial class RoutesViewModel : ObservableObject
     [RelayCommand]
     private void ChooseFile()
     {
-        //IsSolutionLoaded = false;
         //IsSolutionCalculated = false;
         var appPath = AppDomain.CurrentDomain.BaseDirectory;
         var dialog = new OpenFileDialog()
@@ -149,6 +148,7 @@ public partial class RoutesViewModel : ObservableObject
         };
         if (dialog.ShowDialog() is true)
         {
+            IsSolutionLoaded = false;
             _solution = VrpParser.ExtractVrpFile(dialog.FileName);
             _routesMapper.RoutesToRoutesViewModel(_solution, this);
             IsSolutionLoaded = true;

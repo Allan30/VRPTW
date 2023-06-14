@@ -14,13 +14,15 @@ public class Vehicle : ICloneable
         Id = id;
         CurrentCapacity = 0;
         MaxCapacity = capacity;
-        Clients = new List<Client>();
+        Clients = new List<Client>
+        {
+            depot,
+            new Client(depot.Id + "_bis", depot.Coordinate, depot.ReadyTime, depot.DueTime)
+        };
         Depot = depot;
-        Clients.Add(depot);
-        Clients.Add(new Client(depot.Id + "_bis", depot.Coordinate, depot.ReadyTime, depot.DueTime));
     }
 
-    public bool AddClientWithWindow(Client client)
+    public bool TryAddClientWithWindow(Client client)
     {
         AddClientBefore(Clients.Count, client);
         if (IsCorrect())
@@ -60,7 +62,6 @@ public class Vehicle : ICloneable
         var currentTime = 0.0;
         for (var i = 0; i < Clients.Count - 1; i++)
         {
-
             var currentClient = Clients[i];
             var nextClient = Clients[i + 1];
 

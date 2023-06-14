@@ -3,7 +3,6 @@ using MahApps.Metro.Controls;
 using ScottPlot;
 using ScottPlot.Plottable;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -58,11 +57,22 @@ public partial class MainWindow : MetroWindow
         switch (e.PropertyName)
         {
             case nameof(RoutesViewModel.IsSolutionLoaded):
-                DrawClients();
+                if (ViewModel.IsSolutionLoaded)
+                {
+                    DrawClients();
+                    PlotZone.MouseMove += OnPlotZoneMouseMoved;
+                }
+                else
+                {
+                    PlotZone.MouseMove -= OnPlotZoneMouseMoved;
+                }
                 break;
             case nameof(RoutesViewModel.IsSolutionCalculated):
-                GiveColorsToRoutes();
-                DrawRoutes();
+                if (ViewModel.IsSolutionCalculated)
+                {
+                    GiveColorsToRoutes();
+                    DrawRoutes();
+                }
                 break;
             case nameof(RoutesViewModel.SelectedClient):
                 HighlightSelectedClient();
@@ -155,11 +165,11 @@ public partial class MainWindow : MetroWindow
 
             allXs.AddRange(xs);
             allYs.AddRange(ys);
-            
+
             var scatter = PlotZone.Plot.AddScatter(xs.ToArray(), ys.ToArray(), color: Color.FromArgb(vehicle.ARGBColor), markerSize: MARKER_SIZE);
             _allScatters.Add(vehicle.Id, scatter);
         }
-        
+
         _combinedScatters = new ScatterPlot(allXs.ToArray(), allYs.ToArray());
         PlotZone.Refresh();
     }
@@ -268,25 +278,12 @@ public partial class MainWindow : MetroWindow
             {
                 _lastHighlightedIndex = point.index;
                 ViewModel.SelectedClient =
-                    ViewModel                    
+                    ViewModel
                     .ClientsWithDepot
                     .First(x => x.Coordinate.X == point.x && x.Coordinate.Y == point.y);
             }
         }
         else
-        {
-            ViewModel.SelectedClient = null;
-        }
-    }
-
-    private void OnPlotZoneLeftClicked(object sender, RoutedEventArgs e)
-    {
-        if (_combinedScatters is null || ViewModel.SelectedClient is null) return;
-
-        (double mouseCoordX, double mouseCoordY) = PlotZone.GetMouseCoordinates();
-        double xyRatio = PlotZone.Plot.XAxis.Dims.PxPerUnit / PlotZone.Plot.YAxis.Dims.PxPerUnit;
-
-        if (!_combinedScatters.TryGetPointNearest(mouseCoordX, mouseCoordY, out var _, 5, xyRatio))
         {
             ViewModel.SelectedClient = null;
         }
