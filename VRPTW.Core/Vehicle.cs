@@ -31,9 +31,15 @@ public class Vehicle : ICloneable
         return false;
     }
 
-    public double TravelledDistance => Clients.Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.GetDistance(nextClient)).Sum();
+    public double TravelledDistance =>
+        Clients
+            .Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.GetDistance(nextClient))
+            .Sum();
 
-    public double RouteTime => Clients.Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.Service + prevClient.GetDistance(nextClient)).Sum();
+    public double RouteTime => 
+        Clients
+            .Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.Service + prevClient.GetDistance(nextClient))
+            .Sum();
 
     public object Clone()
     {
