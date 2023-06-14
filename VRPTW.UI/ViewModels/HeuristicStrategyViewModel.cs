@@ -9,8 +9,6 @@ public sealed class HeuristicStrategyViewModel
     {
         HeuristicStrategyType = heuristicStrategyType;
     }
-
-    public NeighborhoodStrategyViewModel? NeighborhoodStrategy { get; set; }
     public HeuristicStrategyEnum HeuristicStrategyType { get; }
     public override string ToString() => HeuristicStrategyType.GetFriendlyName();
 }

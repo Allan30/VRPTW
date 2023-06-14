@@ -131,6 +131,7 @@ public partial class RoutesViewModel : ObservableObject
     {
         _solution!.GenerateRandomSolution();
         var strategy = _heuristicStrategyMapper.HeuristicStrategyViewModelToHeuristicStrategyBase(SelectedHeuristicStrategy);
+        strategy.NeighborhoodStrategy = SelectedNeighborhoodStrategy.NeighborhoodStrategyType;
         strategy.Calculate(ref _solution, SelectedOperators.Select(op => op.OperatorType).ToList());
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
