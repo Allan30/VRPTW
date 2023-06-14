@@ -53,8 +53,8 @@ public partial class HeuristicStrategyMapper
         heuristicStrategy.HeuristicStrategyType switch
         {
             HeuristicStrategyEnum.Descent => new DescentStrategy(),
-            HeuristicStrategyEnum.SimulatedAnnealing => new SimulatedAnnealingStrategy(),
-            HeuristicStrategyEnum.Tabu => new TabuStrategy(),
+            HeuristicStrategyEnum.SimulatedAnnealing => new SimulatedAnnealingStrategy { NbSteps = heuristicStrategy.NbSteps },
+            HeuristicStrategyEnum.Tabu => new TabuStrategy { NbSteps = heuristicStrategy.NbSteps },
             _ => throw new System.NotImplementedException(),
         };
 }

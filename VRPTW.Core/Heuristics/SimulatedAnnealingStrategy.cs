@@ -8,9 +8,7 @@ public class SimulatedAnnealingStrategy : HeuristicStrategyBase
     private double _temperature = 100;
     private static readonly double _mu = 0.999;
     private int _currentStep = 0;
-    private int _nbStep = 1000;//Math.Round(Math.Log(Math.Log(0.8)/Math.Log(0.1))/Math.Log(mu));
-
-    protected override bool LoopConditon => _currentStep < _nbStep;
+    protected override bool LoopConditon => _currentStep < NbSteps;
 
     protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution)
     {

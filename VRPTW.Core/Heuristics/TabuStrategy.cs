@@ -4,12 +4,12 @@ namespace VRPTW.Core.Heuristics;
 
 public class TabuStrategy : HeuristicStrategyBase
 {
-    private readonly int _tabouSize = 80;
+    public int TabuSize { get; set; } = 80;
+
     private int _currentStep = 0;
-    private readonly int _nbStep = 1000;
 
     private readonly List<(OperatorEnum operatorName, List<string> clientName)> _tabouList = new();
-    protected override bool LoopConditon => _currentStep < _nbStep;
+    protected override bool LoopConditon => _currentStep < NbSteps;
 
     protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution)
     {
@@ -27,7 +27,7 @@ public class TabuStrategy : HeuristicStrategyBase
         }
         if (bestOperation.delta <= 0)
         {
-            if (_tabouList.Count >= _tabouSize)
+            if (_tabouList.Count >= TabuSize)
             {
                 _tabouList.RemoveAt(0);
             }

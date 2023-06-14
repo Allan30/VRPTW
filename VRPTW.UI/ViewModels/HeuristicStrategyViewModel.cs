@@ -11,6 +11,8 @@ public sealed class HeuristicStrategyViewModel
     }
     public HeuristicStrategyEnum HeuristicStrategyType { get; }
     public override string ToString() => HeuristicStrategyType.GetFriendlyName();
-
-    
+    public int TabuSize { get; set; } = 50;
+    public int NbSteps { get; set; } = 1_000;
+    public bool IsTabu => HeuristicStrategyType == HeuristicStrategyEnum.Tabu;
+    public bool IsStepStrategy => HeuristicStrategyType == HeuristicStrategyEnum.Tabu || HeuristicStrategyType == HeuristicStrategyEnum.SimulatedAnnealing;
 }

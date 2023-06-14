@@ -95,11 +95,6 @@ public partial class RoutesViewModel : ObservableObject
         }
     }
 
-    [ObservableProperty]
-    private int _wantedIterations = 1_000;
-    public const int ITERATIONS_MAX = 1_000_000;
-    public const int ITERATIONS_MIN = 100;
-
     public double Fitness { get; set; }
     public int NbClients { get; set; }
     public int TotalDemand { get; set; }
