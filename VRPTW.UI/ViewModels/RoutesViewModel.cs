@@ -120,6 +120,7 @@ public partial class RoutesViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(IsSolutionLoaded))]
     private void RandomSolution()
     {
+        IsSolutionCalculated = false;
         _solution!.GenerateRandomSolution();        
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
