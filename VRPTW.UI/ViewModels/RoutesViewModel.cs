@@ -12,7 +12,6 @@ using VRPTW.Core.Neighborhood;
 using VRPTW.Core.Operators;
 using VRPTW.Core.Tools;
 using VRPTW.Core;
-using System.Threading.Tasks;
 
 namespace VRPTW.UI.ViewModels;
 
