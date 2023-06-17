@@ -13,24 +13,23 @@ public abstract class HeuristicStrategyBase
     protected abstract bool LoopConditon { get; }
 
     public NeighborhoodStrategyEnum NeighborhoodStrategy { get; set; } = NeighborhoodStrategyEnum.Best;
-
-    public void Calculate(ref Routes solution, List<OperatorEnum> ops)
+    
+    public async Task<Routes> CalculateAsync(Routes solution, List<OperatorEnum> ops, /*IProgress<int> progress, */CancellationToken cancellationToken)
     {
-        if (NeighborhoodStrategy == NeighborhoodStrategyEnum.Best)
+        Routes routes = NeighborhoodStrategy switch
         {
-            BestOfSelectedOperators(ref solution, ops);
-        }
-        else
-        {
-            RandomWithSelectedOperators(ref solution, ops);
-        }
+            NeighborhoodStrategyEnum.Best => await BestOfSelectedOperators(solution, ops, cancellationToken),
+            _ => await RandomWithSelectedOperators(solution, ops, cancellationToken)
+        };
+        return routes;
     }
 
-    private void RandomWithSelectedOperators(ref Routes solution, List<OperatorEnum> ops)
+    private async Task<Routes> RandomWithSelectedOperators(Routes solution, List<OperatorEnum> ops, CancellationToken cancellationToken)
     {
         var operators = GetOperatorsFromName(ops);
         while (LoopConditon)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             solution = GetNewSolution(operators[Random.Next(0, operators.Count)].Execute(solution), solution);
             solution.DeleteEmptyVehicles();
             var newFitness = solution.Fitness;
@@ -40,14 +39,16 @@ public abstract class HeuristicStrategyBase
                 BestSolution = (Routes)solution.Clone();
             }
         }
+        return solution;
     }
 
-    private void BestOfSelectedOperators(ref Routes solution, List<OperatorEnum> ops)
+    private async Task<Routes> BestOfSelectedOperators(Routes solution, List<OperatorEnum> ops, CancellationToken cancellationToken)
     {
         BestSolution = (Routes)solution.Clone();
         var operators = GetOperatorsFromName(ops);
         while (LoopConditon)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var neighbors = new List<(Vehicle, Vehicle, double, (OperatorEnum, List<int>))>();
             foreach (var op in operators)
             {
@@ -62,8 +63,7 @@ public abstract class HeuristicStrategyBase
                 BestSolution = (Routes)solution.Clone();
             }
         }
-        Console.WriteLine(solution.Fitness);
-        solution = BestSolution;
+        return BestSolution;
     }
 
     protected static List<OperatorBase> GetOperatorsFromName(List<OperatorEnum> operatorsName)

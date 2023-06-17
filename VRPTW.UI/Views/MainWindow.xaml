@@ -136,6 +136,13 @@
                                 ToolTipService.ShowOnDisabled="True"
                                 Margin="0,15,0,0" />
 
+                        <Button Content="Annuler"
+                                Command="{Binding CancelVRPTWCommand}"
+                                Visibility="{Binding IsSolutionCalculating, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Margin="0,15,0,0" />
+
+                        <ProgressBar Value="50" />
+
                     </StackPanel>
                 </StackPanel>
             </TabItem>

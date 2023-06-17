@@ -12,6 +12,8 @@ using VRPTW.Core.Neighborhood;
 using VRPTW.Core.Operators;
 using VRPTW.Core.Tools;
 using VRPTW.Core;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace VRPTW.UI.ViewModels;
 
@@ -110,9 +112,12 @@ public partial class RoutesViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ResetCommand))]
+    private bool _isSolutionCalculating;
+
+    [ObservableProperty]
     private bool _isSolutionCalculated;
 
-    public bool IsSolutionCalculable => IsSolutionLoaded && SelectedOperators.Any();
+    public bool IsSolutionCalculable => IsSolutionLoaded && !IsSolutionCalculating && SelectedOperators.Any();
 
     [ObservableProperty]
     private bool _displayAllRoutes = true;
@@ -121,12 +126,12 @@ public partial class RoutesViewModel : ObservableObject
     private void RandomSolution()
     {
         IsSolutionCalculated = false;
-        _solution!.GenerateRandomSolution();        
+        _solution!.GenerateRandomSolution();
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = true;
     }
 
-    [RelayCommand(CanExecute = nameof(IsSolutionCalculated))]
+    [RelayCommand(CanExecute = nameof(IsSolutionCalculating))]
     private void Reset()
     {
         IsSolutionCalculated = false;
@@ -135,15 +140,37 @@ public partial class RoutesViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(IsSolutionCalculable))]
-    private void StartVRPTW()
+    private async Task StartVRPTWAsync()
     {
         IsSolutionCalculated = false;
+        IsSolutionCalculating = true;
         _solution!.GenerateRandomSolution();
         var strategy = _heuristicStrategyMapper.HeuristicStrategyViewModelToHeuristicStrategyBase(SelectedHeuristicStrategy);
         strategy.NeighborhoodStrategy = SelectedNeighborhoodStrategy.NeighborhoodStrategyType;
-        strategy.Calculate(ref _solution, SelectedOperators.Select(op => op.OperatorType).ToList());
-        _routesMapper.RoutesToRoutesViewModel(_solution, this);
-        IsSolutionCalculated = true;
+        var routesTask = Task.Run(() => strategy.CalculateAsync(_solution, SelectedOperators.Select(op => op.OperatorType).ToList(), _cancellationTokenSource.Token));
+        try
+        {
+            _solution = await routesTask;
+            _routesMapper.RoutesToRoutesViewModel(_solution, this);
+            IsSolutionCalculated = true;
+        }
+        catch (OperationCanceledException)
+        {
+
+        }
+        finally
+        {
+            IsSolutionCalculating = false;
+            _cancellationTokenSource = new();
+        }
+    }
+
+    private CancellationTokenSource _cancellationTokenSource = new();
+
+    [RelayCommand]
+    private void CancelVRPTW()
+    {
+        _cancellationTokenSource.Cancel();
     }
 
     [RelayCommand]
