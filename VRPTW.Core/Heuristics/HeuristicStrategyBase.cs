@@ -5,6 +5,7 @@ namespace VRPTW.Core.Heuristics;
 
 public abstract class HeuristicStrategyBase
 {
+    protected Random Random { get; } = new();
     protected double BestFitness { get; set; } = double.MaxValue;
     protected Routes? BestSolution;
     public int NbSteps { get; set; } = 1_000;
@@ -27,11 +28,10 @@ public abstract class HeuristicStrategyBase
 
     private void RandomWithSelectedOperators(ref Routes solution, List<OperatorEnum> ops)
     {
-        var r = new Random();
         var operators = GetOperatorsFromName(ops);
         while (LoopConditon)
         {
-            solution = GetNewSolution(operators[r.Next(0, operators.Count)].Execute(solution), solution);
+            solution = GetNewSolution(operators[Random.Next(0, operators.Count)].Execute(solution), solution);
             solution.DeleteEmptyVehicles();
             var newFitness = solution.Fitness;
             if (newFitness < BestFitness)

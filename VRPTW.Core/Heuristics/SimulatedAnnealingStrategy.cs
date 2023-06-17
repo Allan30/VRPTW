@@ -6,7 +6,7 @@ public class SimulatedAnnealingStrategy : HeuristicStrategyBase
 {
 
     private double _temperature = 100;
-    private static readonly double _mu = 0.999;
+    public double Alpha { get; set; } = 0.999;
     private int _currentStep = 0;
     protected override bool LoopConditon => _currentStep < NbSteps;
 
@@ -17,15 +17,14 @@ public class SimulatedAnnealingStrategy : HeuristicStrategyBase
         {
             return solution;
         }
-        var r = new Random();
         var newRoutes = (Routes)solution.Clone();
-        var theOperation = vehicles[r.Next(0, vehicles.Count)];
-        if (theOperation.delta > 0 || Math.Exp(theOperation.delta / _temperature) > r.NextDouble())
+        var theOperation = vehicles[Random.Next(0, vehicles.Count)];
+        if (theOperation.delta > 0 || Math.Exp(theOperation.delta / _temperature) > Random.NextDouble())
         {
             newRoutes.ChangeVehicle(theOperation.src);
             newRoutes.ChangeVehicle(theOperation.trg);
         }
-        _temperature *= _mu;
+        _temperature *= Alpha;
         return newRoutes;
     }
 }
