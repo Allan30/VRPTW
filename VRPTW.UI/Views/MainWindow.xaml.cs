@@ -191,13 +191,14 @@ public partial class MainWindow : MetroWindow
             _highlightedPoint.Y = ViewModel.SelectedClient.Coordinate.Y;
             _highlightedPoint.IsVisible = true;
             PlotZone.Plot.Remove(_selectedClientTooltip);
-            var str = ViewModel.SelectedClient.ToString();
-            var pos = $"Position : {ViewModel.SelectedClient.Coordinate}";
-            var demand = $"Demande : {ViewModel.SelectedClient.Demand}";
-            var readyTime = $"Heure min : {ViewModel.SelectedClient.ReadyTime}";
-            var dueTime = $"Heure max : {ViewModel.SelectedClient.DueTime}";
-            var service = $"Temps de chargement : {ViewModel.SelectedClient.Service}";
-            _selectedClientTooltip = PlotZone.Plot.AddCustomTooltip($"{str}\n{pos}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
+            //var str = ViewModel.SelectedClient.ToString();
+            //var pos = $"Position : {ViewModel.SelectedClient.Coordinate}";
+            //var demand = $"Demande : {ViewModel.SelectedClient.Demand}";
+            //var readyTime = $"Heure min : {ViewModel.SelectedClient.ReadyTime}";
+            //var dueTime = $"Heure max : {ViewModel.SelectedClient.DueTime}";
+            //var service = $"Temps de chargement : {ViewModel.SelectedClient.Service}";
+            //_selectedClientTooltip = PlotZone.Plot.AddCustomTooltip($"{str}\n{pos}\n{demand}\n{readyTime}\n{dueTime}\n{service}", _highlightedPoint.X, _highlightedPoint.Y);
+            _selectedClientTooltip = PlotZone.Plot.AddCustomTooltip(ViewModel.SelectedClient.ToString(), _highlightedPoint.X, _highlightedPoint.Y);
         }
         PlotZone.Refresh();
     }

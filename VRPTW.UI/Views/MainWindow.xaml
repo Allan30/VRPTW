@@ -153,10 +153,28 @@
                               IsExpanded="True"
                               Padding="10"
                               Margin="0,0,0,10">
-                        <ComboBox ItemsSource="{Binding ClientsWithDepot}"
+                        <StackPanel>
+                            <ComboBox ItemsSource="{Binding ClientsWithDepot}"
                                   SelectedItem="{Binding SelectedClient}"
                                   IsEnabled="{Binding IsSolutionLoaded}"
-                                  Style="{StaticResource ClearableComboBox}" />
+                                  Style="{StaticResource ClearableComboBox}"
+                                  Margin="0,0,0,10" />
+                            <Label Content="{Binding SelectedClient.Coordinate}"
+                                   ContentStringFormat="Position : {0}"
+                                   Padding="0,0,0,5" />
+                            <Label Content="{Binding SelectedClient.Demand}"
+                                   ContentStringFormat="Demande : {0}"
+                                   Padding="0,0,0,5" />
+                            <Label Content="{Binding SelectedClient.ReadyTime}"
+                                   ContentStringFormat="Heure min : {0}"
+                                   Padding="0,0,0,5" />
+                            <Label Content="{Binding SelectedClient.DueTime}"
+                                   ContentStringFormat="Heure max : {0}"
+                                   Padding="0,0,0,5" />
+                            <Label Content="{Binding SelectedClient.Service}"
+                                   ContentStringFormat="Temps de chargement : {0}"
+                                   Padding="0" />
+                        </StackPanel>
                     </Expander>
                     <Expander Visibility="{Binding IsSolutionCalculated, Converter={StaticResource BooleanToVisibilityConverter}}"
                               Header="Route sélectionnée"
