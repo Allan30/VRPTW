@@ -51,7 +51,7 @@
 
         <ScottPlot:WpfPlot x:Name="PlotZone" />
 
-        <TabControl Grid.Column="1" Style="{DynamicResource MahApps.Styles.TabControl.Animated}">
+        <TabControl Grid.Column="1">
             
             <TabItem Header="Configuration">
                 <StackPanel Margin="10">
@@ -70,7 +70,8 @@
                     <StackPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
                                 Margin="0,8,0,8">
 
-                        <Expander Header="Configuration">
+                        <Expander Header="Paramètres"
+                                  IsExpanded="True">
                             <StackPanel Margin="0,0,8,0">
                                 <StackPanel Margin="0,4">
                                     <Label Content="Heuristique"
@@ -136,6 +137,7 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
+
             <TabItem Header="Affichage">
                 <StackPanel Grid.Column="2"
                             Margin="10">
@@ -205,6 +207,7 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
+            
         </TabControl>
     </Grid>
 </mah:MetroWindow>
