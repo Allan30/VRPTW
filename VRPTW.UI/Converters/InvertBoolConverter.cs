@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace VRPTW.UI.Converters;
 
-public class InvertBoolConverter : IValueConverter
+public sealed class InvertBoolConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
