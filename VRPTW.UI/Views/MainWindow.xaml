@@ -146,57 +146,54 @@
                                Text="Veuillez d'abord configurer une solution depuis Configuration."
                                TextWrapping="Wrap" />
                     <StackPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Label Content="Clients"
-                               Style="{StaticResource Subtitle}" />
+                        
+                    </StackPanel>
+                    <Expander Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              Header="Client sélectionné"
+                              IsExpanded="True"
+                              Padding="10"
+                              Margin="0,0,0,10">
                         <ComboBox ItemsSource="{Binding ClientsWithDepot}"
                                   SelectedItem="{Binding SelectedClient}"
                                   IsEnabled="{Binding IsSolutionLoaded}"
-                                  Style="{StaticResource ClearableComboBox}"
-                                  Margin="10,0,0,0" />
-                    </StackPanel>
-                    <StackPanel Visibility="{Binding IsSolutionCalculated, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Label Content="Routes"
-                               Style="{StaticResource Subtitle}" />
-                        <ComboBox ItemsSource="{Binding Vehicles}"
-                                  SelectedItem="{Binding SelectedVehicle}"
-                                  Margin="10,0,0,0">
-                            <ComboBox.Style>
-                                <Style TargetType="ComboBox"
-                                       BasedOn="{StaticResource MahApps.Styles.ComboBox}">
-                                    <Setter Property="mah:TextBoxHelper.ClearTextButton"
-                                            Value="True" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding DisplayAllRoutes}"
-                                                     Value="False">
-                                            <Setter Property="mah:TextBoxHelper.ClearTextButton"
-                                                    Value="False" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding SelectedItem, RelativeSource={RelativeSource Self}}"
-                                                     Value="{x:Null}">
-                                            <Setter Property="mah:TextBoxHelper.ClearTextButton"
-                                                    Value="False"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ComboBox.Style>
-                        </ComboBox>
-                        <CheckBox IsChecked="{Binding DisplayAllRoutes, Converter={StaticResource InvertBoolConverter}}"
-                                  Margin="10,8,0,0">
-                            <TextBlock Text="N'afficher que la route sélectionnée"
-                                       TextWrapping="Wrap"
-                                       Margin="4,0,0,0" />
-                            <CheckBox.Style>
-                                <Style TargetType="CheckBox"
-                                       BasedOn="{StaticResource MahApps.Styles.CheckBox}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SelectedVehicle}" Value="{x:Null}">
-                                            <Setter Property="IsEnabled" Value="False" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </CheckBox.Style>
-                        </CheckBox>
-                        <StackPanel Margin="10,10,0,0">
+                                  Style="{StaticResource ClearableComboBox}" />
+                    </Expander>
+                    <Expander Visibility="{Binding IsSolutionCalculated, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              Header="Route sélectionnée"
+                              IsExpanded="True"
+                              Padding="10">
+                        <StackPanel>
+                            <ComboBox ItemsSource="{Binding Vehicles}"
+                                      SelectedItem="{Binding SelectedVehicle}">
+                                <ComboBox.Style>
+                                    <Style TargetType="ComboBox" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
+                                        <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="True" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DisplayAllRoutes}" Value="False">
+                                                <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="False" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
+                                                <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="False"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ComboBox.Style>
+                            </ComboBox>
+                            <CheckBox IsChecked="{Binding DisplayAllRoutes, Converter={StaticResource InvertBoolConverter}}"
+                                      Margin="0,10,0,10">
+                                <TextBlock Text="N'afficher que la route sélectionnée"
+                                           TextWrapping="Wrap"
+                                           Margin="4,0,0,0" />
+                                <CheckBox.Style>
+                                    <Style TargetType="CheckBox" BasedOn="{StaticResource MahApps.Styles.CheckBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectedVehicle}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </CheckBox.Style>
+                            </CheckBox>
                             <Label Content="{Binding SelectedVehicle.NbClients}"
                                    ContentStringFormat="Nombre de clients : {0}"
                                    Padding="0,0,0,5" />
@@ -208,9 +205,9 @@
                                    Padding="0,0,0,5" />
                             <Label Content="{Binding SelectedVehicle.TotalDemand}"
                                    ContentStringFormat="Demande totale : {0}"
-                                   Padding="0"/>
+                                   Padding="0" />
                         </StackPanel>
-                    </StackPanel>
+                    </Expander>
                 </StackPanel>
             </TabItem>
             
