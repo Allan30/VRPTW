@@ -7,6 +7,7 @@
                  xmlns:viewmodels="clr-namespace:VRPTW.UI.ViewModels"
                  xmlns:ScottPlot="clr-namespace:ScottPlot;assembly=ScottPlot.WPF"
                  xmlns:converters="clr-namespace:VRPTW.UI.Converters"
+                 ShowIconOnTitleBar="True"
                  Title="VRPTW"
                  Width="1000"
                  MinWidth="1000"
@@ -52,207 +53,210 @@
 
         <ScottPlot:WpfPlot x:Name="PlotZone" />
 
-        <TabControl Grid.Column="1">
-            
-            <TabItem Header="Configuration"
+        <DockPanel Grid.Column="1" VerticalAlignment="Stretch" LastChildFill="True">
+            <TextBlock DockPanel.Dock="Bottom"
+                       Text="Thibault THOMAS &amp; Allan DES COURTILS © 2023"
+                       FontSize="9"
+                       Foreground="LightGray"
+                       Margin="10" />
+            <TabControl DockPanel.Dock="Top">
+
+                <TabItem Header="Configuration"
                      IsSelected="True">
-                <ScrollViewer>
+                    <ScrollViewer>
+                        <StackPanel Margin="10">
+                            <Button Content="Choisir un fichier"
+                                    Command="{Binding ChooseFileCommand}"
+                                    Margin="0,0,0,8" />
+                            <Button Content="Solution aléatoire"
+                                    Command="{Binding RandomSolutionCommand}"
+                                    Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    Margin="0,0,0,8" />
+                            <Button Content="Réinitialiser"
+                                    Command="{Binding ResetCommand}"
+                                    ToolTip="Revenir à l'étape Clients"
+                                    Visibility="{Binding IsSolutionCalculated, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                            <StackPanel Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Margin="0,8,0,8">
+
+                                <Expander Header="Paramètres" x:Name="ParametersExpander">
+                                    <StackPanel Margin="0,0,8,0">
+                                        <StackPanel Margin="0,4">
+                                            <Label Content="Heuristique" Style="{StaticResource Subtitle}" />
+                                            <ComboBox ItemsSource="{Binding Source={x:Static viewmodels:RoutesViewModel.HeuristicStrategies}, Mode=OneWay}"
+                                                      SelectedItem="{Binding SelectedHeuristicStrategy}"
+                                                      Margin="10,0,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,4">
+                                            <Label Content="Stratégie de voisinage" Style="{StaticResource Subtitle}" />
+                                            <ComboBox ItemsSource="{Binding Source={x:Static viewmodels:RoutesViewModel.NeighborhoodStrategies}, Mode=OneWay}"
+                                                      SelectedItem="{Binding SelectedNeighborhoodStrategy}"
+                                                      Margin="10,0,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,4">
+                                            <Label Content="Opérateurs" Style="{StaticResource Subtitle}" />
+                                            <ListView ItemsSource="{Binding Source={x:Static viewmodels:RoutesViewModel.Operators}, Mode=OneWay}"
+                                                      SelectionMode="Multiple"
+                                                      Name="OperatorsListView"
+                                                      SelectionChanged="OnOperatorsSelectionChanged"
+                                                      Margin="10,0,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsStepStrategy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                    Margin="0,4">
+                                            <Label Content="Itérations" Style="{StaticResource Subtitle}" />
+                                            <mah:NumericUpDown Value="{Binding SelectedHeuristicStrategy.NbSteps}"
+                                                               Minimum="100"
+                                                               Maximum="10000"
+                                                               Margin="10,0,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsSimulatedAnnealing, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                    Margin="0,4">
+                                            <Label Content="Taux de refroidissement alpha" Style="{StaticResource Subtitle}" />
+                                            <mah:NumericUpDown Value="{Binding SelectedHeuristicStrategy.Alpha}"
+                                                               Interval="0.001"
+                                                               StringFormat="F3"
+                                                               Minimum="0.001"
+                                                               Maximum="0.999"
+                                                               Margin="10,0,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsTabu, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                    Margin="0,4">
+                                            <Label Content="Taille liste taboue" Style="{StaticResource Subtitle}" />
+                                            <mah:NumericUpDown Value="{Binding SelectedHeuristicStrategy.TabuSize}"
+                                                               Minimum="0"
+                                                               Maximum="200"
+                                                               Margin="10,0,0,0" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander>
+
+                                <Button Content="Démarrer le calcul"
+                                        Command="{Binding StartVRPTWCommand}"
+                                        Click="OnStartVRPTWButtonClick"
+                                        ToolTip="Assurez-vous d'avoir sélectionné un ou plusieurs opérateurs."
+                                        ToolTipService.ShowOnDisabled="True"
+                                        Margin="0,15,0,15" />
+
+                                <ContentControl Visibility="{Binding SelectedHeuristicStrategy.IsStepStrategy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <TextBlock Visibility="{Binding IsSolutionCalculating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0}% (étape {1}/{2})">
+                                                <Binding Path="Progress" />
+                                                <Binding Path="CurrentStep" />
+                                                <Binding Path="SelectedHeuristicStrategy.NbSteps" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </ContentControl>
+
+                                <ProgressBar Value="{Binding Progress, Mode=OneWay}"
+                                             IsIndeterminate="{Binding SelectedHeuristicStrategy.IsStepStrategy, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"
+                                             Visibility="{Binding IsSolutionCalculating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                             Margin="0,2,0,15" />
+
+                                <Button Content="Arrêter le calcul"
+                                        Command="{Binding CancelVRPTWCommand}"
+                                        Visibility="{Binding IsSolutionCalculating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Margin="0,15,0,0" />
+
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="Affichage">
                     <StackPanel Margin="10">
-                        <Button Content="Choisir un fichier"
-                                Command="{Binding ChooseFileCommand}"
-                                Margin="0,0,0,8" />
-                        <Button Content="Solution aléatoire"
-                                Command="{Binding RandomSolutionCommand}"
-                                Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                Margin="0,0,0,8" />
-                        <Button Content="Réinitialiser"
-                                Command="{Binding ResetCommand}"
-                                ToolTip="Revenir à l'étape Clients"
-                                Visibility="{Binding IsSolutionCalculated, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-                        <StackPanel Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    Margin="0,8,0,8">
-
-                            <Expander Header="Paramètres" x:Name="ParametersExpander">
-                                <StackPanel Margin="0,0,8,0">
-                                    <StackPanel Margin="0,4">
-                                        <Label Content="Heuristique"
-                                               Style="{StaticResource Subtitle}" />
-                                        <ComboBox ItemsSource="{Binding Source={x:Static viewmodels:RoutesViewModel.HeuristicStrategies}, Mode=OneWay}"
-                                                  SelectedItem="{Binding SelectedHeuristicStrategy}"
-                                                  Margin="10,0,0,0" />
-                                    </StackPanel>
-                                    <StackPanel Margin="0,4">
-                                        <Label Content="Stratégie de voisinage"
-                                               Style="{StaticResource Subtitle}" />
-                                        <ComboBox ItemsSource="{Binding Source={x:Static viewmodels:RoutesViewModel.NeighborhoodStrategies}, Mode=OneWay}"
-                                                  SelectedItem="{Binding SelectedNeighborhoodStrategy}"
-                                                  Margin="10,0,0,0" />
-                                    </StackPanel>
-                                    <StackPanel Margin="0,4">
-                                        <Label Content="Opérateurs"
-                                               Style="{StaticResource Subtitle}" />
-                                        <ListView ItemsSource="{Binding Source={x:Static viewmodels:RoutesViewModel.Operators}, Mode=OneWay}"
-                                                  SelectionMode="Multiple"
-                                                  Name="OperatorsListView"
-                                                  SelectionChanged="OnOperatorsSelectionChanged"
-                                                  Margin="10,0,0,0" />
-                                    </StackPanel>
-                                    <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsStepStrategy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                Margin="0,4">
-                                        <Label Content="Itérations"
-                                               Style="{StaticResource Subtitle}" />
-                                        <mah:NumericUpDown Value="{Binding SelectedHeuristicStrategy.NbSteps}"
-                                                           Minimum="100"
-                                                           Maximum="10000"
-                                                           Margin="10,0,0,0" />
-                                    </StackPanel>
-                                    <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsSimulatedAnnealing, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                Margin="0,4">
-                                        <Label Content="Taux de refroidissement alpha"
-                                               Style="{StaticResource Subtitle}" />
-                                        <mah:NumericUpDown Value="{Binding SelectedHeuristicStrategy.Alpha}"
-                                                           Interval="0.001"
-                                                           StringFormat="F3"
-                                                           Minimum="0.001"
-                                                           Maximum="0.999"
-                                                           Margin="10,0,0,0" />
-                                    </StackPanel>
-                                    <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsTabu, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                Margin="0,4">
-                                        <Label Content="Taille liste taboue"
-                                               Style="{StaticResource Subtitle}" />
-                                        <mah:NumericUpDown Value="{Binding SelectedHeuristicStrategy.TabuSize}"
-                                                           Minimum="0"
-                                                           Maximum="200"
-                                                           Margin="10,0,0,0" />
-                                    </StackPanel>
-                                </StackPanel>
-                            </Expander>
-
-                            <Button Content="Démarrer le calcul"
-                                    Command="{Binding StartVRPTWCommand}"
-                                    Click="OnStartVRPTWButtonClick"
-                                    ToolTip="Assurez-vous d'avoir sélectionné un ou plusieurs opérateurs."
-                                    ToolTipService.ShowOnDisabled="True"
-                                    Margin="0,15,0,15" />
-
-                            <ContentControl Visibility="{Binding SelectedHeuristicStrategy.IsStepStrategy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <TextBlock Visibility="{Binding IsSolutionCalculating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0}% (étape {1}/{2})">
-                                            <Binding Path="Progress" />
-                                            <Binding Path="CurrentStep" />
-                                            <Binding Path="SelectedHeuristicStrategy.NbSteps" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                            </ContentControl>
-
-                            <ProgressBar Value="{Binding Progress, Mode=OneWay}"
-                                         IsIndeterminate="{Binding SelectedHeuristicStrategy.IsStepStrategy, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"
-                                         Visibility="{Binding IsSolutionCalculating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                         Margin="0,2,0,15" />
-
-                            <Button Content="Arrêter le calcul"
-                                    Command="{Binding CancelVRPTWCommand}"
-                                    Visibility="{Binding IsSolutionCalculating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    Margin="0,15,0,0" />
+                        <TextBlock Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource InvertBooleanToVisibilityConverter}}"
+                                   Text="Veuillez d'abord configurer une solution depuis Configuration."
+                                   TextWrapping="Wrap" />
+                        <StackPanel Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                         </StackPanel>
+                        <Expander Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Header="Client sélectionné"
+                                  IsExpanded="True"
+                                  Padding="10"
+                                  Margin="0,0,0,10">
+                            <StackPanel>
+                                <ComboBox ItemsSource="{Binding ClientsWithDepot}"
+                                          SelectedItem="{Binding SelectedClient}"
+                                          IsEnabled="{Binding IsSolutionLoaded, Mode=OneWay}"
+                                          Style="{StaticResource ClearableComboBox}"
+                                          Margin="0,0,0,10" />
+                                <Label Content="{Binding SelectedClient.Coordinate}"
+                                       ContentStringFormat="Position : {0}"
+                                       Padding="0,0,0,5" />
+                                <Label Content="{Binding SelectedClient.Demand}"
+                                       ContentStringFormat="Demande : {0}"
+                                       Padding="0,0,0,5" />
+                                <Label Content="{Binding SelectedClient.ReadyTime}"
+                                       ContentStringFormat="Heure min : {0}"
+                                       Padding="0,0,0,5" />
+                                <Label Content="{Binding SelectedClient.DueTime}"
+                                       ContentStringFormat="Heure max : {0}"
+                                       Padding="0,0,0,5" />
+                                <Label Content="{Binding SelectedClient.Service}"
+                                       ContentStringFormat="Temps de chargement : {0}"
+                                       Padding="0" />
+                            </StackPanel>
+                        </Expander>
+                        <Expander Visibility="{Binding IsSolutionCalculated, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Header="Route sélectionnée"
+                                  IsExpanded="True"
+                                  Padding="10">
+                            <StackPanel>
+                                <ComboBox ItemsSource="{Binding Vehicles}"
+                                          SelectedItem="{Binding SelectedVehicle}">
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
+                                            <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="True" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DisplayAllRoutes}" Value="False">
+                                                    <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="False" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
+                                                    <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="False"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ComboBox.Style>
+                                </ComboBox>
+                                <CheckBox IsChecked="{Binding DisplayAllRoutes, Converter={StaticResource InvertBoolConverter}}"
+                                          Margin="0,10,0,10">
+                                    <TextBlock Text="N'afficher que la route sélectionnée"
+                                               TextWrapping="Wrap"
+                                               Margin="4,0,0,0" />
+                                    <CheckBox.Style>
+                                        <Style TargetType="CheckBox" BasedOn="{StaticResource MahApps.Styles.CheckBox}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedVehicle}" Value="{x:Null}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </CheckBox.Style>
+                                </CheckBox>
+                                <Label Content="{Binding SelectedVehicle.NbClients}"
+                                       ContentStringFormat="Nombre de clients : {0}"
+                                       Padding="0,0,0,5" />
+                                <Label Content="{Binding SelectedVehicle.TravelledDistance}"
+                                       ContentStringFormat="Distance parcourue : {0:0.00}"
+                                       Padding="0,0,0,5" />
+                                <Label Content="{Binding SelectedVehicle.MaxCapacity}"
+                                       ContentStringFormat="Capacité maximale : {0}"
+                                       Padding="0,0,0,5" />
+                                <Label Content="{Binding SelectedVehicle.TotalDemand}"
+                                       ContentStringFormat="Demande totale : {0}"
+                                       Padding="0" />
+                            </StackPanel>
+                        </Expander>
                     </StackPanel>
-                </ScrollViewer>
-            </TabItem>
+                </TabItem>
 
-            <TabItem Header="Affichage">
-                <StackPanel Margin="10">
-                    <TextBlock Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource InvertBooleanToVisibilityConverter}}"
-                               Text="Veuillez d'abord configurer une solution depuis Configuration."
-                               TextWrapping="Wrap" />
-                    <StackPanel Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        
-                    </StackPanel>
-                    <Expander Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                              Header="Client sélectionné"
-                              IsExpanded="True"
-                              Padding="10"
-                              Margin="0,0,0,10">
-                        <StackPanel>
-                            <ComboBox ItemsSource="{Binding ClientsWithDepot}"
-                                      SelectedItem="{Binding SelectedClient}"
-                                      IsEnabled="{Binding IsSolutionLoaded, Mode=OneWay}"
-                                      Style="{StaticResource ClearableComboBox}"
-                                      Margin="0,0,0,10" />
-                            <Label Content="{Binding SelectedClient.Coordinate}"
-                                   ContentStringFormat="Position : {0}"
-                                   Padding="0,0,0,5" />
-                            <Label Content="{Binding SelectedClient.Demand}"
-                                   ContentStringFormat="Demande : {0}"
-                                   Padding="0,0,0,5" />
-                            <Label Content="{Binding SelectedClient.ReadyTime}"
-                                   ContentStringFormat="Heure min : {0}"
-                                   Padding="0,0,0,5" />
-                            <Label Content="{Binding SelectedClient.DueTime}"
-                                   ContentStringFormat="Heure max : {0}"
-                                   Padding="0,0,0,5" />
-                            <Label Content="{Binding SelectedClient.Service}"
-                                   ContentStringFormat="Temps de chargement : {0}"
-                                   Padding="0" />
-                        </StackPanel>
-                    </Expander>
-                    <Expander Visibility="{Binding IsSolutionCalculated, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                              Header="Route sélectionnée"
-                              IsExpanded="True"
-                              Padding="10">
-                        <StackPanel>
-                            <ComboBox ItemsSource="{Binding Vehicles}"
-                                      SelectedItem="{Binding SelectedVehicle}">
-                                <ComboBox.Style>
-                                    <Style TargetType="ComboBox" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
-                                        <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="True" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding DisplayAllRoutes}" Value="False">
-                                                <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="False" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
-                                                <Setter Property="mah:TextBoxHelper.ClearTextButton" Value="False"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ComboBox.Style>
-                            </ComboBox>
-                            <CheckBox IsChecked="{Binding DisplayAllRoutes, Converter={StaticResource InvertBoolConverter}}"
-                                      Margin="0,10,0,10">
-                                <TextBlock Text="N'afficher que la route sélectionnée"
-                                           TextWrapping="Wrap"
-                                           Margin="4,0,0,0" />
-                                <CheckBox.Style>
-                                    <Style TargetType="CheckBox" BasedOn="{StaticResource MahApps.Styles.CheckBox}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding SelectedVehicle}" Value="{x:Null}">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </CheckBox.Style>
-                            </CheckBox>
-                            <Label Content="{Binding SelectedVehicle.NbClients}"
-                                   ContentStringFormat="Nombre de clients : {0}"
-                                   Padding="0,0,0,5" />
-                            <Label Content="{Binding SelectedVehicle.TravelledDistance}"
-                                   ContentStringFormat="Distance parcourue : {0:0.00}"
-                                   Padding="0,0,0,5" />
-                            <Label Content="{Binding SelectedVehicle.MaxCapacity}"
-                                   ContentStringFormat="Capacité maximale : {0}"
-                                   Padding="0,0,0,5" />
-                            <Label Content="{Binding SelectedVehicle.TotalDemand}"
-                                   ContentStringFormat="Demande totale : {0}"
-                                   Padding="0" />
-                        </StackPanel>
-                    </Expander>
-                </StackPanel>
-            </TabItem>
-            
-        </TabControl>
+            </TabControl>
+
+        </DockPanel>
+        
     </Grid>
 </mah:MetroWindow>
