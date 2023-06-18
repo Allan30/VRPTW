@@ -148,6 +148,8 @@ public partial class RoutesViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(IsSolutionCalculable))]
     private async Task StartVRPTWAsync()
     {
+        _solution!.Reset();
+        _routesMapper.RoutesToRoutesViewModel(_solution, this);
         IsSolutionCalculated = false;
         IsSolutionCalculating = true;
         _solution!.GenerateRandomSolution();
