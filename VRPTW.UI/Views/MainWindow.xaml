@@ -63,14 +63,14 @@
                                 Margin="0,0,0,8" />
                         <Button Content="Solution aléatoire"
                                 Command="{Binding RandomSolutionCommand}"
-                                Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                                 Margin="0,0,0,8" />
                         <Button Content="Réinitialiser"
                                 Command="{Binding ResetCommand}"
                                 ToolTip="Revenir à l'étape Clients"
-                                Visibility="{Binding IsSolutionCalculated,Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                Visibility="{Binding IsSolutionCalculated, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                        <StackPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        <StackPanel Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                                     Margin="0,8,0,8">
 
                             <Expander Header="Paramètres" x:Name="ParametersExpander">
@@ -98,7 +98,7 @@
                                                   SelectionChanged="OnOperatorsSelectionChanged"
                                                   Margin="10,0,0,0" />
                                     </StackPanel>
-                                    <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsStepStrategy, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsStepStrategy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                 Margin="0,4">
                                         <Label Content="Itérations"
                                                Style="{StaticResource Subtitle}" />
@@ -107,7 +107,7 @@
                                                            Maximum="10000"
                                                            Margin="10,0,0,0" />
                                     </StackPanel>
-                                    <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsSimulatedAnnealing, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsSimulatedAnnealing, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                 Margin="0,4">
                                         <Label Content="Taux de refroidissement alpha"
                                                Style="{StaticResource Subtitle}" />
@@ -118,7 +118,7 @@
                                                            Maximum="0.999"
                                                            Margin="10,0,0,0" />
                                     </StackPanel>
-                                    <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsTabu, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsTabu, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                 Margin="0,4">
                                         <Label Content="Taille liste taboue"
                                                Style="{StaticResource Subtitle}" />
@@ -137,7 +137,7 @@
                                     ToolTipService.ShowOnDisabled="True"
                                     Margin="0,15,0,15" />
 
-                            <ContentControl Visibility="{Binding SelectedHeuristicStrategy.IsStepStrategy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <ContentControl Visibility="{Binding SelectedHeuristicStrategy.IsStepStrategy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <TextBlock Visibility="{Binding IsSolutionCalculating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="{}{0}% (étape {1}/{2})">
@@ -151,12 +151,12 @@
 
                             <ProgressBar Value="{Binding Progress, Mode=OneWay}"
                                          IsIndeterminate="{Binding SelectedHeuristicStrategy.IsStepStrategy, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"
-                                         Visibility="{Binding IsSolutionCalculating, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                         Visibility="{Binding IsSolutionCalculating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                                          Margin="0,2,0,15" />
 
                             <Button Content="Arrêter le calcul"
                                     Command="{Binding CancelVRPTWCommand}"
-                                    Visibility="{Binding IsSolutionCalculating, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    Visibility="{Binding IsSolutionCalculating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                                     Margin="0,15,0,0" />
 
                         </StackPanel>
@@ -166,13 +166,13 @@
 
             <TabItem Header="Affichage">
                 <StackPanel Margin="10">
-                    <TextBlock Visibility="{Binding IsSolutionLoaded, Converter={StaticResource InvertBooleanToVisibilityConverter}}"
+                    <TextBlock Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource InvertBooleanToVisibilityConverter}}"
                                Text="Veuillez d'abord configurer une solution depuis Configuration."
                                TextWrapping="Wrap" />
-                    <StackPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                         
                     </StackPanel>
-                    <Expander Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    <Expander Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                               Header="Client sélectionné"
                               IsExpanded="True"
                               Padding="10"
@@ -200,7 +200,7 @@
                                    Padding="0" />
                         </StackPanel>
                     </Expander>
-                    <Expander Visibility="{Binding IsSolutionCalculated, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    <Expander Visibility="{Binding IsSolutionCalculated, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                               Header="Route sélectionnée"
                               IsExpanded="True"
                               Padding="10">
