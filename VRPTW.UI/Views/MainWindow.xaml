@@ -9,6 +9,7 @@
                  xmlns:converters="clr-namespace:VRPTW.UI.Converters"
                  ShowIconOnTitleBar="True"
                  Title="VRPTW"
+                 Language="fr-FR"
                  Width="1000"
                  MinWidth="1000"
                  MinHeight="720"
@@ -112,12 +113,18 @@
                                         </StackPanel>
                                         <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsSimulatedAnnealing, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                     Margin="0,4">
+                                            <Label Content="Température initiale" Style="{StaticResource Subtitle}" />
+                                            <mah:NumericUpDown Value="{Binding SelectedHeuristicStrategy.InitialTemperature}"
+                                                               StringFormat="N0"
+                                                               Minimum="0"
+                                                               Maximum="1000000"
+                                                               Margin="10,0,0,10" />
                                             <Label Content="Taux de refroidissement alpha" Style="{StaticResource Subtitle}" />
                                             <mah:NumericUpDown Value="{Binding SelectedHeuristicStrategy.Alpha}"
                                                                Interval="0.001"
                                                                StringFormat="F3"
-                                                               Minimum="0.001"
-                                                               Maximum="0.999"
+                                                               Minimum="0"
+                                                               Maximum="1"
                                                                Margin="10,0,0,0" />
                                         </StackPanel>
                                         <StackPanel Visibility="{Binding SelectedHeuristicStrategy.IsTabu, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -141,7 +148,7 @@
                                 <ContentControl Visibility="{Binding SelectedHeuristicStrategy.IsStepStrategy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <TextBlock Visibility="{Binding IsSolutionCalculating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0}% (étape {1}/{2})">
+                                            <MultiBinding StringFormat="{}{0}% (étape {1:N0}/{2:N0})">
                                                 <Binding Path="Progress" />
                                                 <Binding Path="CurrentStep" />
                                                 <Binding Path="SelectedHeuristicStrategy.NbSteps" />

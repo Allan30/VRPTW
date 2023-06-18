@@ -5,9 +5,8 @@ namespace VRPTW.Core.Heuristics;
 
 public class SimulatedAnnealingStrategy : HeuristicStrategyBase
 {
-
-    private double _temperature = 100;
-    public double Alpha { get; set; } = 0.999;
+    public double Temperature { get; set; } = 10_000;
+    public double Alpha { get; set; } = 0.985;
     private int _currentStep = 0;
 
     public SimulatedAnnealingStrategy(INeighborhoodStrategy neighborhoodStrategy) : base(neighborhoodStrategy)
@@ -25,12 +24,12 @@ public class SimulatedAnnealingStrategy : HeuristicStrategyBase
         }
         var newRoutes = (Routes)solution.Clone();
         var theOperation = vehicles[Random.Next(0, vehicles.Count)];
-        if (theOperation.delta > 0 || Math.Exp(theOperation.delta / _temperature) > Random.NextDouble())
+        if (theOperation.delta > 0 || Math.Exp(theOperation.delta / Temperature) > Random.NextDouble())
         {
             newRoutes.ChangeVehicle(theOperation.src);
             newRoutes.ChangeVehicle(theOperation.trg);
         }
-        _temperature *= Alpha;
+        Temperature *= Alpha;
         return newRoutes;
     }
 }
