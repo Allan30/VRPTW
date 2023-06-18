@@ -17,8 +17,8 @@ public partial class App : Application
     {
         try
         {
-            MessageBox.Show(e.Exception.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             e.Handled = true;
+            MessageBox.Show(e.Exception.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             Shutdown(-1);
         }
         catch
