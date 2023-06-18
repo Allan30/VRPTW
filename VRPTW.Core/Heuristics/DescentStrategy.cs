@@ -9,8 +9,9 @@ public class DescentStrategy : HeuristicStrategyBase
     private double _currentFitness = -1;
     protected override bool LoopConditon => _prevFitness > _currentFitness;
 
-    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution)
+    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution, IProgress<int> progress)
     {
+        progress.Report(-1);
         _prevFitness = solution.Fitness;
         if (vehicles.Count == 0)
         {

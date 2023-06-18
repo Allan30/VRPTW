@@ -10,9 +10,9 @@ public class SimulatedAnnealingStrategy : HeuristicStrategyBase
     private int _currentStep = 0;
     protected override bool LoopConditon => _currentStep < NbSteps;
 
-    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution)
+    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution, IProgress<int> progress)
     {
-        _currentStep++;
+        progress.Report(++_currentStep);
         if (vehicles.Count == 0)
         {
             return solution;

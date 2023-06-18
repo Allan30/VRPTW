@@ -11,9 +11,9 @@ public class TabuStrategy : HeuristicStrategyBase
     private readonly List<(OperatorEnum operatorName, List<string> clientName)> _tabouList = new();
     protected override bool LoopConditon => _currentStep < NbSteps;
 
-    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution)
+    protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution, IProgress<int> progress)
     {
-        _currentStep++;
+        progress.Report(++_currentStep);
         if (vehicles.Count == 0)
         {
             return solution;

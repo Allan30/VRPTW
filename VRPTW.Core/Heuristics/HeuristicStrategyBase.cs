@@ -13,24 +13,29 @@ public abstract class HeuristicStrategyBase
     protected abstract bool LoopConditon { get; }
 
     public NeighborhoodStrategyEnum NeighborhoodStrategy { get; set; } = NeighborhoodStrategyEnum.Best;
-    
-    public async Task<Routes> CalculateAsync(Routes solution, List<OperatorEnum> ops, /*IProgress<int> progress, */CancellationToken cancellationToken)
+
+    public Routes Calculate(Routes solution, List<OperatorEnum> ops, IProgress<int> progress, CancellationToken cancellationToken)
     {
-        Routes routes = NeighborhoodStrategy switch
+        if (NeighborhoodStrategy == NeighborhoodStrategyEnum.Best)
         {
-            NeighborhoodStrategyEnum.Best => await BestOfSelectedOperators(solution, ops, cancellationToken),
-            _ => await RandomWithSelectedOperators(solution, ops, cancellationToken)
-        };
-        return routes;
+            return BestOfSelectedOperators(solution, ops, progress, cancellationToken);
+        }
+        else if (NeighborhoodStrategy == NeighborhoodStrategyEnum.Random)
+        {
+            return RandomWithSelectedOperators(solution, ops, progress, cancellationToken);
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    private async Task<Routes> RandomWithSelectedOperators(Routes solution, List<OperatorEnum> ops, CancellationToken cancellationToken)
+    private Routes RandomWithSelectedOperators(Routes solution, List<OperatorEnum> ops, IProgress<int> progress, CancellationToken cancellationToken)
     {
         var operators = GetOperatorsFromName(ops);
-        while (LoopConditon)
+        while (LoopConditon && !cancellationToken.IsCancellationRequested)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            solution = GetNewSolution(operators[Random.Next(0, operators.Count)].Execute(solution), solution);
+            solution = GetNewSolution(operators[Random.Next(0, operators.Count)].Execute(solution), solution, progress);
             solution.DeleteEmptyVehicles();
             var newFitness = solution.Fitness;
             if (newFitness < BestFitness)
@@ -41,20 +46,19 @@ public abstract class HeuristicStrategyBase
         }
         return solution;
     }
-
-    private async Task<Routes> BestOfSelectedOperators(Routes solution, List<OperatorEnum> ops, CancellationToken cancellationToken)
+    
+    private Routes BestOfSelectedOperators(Routes solution, List<OperatorEnum> ops, IProgress<int> progress, CancellationToken cancellationToken)
     {
         BestSolution = (Routes)solution.Clone();
         var operators = GetOperatorsFromName(ops);
-        while (LoopConditon)
+        while (LoopConditon && !cancellationToken.IsCancellationRequested)
         {
-            cancellationToken.ThrowIfCancellationRequested();
             var neighbors = new List<(Vehicle, Vehicle, double, (OperatorEnum, List<int>))>();
             foreach (var op in operators)
             {
                 neighbors = neighbors.Concat(op.Execute(solution)).ToList();
             }
-            solution = GetNewSolution(neighbors, solution);
+            solution = GetNewSolution(neighbors, solution, progress);
             solution.DeleteEmptyVehicles();
             var newFitness = solution.Fitness;
             if (newFitness < BestFitness)
@@ -89,6 +93,7 @@ public abstract class HeuristicStrategyBase
 
     protected abstract Routes GetNewSolution(
         List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles,
-        Routes solution
+        Routes solution,
+        IProgress<int> progress
     );
 }

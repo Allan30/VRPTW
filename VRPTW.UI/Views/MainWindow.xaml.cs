@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using VRPTW.UI.Plottables;
@@ -298,5 +299,10 @@ public partial class MainWindow : MetroWindow
     private void OnOperatorsSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         ViewModel.SelectedOperators = new(OperatorsListView.SelectedItems.Cast<OperatorViewModel>());
+    }
+
+    private void OnStartVRPTWButtonClick(object sender, RoutedEventArgs e)
+    {
+        ParametersExpander.IsExpanded = false;
     }
 }

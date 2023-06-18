@@ -139,6 +139,12 @@ public partial class RoutesViewModel : ObservableObject
         _routesMapper.RoutesToRoutesViewModel(_solution, this);
     }
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Progress))]
+    private int _currentStep;
+
+    public int Progress => CurrentStep * 100 / SelectedHeuristicStrategy.NbSteps;
+
     [RelayCommand(CanExecute = nameof(IsSolutionCalculable))]
     private async Task StartVRPTWAsync()
     {
@@ -147,22 +153,18 @@ public partial class RoutesViewModel : ObservableObject
         _solution!.GenerateRandomSolution();
         var strategy = _heuristicStrategyMapper.HeuristicStrategyViewModelToHeuristicStrategyBase(SelectedHeuristicStrategy);
         strategy.NeighborhoodStrategy = SelectedNeighborhoodStrategy.NeighborhoodStrategyType;
-        var routesTask = Task.Run(() => strategy.CalculateAsync(_solution, SelectedOperators.Select(op => op.OperatorType).ToList(), _cancellationTokenSource.Token));
-        try
-        {
-            _solution = await routesTask;
-            _routesMapper.RoutesToRoutesViewModel(_solution, this);
-            IsSolutionCalculated = true;
-        }
-        catch (OperationCanceledException)
-        {
-
-        }
-        finally
-        {
-            IsSolutionCalculating = false;
-            _cancellationTokenSource = new();
-        }
+        _solution = await Task.Run(() =>
+            strategy.Calculate(
+                _solution,
+                SelectedOperators.Select(op => op.OperatorType).ToList(),
+                new Progress<int>(step => CurrentStep = step),
+                _cancellationTokenSource.Token
+            )
+        );
+        _routesMapper.RoutesToRoutesViewModel(_solution, this);
+        IsSolutionCalculating = false;
+        IsSolutionCalculated = true;
+        _cancellationTokenSource = new();
     }
 
     private CancellationTokenSource _cancellationTokenSource = new();

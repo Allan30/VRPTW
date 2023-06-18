@@ -13,21 +13,6 @@
 
         public double TimeAfterService => TimeOnIt + Service;
 
-        public override bool Equals(object obj)
-        {
-            if (obj is Client client)
-            {
-                return Id == client.Id;
-            }
-
-            return false;
-        }
-
-        public object Clone()
-        {
-            return new Client(Id, Coordinate, ReadyTime, DueTime, Demand, Service);
-        }
-
         public Client(string id, Coordinate coordinate, int readyTime, int dueTime, int demand = 0, int service = 0)
         {
             Id = id;
@@ -40,5 +25,19 @@
 
         public double GetDistance(Client otherClient) =>
             Coordinate.GetDistance(otherClient.Coordinate);
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is Client client)
+            {
+                return Id == client.Id;
+            }
+
+            return false;
+        }
+
+        public object Clone() => new Client(Id, Coordinate, ReadyTime, DueTime, Demand, Service);
+
+        public override int GetHashCode() => Id.GetHashCode();
     }
 }

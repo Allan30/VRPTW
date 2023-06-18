@@ -7,6 +7,8 @@
                  xmlns:viewmodels="clr-namespace:VRPTW.UI.ViewModels"
                  xmlns:ScottPlot="clr-namespace:ScottPlot;assembly=ScottPlot.WPF"
                  xmlns:converters="clr-namespace:VRPTW.UI.Converters"
+                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                  Title="VRPTW"
                  Width="1000"
                  MinWidth="1000"
@@ -73,7 +75,17 @@
                                 Margin="0,8,0,8">
 
                         <Expander Header="Paramètres"
-                                  IsExpanded="True">
+                                  x:Name="ParametersExpander">
+                            <!--<Expander.Style>
+                                <Style TargetType="Expander" BasedOn="{StaticResource MahApps.Styles.Expander}">
+                                    <Setter Property="IsExpanded" Value="True" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSolutionCalculating}" Value="True">
+                                            <Setter Property="IsExpanded" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Expander.Style>-->
                             <StackPanel Margin="0,0,8,0">
                                 <StackPanel Margin="0,4">
                                     <Label Content="Heuristique"
@@ -130,18 +142,34 @@
                             </StackPanel>
                         </Expander>
 
-                        <Button Content="Démarrer"
+                        <Button Content="Démarrer le calcul"
                                 Command="{Binding StartVRPTWCommand}"
+                                Click="OnStartVRPTWButtonClick"
                                 ToolTip="Assurez-vous d'avoir sélectionné un ou plusieurs opérateurs."
                                 ToolTipService.ShowOnDisabled="True"
-                                Margin="0,15,0,0" />
+                                Margin="0,15,0,15" />
 
-                        <Button Content="Annuler"
+                        <ContentControl Visibility="{Binding SelectedHeuristicStrategy.IsStepStrategy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Visibility="{Binding IsSolutionCalculating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0}% (étape {1}/{2})">
+                                        <Binding Path="Progress" />
+                                        <Binding Path="CurrentStep" />
+                                        <Binding Path="SelectedHeuristicStrategy.NbSteps" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </ContentControl>
+                        
+                        <ProgressBar Value="{Binding Progress, Mode=OneWay}"
+                                     IsIndeterminate="{Binding SelectedHeuristicStrategy.IsStepStrategy, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"
+                                     Visibility="{Binding IsSolutionCalculating, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                     Margin="0,2,0,15" />
+
+                        <Button Content="Arrêter le calcul"
                                 Command="{Binding CancelVRPTWCommand}"
                                 Visibility="{Binding IsSolutionCalculating, Converter={StaticResource BooleanToVisibilityConverter}}"
                                 Margin="0,15,0,0" />
-
-                        <ProgressBar Value="50" />
 
                     </StackPanel>
                 </StackPanel>
@@ -162,10 +190,10 @@
                               Margin="0,0,0,10">
                         <StackPanel>
                             <ComboBox ItemsSource="{Binding ClientsWithDepot}"
-                                  SelectedItem="{Binding SelectedClient}"
-                                  IsEnabled="{Binding IsSolutionLoaded}"
-                                  Style="{StaticResource ClearableComboBox}"
-                                  Margin="0,0,0,10" />
+                                      SelectedItem="{Binding SelectedClient}"
+                                      IsEnabled="{Binding IsSolutionLoaded, Mode=OneWay}"
+                                      Style="{StaticResource ClearableComboBox}"
+                                      Margin="0,0,0,10" />
                             <Label Content="{Binding SelectedClient.Coordinate}"
                                    ContentStringFormat="Position : {0}"
                                    Padding="0,0,0,5" />
