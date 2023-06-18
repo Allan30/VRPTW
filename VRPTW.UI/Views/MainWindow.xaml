@@ -7,8 +7,6 @@
                  xmlns:viewmodels="clr-namespace:VRPTW.UI.ViewModels"
                  xmlns:ScottPlot="clr-namespace:ScottPlot;assembly=ScottPlot.WPF"
                  xmlns:converters="clr-namespace:VRPTW.UI.Converters"
-                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                  Title="VRPTW"
                  Width="1000"
                  MinWidth="1000"
