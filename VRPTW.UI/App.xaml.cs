@@ -19,9 +19,11 @@ public partial class App : Application
         {
             e.Handled = true;
             MessageBox.Show(e.Exception.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-            Shutdown(-1);
         }
         catch
+        {
+        }
+        finally
         {
             Shutdown(-1);
         }
