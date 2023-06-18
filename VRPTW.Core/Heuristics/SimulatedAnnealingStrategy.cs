@@ -1,3 +1,4 @@
+using VRPTW.Core.Neighborhood;
 using VRPTW.Core.Operators;
 
 namespace VRPTW.Core.Heuristics;
@@ -8,6 +9,11 @@ public class SimulatedAnnealingStrategy : HeuristicStrategyBase
     private double _temperature = 100;
     public double Alpha { get; set; } = 0.999;
     private int _currentStep = 0;
+
+    public SimulatedAnnealingStrategy(INeighborhoodStrategy neighborhoodStrategy) : base(neighborhoodStrategy)
+    {
+    }
+
     protected override bool LoopConditon => _currentStep < NbSteps;
 
     protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution, IProgress<int> progress)

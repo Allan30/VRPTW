@@ -1,3 +1,4 @@
+using VRPTW.Core.Neighborhood;
 using VRPTW.Core.Operators;
 
 namespace VRPTW.Core.Heuristics;
@@ -9,6 +10,11 @@ public class TabuStrategy : HeuristicStrategyBase
     private int _currentStep = 0;
 
     private readonly List<(OperatorEnum operatorName, List<string> clientName)> _tabouList = new();
+
+    public TabuStrategy(INeighborhoodStrategy neighborhoodStrategy) : base(neighborhoodStrategy)
+    {
+    }
+
     protected override bool LoopConditon => _currentStep < NbSteps;
 
     protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution, IProgress<int> progress)

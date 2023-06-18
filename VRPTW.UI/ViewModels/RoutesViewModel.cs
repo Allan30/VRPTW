@@ -153,8 +153,7 @@ public partial class RoutesViewModel : ObservableObject
         IsSolutionCalculated = false;
         IsSolutionCalculating = true;
         _solution!.GenerateRandomSolution();
-        var strategy = _heuristicStrategyMapper.HeuristicStrategyViewModelToHeuristicStrategyBase(SelectedHeuristicStrategy);
-        strategy.NeighborhoodStrategy = SelectedNeighborhoodStrategy.NeighborhoodStrategyType;
+        var strategy = _heuristicStrategyMapper.HeuristicStrategyViewModelToHeuristicStrategyBase(SelectedHeuristicStrategy, SelectedNeighborhoodStrategy.NeighborhoodStrategyType);
         _solution = await Task.Run(() =>
             strategy.Calculate(
                 _solution,

@@ -1,8 +1,10 @@
 ﻿using Riok.Mapperly.Abstractions;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using VRPTW.Core;
 using VRPTW.Core.Heuristics;
+using VRPTW.Core.Neighborhood;
 using VRPTW.UI.Enums;
 using VRPTW.UI.ViewModels;
 
@@ -49,12 +51,22 @@ public partial class ClientMapper
 [Mapper]
 public partial class HeuristicStrategyMapper
 {
-    public HeuristicStrategyBase HeuristicStrategyViewModelToHeuristicStrategyBase(HeuristicStrategyViewModel heuristicStrategy) =>
-        heuristicStrategy.HeuristicStrategyType switch
+    public HeuristicStrategyBase HeuristicStrategyViewModelToHeuristicStrategyBase(HeuristicStrategyViewModel heuristicStrategyViewModel, NeighborhoodStrategyEnum neighborhoodStrategyType)
+    {
+        INeighborhoodStrategy neighborhoodStrategy = neighborhoodStrategyType switch
         {
-            HeuristicStrategyEnum.Descent => new DescentStrategy(),
-            HeuristicStrategyEnum.SimulatedAnnealing => new SimulatedAnnealingStrategy { NbSteps = heuristicStrategy.NbSteps, Alpha = heuristicStrategy.Alpha },
-            HeuristicStrategyEnum.Tabu => new TabuStrategy { NbSteps = heuristicStrategy.NbSteps },
-            _ => throw new System.NotImplementedException(),
+            NeighborhoodStrategyEnum.Random => new RandomWithSelectedOperatorsStrategy(),
+            NeighborhoodStrategyEnum.Best => new BestWithSelectedOperatorsStrategy(),
+            _ => throw new NotImplementedException()
         };
+        HeuristicStrategyBase heuristicStrategy = heuristicStrategyViewModel.HeuristicStrategyType switch
+        {
+            HeuristicStrategyEnum.Descent => new DescentStrategy(neighborhoodStrategy),
+            HeuristicStrategyEnum.SimulatedAnnealing => new SimulatedAnnealingStrategy(neighborhoodStrategy) { NbSteps = heuristicStrategyViewModel.NbSteps, Alpha = heuristicStrategyViewModel.Alpha },
+            HeuristicStrategyEnum.Tabu => new TabuStrategy(neighborhoodStrategy) { NbSteps = heuristicStrategyViewModel.NbSteps },
+            _ => throw new NotImplementedException(),
+        };
+        return heuristicStrategy;
+    }
+        
 }

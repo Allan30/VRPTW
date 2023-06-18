@@ -2,10 +2,7 @@ namespace VRPTW.Core.Operators;
 
 public class ExchangeInterOperator : InterOperator
 {
-    protected override OperatorEnum GetName()
-    {
-        return OperatorEnum.ExchangeInter;
-    }
+    protected override OperatorEnum GetName() => OperatorEnum.ExchangeInter;
 
     protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle) =>
         indexSrc != vehicle.Clients.Count - 1;

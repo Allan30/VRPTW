@@ -12,44 +12,20 @@ public abstract class HeuristicStrategyBase
 
     protected abstract bool LoopConditon { get; }
 
-    public NeighborhoodStrategyEnum NeighborhoodStrategy { get; set; } = NeighborhoodStrategyEnum.Best;
+    public INeighborhoodStrategy NeighborhoodStrategy { get; set; }
+
+    protected HeuristicStrategyBase(INeighborhoodStrategy neighborhoodStrategy)
+    {
+        NeighborhoodStrategy = neighborhoodStrategy;
+    }
 
     public Routes Calculate(Routes solution, List<OperatorEnum> ops, IProgress<int> progress, CancellationToken cancellationToken)
-        => NeighborhoodStrategy switch
-        {
-            NeighborhoodStrategyEnum.Best => BestOfSelectedOperators(solution, ops, progress, cancellationToken),
-            NeighborhoodStrategyEnum.Random => RandomWithSelectedOperators(solution, ops, progress, cancellationToken),
-            _ => throw new NotImplementedException()
-        };
-
-    private Routes RandomWithSelectedOperators(Routes solution, List<OperatorEnum> ops, IProgress<int> progress, CancellationToken cancellationToken)
-    {
-        var operators = GetOperatorsFromName(ops);
-        while (LoopConditon && !cancellationToken.IsCancellationRequested)
-        {
-            solution = GetNewSolution(operators[Random.Next(0, operators.Count)].Execute(solution), solution, progress);
-            solution.DeleteEmptyVehicles();
-            var newFitness = solution.Fitness;
-            if (newFitness < BestFitness)
-            {
-                BestFitness = newFitness;
-                BestSolution = (Routes)solution.Clone();
-            }
-        }
-        return solution;
-    }
-    
-    private Routes BestOfSelectedOperators(Routes solution, List<OperatorEnum> ops, IProgress<int> progress, CancellationToken cancellationToken)
     {
         BestSolution = (Routes)solution.Clone();
         var operators = GetOperatorsFromName(ops);
         while (LoopConditon && !cancellationToken.IsCancellationRequested)
         {
-            var neighbors = new List<(Vehicle, Vehicle, double, (OperatorEnum, List<int>))>();
-            foreach (var op in operators)
-            {
-                neighbors = neighbors.Concat(op.Execute(solution)).ToList();
-            }
+            var neighbors = NeighborhoodStrategy.FindNeighbors(operators, solution);
             solution = GetNewSolution(neighbors, solution, progress);
             solution.DeleteEmptyVehicles();
             var newFitness = solution.Fitness;

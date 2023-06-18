@@ -43,15 +43,12 @@ public class Vehicle : ICloneable
             .Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.Service + prevClient.GetDistance(nextClient))
             .Sum();
 
-    public object Clone()
-    {
-        var vehicle = new Vehicle(Id, MaxCapacity, Depot)
+    public object Clone() => 
+        new Vehicle(Id, MaxCapacity, Depot)
         {
             CurrentCapacity = CurrentCapacity,
             Clients = new List<Client>(Clients)
         };
-        return vehicle;
-    }
 
     public bool IsCorrect()
     {

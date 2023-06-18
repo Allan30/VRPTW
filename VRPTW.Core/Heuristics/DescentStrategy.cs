@@ -1,3 +1,4 @@
+using VRPTW.Core.Neighborhood;
 using VRPTW.Core.Operators;
 
 namespace VRPTW.Core.Heuristics;
@@ -7,6 +8,11 @@ public class DescentStrategy : HeuristicStrategyBase
 
     private double _prevFitness = 0;
     private double _currentFitness = -1;
+
+    public DescentStrategy(INeighborhoodStrategy neighborhoodStrategy) : base(neighborhoodStrategy)
+    {
+    }
+
     protected override bool LoopConditon => _prevFitness > _currentFitness;
 
     protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution, IProgress<int> progress)
