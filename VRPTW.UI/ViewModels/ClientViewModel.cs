@@ -1,6 +1,8 @@
-﻿namespace VRPTW.UI.ViewModels;
+﻿using System;
 
-public sealed class ClientViewModel
+namespace VRPTW.UI.ViewModels;
+
+public sealed class ClientViewModel : IEquatable<ClientViewModel>
 {
     public bool IsDepot { get; set; }
     public string Id { get; set; }
@@ -15,4 +17,10 @@ public sealed class ClientViewModel
         true => $"{Id} (Dépôt)",
         _ => Id
     };
+
+    public override bool Equals(object? obj) => obj is ClientViewModel client && Equals(client);
+
+    public bool Equals(ClientViewModel? other) => other is not null && Id == other.Id;
+
+    public override int GetHashCode() => Id.GetHashCode();
 }
