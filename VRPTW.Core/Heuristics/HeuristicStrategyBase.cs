@@ -15,20 +15,12 @@ public abstract class HeuristicStrategyBase
     public NeighborhoodStrategyEnum NeighborhoodStrategy { get; set; } = NeighborhoodStrategyEnum.Best;
 
     public Routes Calculate(Routes solution, List<OperatorEnum> ops, IProgress<int> progress, CancellationToken cancellationToken)
-    {
-        if (NeighborhoodStrategy == NeighborhoodStrategyEnum.Best)
+        => NeighborhoodStrategy switch
         {
-            return BestOfSelectedOperators(solution, ops, progress, cancellationToken);
-        }
-        else if (NeighborhoodStrategy == NeighborhoodStrategyEnum.Random)
-        {
-            return RandomWithSelectedOperators(solution, ops, progress, cancellationToken);
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
-    }
+            NeighborhoodStrategyEnum.Best => BestOfSelectedOperators(solution, ops, progress, cancellationToken),
+            NeighborhoodStrategyEnum.Random => RandomWithSelectedOperators(solution, ops, progress, cancellationToken),
+            _ => throw new NotImplementedException()
+        };
 
     private Routes RandomWithSelectedOperators(Routes solution, List<OperatorEnum> ops, IProgress<int> progress, CancellationToken cancellationToken)
     {
