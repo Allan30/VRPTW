@@ -1,6 +1,8 @@
 using System.Diagnostics;
+using System.Globalization;
 using VRPTW.Core.Neighborhood;
 using VRPTW.Core.Operators;
+using VRPTW.Core.Tools;
 
 namespace VRPTW.Core.Heuristics;
 
@@ -8,6 +10,7 @@ public abstract class HeuristicStrategyBase
 {
     
     public List<OperatorBase> Operators { get; set; } = new();
+    public List<double> BestFitnesses { get; set; } = new();
     public List<double> Fitnesses { get; set; } = new();
     protected Random Random { get; } = new();
     protected double BestFitness { get; set; } = double.MaxValue;
@@ -41,11 +44,15 @@ public abstract class HeuristicStrategyBase
             {
                 BestFitness = newFitness;
                 BestSolution = (Routes)solution.Clone();
+                
             }
+            BestFitnesses.Add(BestFitness);
+            Fitnesses.Add(newFitness);
         }
         stopwatch.Stop();
         BestSolution.TimeToCalculate = stopwatch.Elapsed;
-        Fitnesses.Add(BestFitness);
+        
+        CsvWriter.WriteCsv("C:/Users/allan/Desktop/data.csv", new List<string> {"fitness", "best_fitnesses", "operators"}, new List<List<string>>  { Fitnesses.Select(f => f.ToString(CultureInfo.InvariantCulture)).ToList(), BestFitnesses.Select(f => f.ToString(CultureInfo.InvariantCulture)).ToList(), Operators.Select(o => o.ToString()).ToList() });
         return BestSolution;
     }
 
