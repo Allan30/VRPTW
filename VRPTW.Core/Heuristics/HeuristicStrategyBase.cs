@@ -9,9 +9,7 @@ public abstract class HeuristicStrategyBase
     protected double BestFitness { get; set; } = double.MaxValue;
     protected Routes? BestSolution;
     public int NbSteps { get; set; } = 1_000;
-
     protected abstract bool LoopConditon { get; }
-
     public INeighborhoodStrategy NeighborhoodStrategy { get; set; }
 
     protected HeuristicStrategyBase(INeighborhoodStrategy neighborhoodStrategy)

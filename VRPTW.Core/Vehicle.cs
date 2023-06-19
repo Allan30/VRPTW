@@ -17,7 +17,7 @@ public class Vehicle : ICloneable
         Clients = new List<Client>
         {
             depot,
-            new Client(depot.Id + "_bis", depot.Coordinate, depot.ReadyTime, depot.DueTime)
+            new Client(depot.Id + "_bis", depot.Position, depot.ReadyTime, depot.DueTime)
         };
         Depot = depot;
     }

@@ -1,43 +1,40 @@
-﻿namespace VRPTW.Core
+﻿using System.Numerics;
+
+namespace VRPTW.Core
 {
-    public class Client : ICloneable
+    public sealed class Client : ICloneable, IEquatable<Client>
     {
-        public string Id;
-        public Coordinate Coordinate;
-        public int ReadyTime;
-        public int DueTime;
-        public int Demand;
-        public int Service;
+        public string Id { get; set; }
+        public Vector2 Position { get; set; }
+        public int ReadyTime { get; set; }
+        public int DueTime { get; set; }
+        public int Demand { get; set; }
+        public int Service { get; set; }
 
         public double TimeOnIt { get; set; }
 
         public double TimeAfterService => TimeOnIt + Service;
 
-        public Client(string id, Coordinate coordinate, int readyTime, int dueTime, int demand = 0, int service = 0)
+        public Client(string id, Vector2 position, int readyTime, int dueTime, int demand = 0, int service = 0)
         {
             Id = id;
-            Coordinate = coordinate;
+            Position = position;
             ReadyTime = readyTime;
             DueTime = dueTime;
             Demand = demand;
             Service = service;
         }
 
-        public double GetDistance(Client otherClient) =>
-            Coordinate.GetDistance(otherClient.Coordinate);
+        public double GetDistance(Client otherClient) => Vector2.Distance(Position, otherClient.Position);
 
-        public override bool Equals(object? obj)
-        {
-            if (obj is Client client)
-            {
-                return Id == client.Id;
-            }
-
-            return false;
-        }
-
-        public object Clone() => new Client(Id, Coordinate, ReadyTime, DueTime, Demand, Service);
+        public object Clone() => new Client(Id, Position, ReadyTime, DueTime, Demand, Service);
 
         public override int GetHashCode() => Id.GetHashCode();
+
+        public override bool Equals(object? obj) =>
+            obj is Client otherClient && Equals(otherClient);
+
+        public bool Equals(Client? other) =>
+            other is not null && Id == other.Id;
     }
 }

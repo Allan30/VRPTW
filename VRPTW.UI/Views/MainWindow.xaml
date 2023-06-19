@@ -56,7 +56,7 @@
 
         <DockPanel Grid.Column="1" VerticalAlignment="Stretch" LastChildFill="True">
             <TextBlock DockPanel.Dock="Bottom"
-                       Text="Thibault THOMAS &amp; Allan DES COURTILS © 2023"
+                       Text="Allan DES COURTILS &amp; Thibault THOMAS © 2023"
                        FontSize="9"
                        Foreground="LightGray"
                        Margin="10" />
@@ -191,7 +191,7 @@
                                           IsEnabled="{Binding IsSolutionLoaded, Mode=OneWay}"
                                           Style="{StaticResource ClearableComboBox}"
                                           Margin="0,0,0,10" />
-                                <Label Content="{Binding SelectedClient.Coordinate}"
+                                <Label Content="{Binding SelectedClient.Position}"
                                        ContentStringFormat="Position : {0}"
                                        Padding="0,0,0,5" />
                                 <Label Content="{Binding SelectedClient.Demand}"
