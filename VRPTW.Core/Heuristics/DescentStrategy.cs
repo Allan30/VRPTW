@@ -3,7 +3,7 @@ using VRPTW.Core.Operators;
 
 namespace VRPTW.Core.Heuristics;
 
-public class DescentStrategy : HeuristicStrategyBase
+public sealed class DescentStrategy : HeuristicStrategyBase
 {
     
     private float _prevFitness = 0;

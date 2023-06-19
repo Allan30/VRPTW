@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using VRPTW.Core.Neighborhood;
 using VRPTW.Core.Operators;
 
@@ -19,6 +20,7 @@ public abstract class HeuristicStrategyBase
 
     public Routes Calculate(Routes solution, List<OperatorEnum> ops, IProgress<int> progress, CancellationToken cancellationToken)
     {
+        var stopwatch = Stopwatch.StartNew();
         BestSolution = (Routes)solution.Clone();
         var operators = GetOperatorsFromName(ops);
         while (LoopConditon && !cancellationToken.IsCancellationRequested)
@@ -33,6 +35,8 @@ public abstract class HeuristicStrategyBase
                 BestSolution = (Routes)solution.Clone();
             }
         }
+        stopwatch.Stop();
+        BestSolution.TimeToCalculate = stopwatch.Elapsed;
         return BestSolution;
     }
 

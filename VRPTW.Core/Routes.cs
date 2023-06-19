@@ -4,6 +4,7 @@ namespace VRPTW.Core;
 
 public sealed class Routes : ICloneable
 {
+    public TimeSpan TimeToCalculate { get; set; }
     public Client Depot { get; }
     public List<Client> Clients { get; private set; }
     public List<Vehicle> Vehicles { get; private set; } = new();
@@ -43,6 +44,7 @@ public sealed class Routes : ICloneable
 
     public void Reset()
     {
+        TimeToCalculate = TimeSpan.Zero;
         Vehicles.Clear();
     }
 

@@ -3,7 +3,7 @@ using VRPTW.Core.Operators;
 
 namespace VRPTW.Core.Heuristics;
 
-public class SimulatedAnnealingStrategy : HeuristicStrategyBase
+public sealed class SimulatedAnnealingStrategy : HeuristicStrategyBase
 {
     private int _currentStep = 0;
     protected override bool LoopConditon => _currentStep < NbSteps;

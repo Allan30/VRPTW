@@ -60,12 +60,11 @@
                        FontSize="9"
                        Foreground="LightGray"
                        Margin="10" />
-            <TabControl DockPanel.Dock="Top">
+            <TabControl DockPanel.Dock="Top" Margin="10">
 
-                <TabItem Header="Configuration"
-                     IsSelected="True">
+                <TabItem Header="Configuration" IsSelected="True">
                     <ScrollViewer>
-                        <StackPanel Margin="10">
+                        <StackPanel Margin="0,10">
                             <Button Content="Choisir un fichier"
                                     Command="{Binding ChooseFileCommand}"
                                     Margin="0,0,0,8" />
@@ -173,13 +172,12 @@
                 </TabItem>
 
                 <TabItem Header="Affichage">
-                    <StackPanel Margin="10">
+                    <StackPanel Margin="0,10">
                         <TextBlock Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource InvertBooleanToVisibilityConverter}}"
                                    Text="Veuillez d'abord configurer une solution depuis Configuration."
                                    TextWrapping="Wrap" />
-                        <StackPanel Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-
-                        </StackPanel>
+                        <TextBlock Visibility="{Binding IsSolutionCalculated, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   Text="{Binding TimeToCalculate, StringFormat='Temps d&quot;exécution : {0}'}" />
                         <Expander Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                                   Header="Client sélectionné"
                                   IsExpanded="True"
@@ -191,19 +189,19 @@
                                           IsEnabled="{Binding IsSolutionLoaded, Mode=OneWay}"
                                           Style="{StaticResource ClearableComboBox}"
                                           Margin="0,0,0,10" />
-                                <Label Content="{Binding SelectedClient.Position}"
+                                <Label Content="{Binding SelectedClient.Position, FallbackValue=-}"
                                        ContentStringFormat="Position : {0}"
                                        Padding="0,0,0,5" />
-                                <Label Content="{Binding SelectedClient.Demand}"
+                                <Label Content="{Binding SelectedClient.Demand, FallbackValue=-}"
                                        ContentStringFormat="Demande : {0}"
                                        Padding="0,0,0,5" />
-                                <Label Content="{Binding SelectedClient.ReadyTime}"
+                                <Label Content="{Binding SelectedClient.ReadyTime, FallbackValue=-}"
                                        ContentStringFormat="Heure min : {0}"
                                        Padding="0,0,0,5" />
-                                <Label Content="{Binding SelectedClient.DueTime}"
+                                <Label Content="{Binding SelectedClient.DueTime, FallbackValue=-}"
                                        ContentStringFormat="Heure max : {0}"
                                        Padding="0,0,0,5" />
-                                <Label Content="{Binding SelectedClient.Service}"
+                                <Label Content="{Binding SelectedClient.Service, FallbackValue=-}"
                                        ContentStringFormat="Temps de chargement : {0}"
                                        Padding="0" />
                             </StackPanel>
