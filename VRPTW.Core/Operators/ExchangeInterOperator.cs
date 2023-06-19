@@ -1,6 +1,6 @@
 namespace VRPTW.Core.Operators;
 
-public class ExchangeInterOperator : InterOperator
+public sealed class ExchangeInterOperator : InterOperator
 {
     protected override OperatorEnum GetName() => OperatorEnum.ExchangeInter;
 

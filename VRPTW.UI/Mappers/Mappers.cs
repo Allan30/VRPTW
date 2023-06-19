@@ -16,6 +16,7 @@ public partial class RoutesMapper
     public void RoutesToRoutesViewModel(Routes routes, RoutesViewModel routesViewModel)
     {
         Map(routes, routesViewModel);
+        routesViewModel.TimeToCalculate = routes.TimeToCalculate;
         var clientMapper = new ClientMapper();
         var clients = routes.Clients.Select(c => clientMapper.ClientToClientViewModel(c));
         var depot = clientMapper.ClientToClientViewModel(routes.Depot, true);

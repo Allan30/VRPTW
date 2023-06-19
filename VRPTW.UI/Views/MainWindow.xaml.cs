@@ -123,10 +123,10 @@ public partial class MainWindow : MetroWindow
 
         for (var i = 0; i < ViewModel.ClientsWithDepot.Count; i++)
         {
-            PlotZone.Plot.AddPoint(ViewModel.ClientsWithDepot[i].Coordinate.X, ViewModel.ClientsWithDepot[i].Coordinate.Y, size: 10);
+            PlotZone.Plot.AddPoint(ViewModel.ClientsWithDepot[i].Position.X, ViewModel.ClientsWithDepot[i].Position.Y, size: 10);
 
-            xs[i] = ViewModel.ClientsWithDepot[i].Coordinate.X;
-            ys[i] = ViewModel.ClientsWithDepot[i].Coordinate.Y;
+            xs[i] = ViewModel.ClientsWithDepot[i].Position.X;
+            ys[i] = ViewModel.ClientsWithDepot[i].Position.Y;
         }
 
         _combinedScatters = PlotZone.Plot.AddScatterPoints(xs, ys, markerSize: MARKER_SIZE, color: Color.Transparent);
@@ -165,8 +165,8 @@ public partial class MainWindow : MetroWindow
 
             foreach (var client in vehicle.Clients)
             {
-                xs.Add(client.Coordinate.X);
-                ys.Add(client.Coordinate.Y);
+                xs.Add(client.Position.X);
+                ys.Add(client.Position.Y);
             }
 
             allXs.AddRange(xs);
@@ -188,8 +188,8 @@ public partial class MainWindow : MetroWindow
         }
         else
         {
-            _highlightedPoint.X = ViewModel.SelectedClient.Coordinate.X;
-            _highlightedPoint.Y = ViewModel.SelectedClient.Coordinate.Y;
+            _highlightedPoint.X = ViewModel.SelectedClient.Position.X;
+            _highlightedPoint.Y = ViewModel.SelectedClient.Position.Y;
             _highlightedPoint.IsVisible = true;
             PlotZone.Plot.Remove(_selectedClientTooltip);
             _selectedClientTooltip = PlotZone.Plot.AddCustomTooltip(ViewModel.SelectedClient.ToString(), _highlightedPoint.X, _highlightedPoint.Y);
@@ -225,10 +225,10 @@ public partial class MainWindow : MetroWindow
             _allScatters[ViewModel.SelectedVehicle.Id].IsVisible = false;
             for (var i = 0; i < ViewModel.SelectedVehicle.Clients.Count - 1; i++)
             {
-                var x1 = ViewModel.SelectedVehicle.Clients[i].Coordinate.X;
-                var y1 = ViewModel.SelectedVehicle.Clients[i].Coordinate.Y;
-                var x2 = ViewModel.SelectedVehicle.Clients[i + 1].Coordinate.X;
-                var y2 = ViewModel.SelectedVehicle.Clients[i + 1].Coordinate.Y;
+                var x1 = ViewModel.SelectedVehicle.Clients[i].Position.X;
+                var y1 = ViewModel.SelectedVehicle.Clients[i].Position.Y;
+                var x2 = ViewModel.SelectedVehicle.Clients[i + 1].Position.X;
+                var y2 = ViewModel.SelectedVehicle.Clients[i + 1].Position.Y;
                 var arrow = PlotZone.Plot.AddArrow(x2, y2, x1, y1, color: _allScatters[ViewModel.SelectedVehicle.Id].Color, lineWidth: weight);
                 arrow.ArrowheadLength = 7;
                 arrow.ArrowheadWidth = 7;
@@ -250,17 +250,17 @@ public partial class MainWindow : MetroWindow
 
     private void ConfigurePlot()
     {
-        PlotZone.Plot.AddHorizontalLine(ViewModel.ClientsWithDepot[0].Coordinate.Y, color: Color.DimGray, style: LineStyle.DashDotDot);
-        PlotZone.Plot.AddVerticalLine(ViewModel.ClientsWithDepot[0].Coordinate.X, color: Color.DimGray, style: LineStyle.DashDotDot);
+        PlotZone.Plot.AddHorizontalLine(ViewModel.ClientsWithDepot[0].Position.Y, color: Color.DimGray, style: LineStyle.DashDotDot);
+        PlotZone.Plot.AddVerticalLine(ViewModel.ClientsWithDepot[0].Position.X, color: Color.DimGray, style: LineStyle.DashDotDot);
 
         const int margin = 10;
 
         PlotZone.Plot.XAxis.SetBoundary(
-            ViewModel.ClientsWithDepot.Min(x => x.Coordinate.X - margin),
-            ViewModel.ClientsWithDepot.Max(x => x.Coordinate.X + margin));
+            ViewModel.ClientsWithDepot.Min(x => x.Position.X - margin),
+            ViewModel.ClientsWithDepot.Max(x => x.Position.X + margin));
         PlotZone.Plot.YAxis.SetBoundary(
-            ViewModel.ClientsWithDepot.Min(x => x.Coordinate.Y - margin),
-            ViewModel.ClientsWithDepot.Max(x => x.Coordinate.Y + margin));
+            ViewModel.ClientsWithDepot.Min(x => x.Position.Y - margin),
+            ViewModel.ClientsWithDepot.Max(x => x.Position.Y + margin));
         PlotZone.Plot.XAxis.SetZoomInLimit(10);
         PlotZone.Plot.YAxis.SetZoomInLimit(10);
     }
@@ -280,7 +280,7 @@ public partial class MainWindow : MetroWindow
                 ViewModel.SelectedClient =
                     ViewModel
                     .ClientsWithDepot
-                    .First(x => x.Coordinate.X == point.x && x.Coordinate.Y == point.y);
+                    .First(x => x.Position.X == point.x && x.Position.Y == point.y);
             }
         }
         else

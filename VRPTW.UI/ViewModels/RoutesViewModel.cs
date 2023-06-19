@@ -100,7 +100,9 @@ public partial class RoutesViewModel : ObservableObject
         }
     }
 
-    public double Fitness { get; set; }
+    [ObservableProperty]
+    private TimeSpan _timeToCalculate;
+    public float Fitness { get; set; }
     public int NbClients { get; set; }
     public int TotalDemand { get; set; }
     public int Capacity { get; set; }
@@ -111,10 +113,10 @@ public partial class RoutesViewModel : ObservableObject
     private bool _isSolutionLoaded;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ResetCommand))]
     private bool _isSolutionCalculating;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ResetCommand))]
     private bool _isSolutionCalculated;
 
     public bool IsSolutionCalculable => IsSolutionLoaded && !IsSolutionCalculating && SelectedOperators.Any();
@@ -131,7 +133,7 @@ public partial class RoutesViewModel : ObservableObject
         IsSolutionCalculated = true;
     }
 
-    [RelayCommand(CanExecute = nameof(IsSolutionCalculating))]
+    [RelayCommand(CanExecute = nameof(IsSolutionCalculated))]
     private void Reset()
     {
         IsSolutionCalculated = false;

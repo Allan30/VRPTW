@@ -6,7 +6,7 @@ public sealed class ClientViewModel : IEquatable<ClientViewModel>
 {
     public bool IsDepot { get; set; }
     public string Id { get; set; }
-    public CoordinateViewModel Coordinate { get; set; }
+    public PositionViewModel Position { get; set; }
     public int ReadyTime { get; set; }
     public int DueTime { get; set; }
     public int Demand { get; set; }

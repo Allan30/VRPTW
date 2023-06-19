@@ -3,7 +3,7 @@ using VRPTW.Core.Operators;
 
 namespace VRPTW.Core.Heuristics;
 
-public class TabuStrategy : HeuristicStrategyBase
+public sealed class TabuStrategy : HeuristicStrategyBase
 {
     public int TabuSize { get; set; } = 80;
 
