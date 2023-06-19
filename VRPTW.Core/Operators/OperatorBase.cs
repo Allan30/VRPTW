@@ -2,8 +2,8 @@ namespace VRPTW.Core.Operators;
 
 public abstract class OperatorBase
 {
-    protected List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum operation, List<int> clientsIndex))> OperateVehicles;
-    public Routes Solution;
+    protected List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum operation, List<int> clientsIndex))> OperateVehicles { get; set; }
+    public Routes Solution { get; set; }
 
     public List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum operation, List<int> clientsIndex))> Execute(Routes solution)
     {

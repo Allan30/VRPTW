@@ -5,9 +5,9 @@ namespace VRPTW.Core.Heuristics;
 
 public class DescentStrategy : HeuristicStrategyBase
 {
-
-    private double _prevFitness = 0;
-    private double _currentFitness = -1;
+    
+    private float _prevFitness = 0;
+    private float _currentFitness = -1;
 
     public DescentStrategy(INeighborhoodStrategy neighborhoodStrategy) : base(neighborhoodStrategy)
     {

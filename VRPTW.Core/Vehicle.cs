@@ -1,13 +1,12 @@
 ﻿namespace VRPTW.Core;
 
-public class Vehicle : ICloneable
+public sealed class Vehicle : ICloneable
 {
     public int Id { get; set; }
-    public int MaxCapacity { get; init; }
+    public int MaxCapacity { get; }
     public int CurrentCapacity { get; private set; }
-    public List<Client> Clients { get; set; }
-
-    public Client Depot;
+    public List<Client> Clients { get; private set; }
+    public Client Depot { get; }
 
     public Vehicle(int id, int capacity, Client depot)
     {
@@ -33,12 +32,12 @@ public class Vehicle : ICloneable
         return false;
     }
 
-    public double TravelledDistance =>
+    public float TravelledDistance =>
         Clients
             .Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.GetDistance(nextClient))
             .Sum();
 
-    public double RouteTime => 
+    public float RouteTime => 
         Clients
             .Zip(Clients.Skip(1), (prevClient, nextClient) => prevClient.Service + prevClient.GetDistance(nextClient))
             .Sum();

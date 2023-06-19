@@ -6,7 +6,7 @@ namespace VRPTW.Core.Heuristics;
 public abstract class HeuristicStrategyBase
 {
     protected Random Random { get; } = new();
-    protected double BestFitness { get; set; } = double.MaxValue;
+    protected float BestFitness { get; set; } = float.MaxValue;
     protected Routes? BestSolution;
     public int NbSteps { get; set; } = 1_000;
     protected abstract bool LoopConditon { get; }

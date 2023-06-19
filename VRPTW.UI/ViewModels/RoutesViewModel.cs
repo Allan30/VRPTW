@@ -100,7 +100,7 @@ public partial class RoutesViewModel : ObservableObject
         }
     }
 
-    public double Fitness { get; set; }
+    public float Fitness { get; set; }
     public int NbClients { get; set; }
     public int TotalDemand { get; set; }
     public int Capacity { get; set; }

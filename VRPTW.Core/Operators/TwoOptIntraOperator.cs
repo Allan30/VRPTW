@@ -1,6 +1,6 @@
 namespace VRPTW.Core.Operators;
 
-public class TwoOptIntraOperator : IntraOperator
+public sealed class TwoOptIntraOperator : IntraOperator
 {
     protected override OperatorEnum GetName() =>
         OperatorEnum.TwoOpt;

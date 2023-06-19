@@ -1,6 +1,6 @@
 namespace VRPTW.Core.Operators;
 
-public class RelocateIntraOperator : IntraOperator
+public sealed class RelocateIntraOperator : IntraOperator
 {
     protected override OperatorEnum GetName()
     {
