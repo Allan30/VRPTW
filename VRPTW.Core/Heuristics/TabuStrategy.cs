@@ -41,6 +41,7 @@ public class TabuStrategy : HeuristicStrategyBase
         }
         newRoutes.ChangeVehicle(bestOperation.src);
         newRoutes.ChangeVehicle(bestOperation.trg);
+        Operators.Add(GetOperatorsFromName(new List<OperatorEnum> { bestOperation.operation.name })[0]);
         return newRoutes;
     }
 }

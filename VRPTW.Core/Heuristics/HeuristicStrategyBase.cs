@@ -5,6 +5,9 @@ namespace VRPTW.Core.Heuristics;
 
 public abstract class HeuristicStrategyBase
 {
+    
+    public List<OperatorBase> Operators { get; set; } = new();
+    public List<double> Fitnesses { get; set; } = new();
     protected Random Random { get; } = new();
     protected double BestFitness { get; set; } = double.MaxValue;
     protected Routes? BestSolution;
@@ -25,7 +28,12 @@ public abstract class HeuristicStrategyBase
         var operators = GetOperatorsFromName(ops);
         while (LoopConditon && !cancellationToken.IsCancellationRequested)
         {
+            
             var neighbors = NeighborhoodStrategy.FindNeighbors(operators, solution);
+            if (neighbors.Count == 0)
+            {
+                break;
+            }
             solution = GetNewSolution(neighbors, solution, progress);
             solution.DeleteEmptyVehicles();
             var newFitness = solution.Fitness;
@@ -35,6 +43,7 @@ public abstract class HeuristicStrategyBase
                 BestSolution = (Routes)solution.Clone();
             }
         }
+        Fitnesses.Add(BestFitness);
         return BestSolution;
     }
 

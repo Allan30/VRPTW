@@ -4,6 +4,7 @@ namespace VRPTW.Core.Neighborhood;
 
 public sealed class BestWithSelectedOperatorsStrategy : INeighborhoodStrategy
 {
+    public List<OperatorBase> Operators { get; set; } = new();
     public List<(Vehicle, Vehicle, double, (OperatorEnum, List<int>))> FindNeighbors(List<OperatorBase> operators, Routes solution)
     {
         var neighbors = new List<(Vehicle, Vehicle, double, (OperatorEnum, List<int>))>();

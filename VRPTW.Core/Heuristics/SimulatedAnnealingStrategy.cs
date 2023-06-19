@@ -30,6 +30,7 @@ public class SimulatedAnnealingStrategy : HeuristicStrategyBase
             newRoutes.ChangeVehicle(theOperation.trg);
         }
         Temperature *= Alpha;
+        Operators.Add(GetOperatorsFromName(new List<OperatorEnum> { theOperation.operation.name })[0]);
         return newRoutes;
     }
 }
