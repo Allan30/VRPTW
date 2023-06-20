@@ -52,7 +52,7 @@ public abstract class HeuristicStrategyBase
         stopwatch.Stop();
         BestSolution.TimeToCalculate = stopwatch.Elapsed;
         
-        CsvWriter.WriteCsv("C:/Users/allan/Desktop/data.csv", new List<string> {"fitness", "best_fitnesses", "operators"}, new List<List<string>>  { Fitnesses.Select(f => f.ToString(CultureInfo.InvariantCulture)).ToList(), BestFitnesses.Select(f => f.ToString(CultureInfo.InvariantCulture)).ToList(), Operators.Select(o => o.ToString()).ToList() });
+        //CsvWriter.WriteCsv("C:/Users/allan/Desktop/data.csv", new List<string> {"fitness", "best_fitnesses", "operators"}, new List<List<string>>  { Fitnesses.Select(f => f.ToString(CultureInfo.InvariantCulture)).ToList(), BestFitnesses.Select(f => f.ToString(CultureInfo.InvariantCulture)).ToList(), Operators.Select(o => o.ToString()!).ToList() });
         return BestSolution;
     }
 
