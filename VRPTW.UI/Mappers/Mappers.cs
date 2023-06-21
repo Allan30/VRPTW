@@ -63,7 +63,7 @@ public partial class HeuristicStrategyMapper
         HeuristicStrategyBase heuristicStrategy = heuristicStrategyViewModel.HeuristicStrategyType switch
         {
             HeuristicStrategyEnum.Descent => new DescentStrategy(neighborhoodStrategy),
-            HeuristicStrategyEnum.SimulatedAnnealing => new SimulatedAnnealingStrategy(neighborhoodStrategy) { NbSteps = heuristicStrategyViewModel.NbSteps, Alpha = heuristicStrategyViewModel.Alpha, Temperature = heuristicStrategyViewModel.InitialTemperature },
+            HeuristicStrategyEnum.SimulatedAnnealing => new SimulatedAnnealingStrategy(neighborhoodStrategy) { NbSteps = heuristicStrategyViewModel.NbSteps, Alpha = heuristicStrategyViewModel.Alpha, InitialTemperature = heuristicStrategyViewModel.InitialTemperature },
             HeuristicStrategyEnum.Tabu => new TabuStrategy(neighborhoodStrategy) { NbSteps = heuristicStrategyViewModel.NbSteps },
             _ => throw new NotImplementedException(),
         };

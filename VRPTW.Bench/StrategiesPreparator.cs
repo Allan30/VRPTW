@@ -67,9 +67,9 @@ public sealed class StrategiesPreparator
             {
                 foreach (var alpha in Alphas)
                 {
-                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy()) { Alpha = alpha, Temperature = temp, NbSteps = sNumber }));
+                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy()) { Alpha = alpha, InitialTemperature = temp, NbSteps = sNumber }));
                     if (UseRandomNeighborhoodStrategy)
-                        strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy()) { Alpha = alpha, Temperature = temp, NbSteps = sNumber }));
+                        strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy()) { Alpha = alpha, InitialTemperature = temp, NbSteps = sNumber }));
                 }
             }
         }
@@ -77,15 +77,15 @@ public sealed class StrategiesPreparator
         {
             foreach (var alpha in AlphaTempCombinations.Value.FixedTemp.Alphas)
             {
-                strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy()) { Alpha = alpha, Temperature = AlphaTempCombinations.Value.FixedTemp.Temp, NbSteps = sNumber }));
+                strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy()) { Alpha = alpha, InitialTemperature = AlphaTempCombinations.Value.FixedTemp.Temp, NbSteps = sNumber }));
                 if (UseRandomNeighborhoodStrategy)
-                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy()) { Alpha = alpha, Temperature = AlphaTempCombinations.Value.FixedTemp.Temp, NbSteps = sNumber }));
+                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy()) { Alpha = alpha, InitialTemperature = AlphaTempCombinations.Value.FixedTemp.Temp, NbSteps = sNumber }));
             }
             foreach (var temp in AlphaTempCombinations.Value.FixedAlpha.Temps)
             {
-                strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy()) { Alpha = AlphaTempCombinations.Value.FixedAlpha.Alpha, Temperature = temp, NbSteps = sNumber }));
+                strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy()) { Alpha = AlphaTempCombinations.Value.FixedAlpha.Alpha, InitialTemperature = temp, NbSteps = sNumber }));
                 if (UseRandomNeighborhoodStrategy)
-                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy()) { Alpha = AlphaTempCombinations.Value.FixedAlpha.Alpha, Temperature = temp, NbSteps = sNumber }));
+                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy()) { Alpha = AlphaTempCombinations.Value.FixedAlpha.Alpha, InitialTemperature = temp, NbSteps = sNumber }));
             }
         }
 

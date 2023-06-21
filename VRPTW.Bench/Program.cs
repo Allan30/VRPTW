@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using VRPTW.Core;
 using VRPTW.Core.Heuristics;
 using VRPTW.Core.Operators;
@@ -64,11 +65,11 @@ public class Program
             : string.Join('_', strategy.Operators.Select(o => o.ToString().ToLower()));
         var additionalInfos = strategy.Strategy switch
         {
-            SimulatedAnnealingStrategy strat => $"steps{strat.NbSteps}_alpha{strat.Alpha}_temp{strat.Temperature}",
+            SimulatedAnnealingStrategy strat => $"steps{strat.NbSteps}_alpha{strat.Alpha}_temp{strat.InitialTemperature}",
             TabuStrategy strat => $"steps{strat.NbSteps}_tabusize{strat.TabuSize}",
             DescentStrategy => string.Empty,
             _ => throw new NotImplementedException(),
         };
-        return string.Join('_', operatorsName, neighbStratName, strategyName);
+        return string.Join('_', operatorsName, neighbStratName, strategyName, additionalInfos);
     }
 }
