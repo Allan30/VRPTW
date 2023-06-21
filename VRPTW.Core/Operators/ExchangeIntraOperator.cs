@@ -2,7 +2,7 @@ namespace VRPTW.Core.Operators;
 
 public sealed class ExchangeIntraOperator : IntraOperator
 {
-    protected override OperatorEnum GetName()
+    public override OperatorEnum GetName()
     {
         return OperatorEnum.ExchangeIntra;
     }

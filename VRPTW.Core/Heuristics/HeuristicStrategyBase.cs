@@ -12,6 +12,8 @@ public abstract class HeuristicStrategyBase
     public List<OperatorBase> Operators { get; set; } = new();
     public List<double> BestFitnesses { get; set; } = new();
     public List<double> Fitnesses { get; set; } = new();
+    
+    public List<int> numbersOfVehicles { get; set; } = new();
     protected Random Random { get; } = new();
     protected double BestFitness { get; set; } = double.MaxValue;
     protected Routes? BestSolution;
@@ -46,13 +48,14 @@ public abstract class HeuristicStrategyBase
                 BestSolution = (Routes)solution.Clone();
                 
             }
-            BestFitnesses.Add(BestFitness);
+            BestFitnesses.Add(BestFitness); 
             Fitnesses.Add(newFitness);
+            numbersOfVehicles.Add(solution.Vehicles.Count);
         }
         stopwatch.Stop();
         BestSolution.TimeToCalculate = stopwatch.Elapsed;
         
-        CsvWriter.WriteCsv("C:/Users/allan/Desktop/data.csv", new List<string> {"fitness", "best_fitnesses", "operators"}, new List<List<string>>  { Fitnesses.Select(f => f.ToString(CultureInfo.InvariantCulture)).ToList(), BestFitnesses.Select(f => f.ToString(CultureInfo.InvariantCulture)).ToList(), Operators.Select(o => o.ToString()).ToList() });
+        CsvWriter.WriteCsv("C:/Users/allan/Desktop/data.csv", new List<string> {"fitness", "best_fitnesses", "operators", "nb_vehicles"}, new List<List<string>>  { Fitnesses.Select(f => f.ToString(CultureInfo.CurrentCulture)).ToList(), BestFitnesses.Select(f => f.ToString(CultureInfo.CurrentCulture)).ToList(), Operators.Select(o => o.GetName().ToString()).ToList(), numbersOfVehicles.Select(n => n.ToString(CultureInfo.InvariantCulture)).ToList() });
         return BestSolution;
     }
 

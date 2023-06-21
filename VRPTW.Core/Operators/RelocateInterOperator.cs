@@ -2,7 +2,7 @@ namespace VRPTW.Core.Operators;
 
 public sealed class RelocateInterOperator : InterOperator
 {
-    protected override OperatorEnum GetName()
+    public override OperatorEnum GetName()
     {
         return OperatorEnum.RelocateInter;
     }

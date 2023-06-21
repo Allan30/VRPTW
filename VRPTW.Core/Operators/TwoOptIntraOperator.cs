@@ -2,7 +2,7 @@ namespace VRPTW.Core.Operators;
 
 public sealed class TwoOptIntraOperator : IntraOperator
 {
-    protected override OperatorEnum GetName() =>
+    public override OperatorEnum GetName() =>
         OperatorEnum.TwoOpt;
 
     protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle) =>
