@@ -13,9 +13,7 @@ public abstract class OperatorBase
         return OperateVehicles;
     }
     protected abstract void Browse();
-
-    protected abstract OperatorEnum GetName();
-
+    public abstract OperatorEnum GetName();
     protected abstract bool IndexSrcCondition(int indexSrc, Vehicle vehicle);
     protected abstract bool IndexTrgCondition(int indexTrg, Vehicle vehicle);
     protected abstract int IndexSrc { get; }

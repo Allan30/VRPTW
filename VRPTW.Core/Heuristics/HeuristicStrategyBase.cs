@@ -1,19 +1,16 @@
 using System.Diagnostics;
-using System.Globalization;
 using VRPTW.Core.Neighborhood;
 using VRPTW.Core.Operators;
-using VRPTW.Core.Tools;
 
 namespace VRPTW.Core.Heuristics;
 
 public abstract class HeuristicStrategyBase
 {
-    
-    public List<OperatorBase> Operators { get; set; } = new();
-    public List<double> BestFitnesses { get; set; } = new();
-    public List<double> Fitnesses { get; set; } = new();
+    public List<OperatorBase> Operators { get; protected set; } = new();
+    public List<double> BestFitnesses { get; protected set; } = new();
+    public List<double> Fitnesses { get; protected set; } = new();
     protected Random Random { get; } = new();
-    protected double BestFitness { get; set; } = double.MaxValue;
+    public double BestFitness { get; protected set; } = double.MaxValue;
     protected Routes? BestSolution;
     public int NbSteps { get; set; } = 1_000;
     protected abstract bool LoopConditon { get; }
@@ -43,16 +40,13 @@ public abstract class HeuristicStrategyBase
             if (newFitness < BestFitness)
             {
                 BestFitness = newFitness;
-                BestSolution = (Routes)solution.Clone();
-                
+                BestSolution = (Routes)solution.Clone(); 
             }
             BestFitnesses.Add(BestFitness);
             Fitnesses.Add(newFitness);
         }
         stopwatch.Stop();
         BestSolution.TimeToCalculate = stopwatch.Elapsed;
-        
-        //CsvWriter.WriteCsv("C:/Users/allan/Desktop/data.csv", new List<string> {"fitness", "best_fitnesses", "operators"}, new List<List<string>>  { Fitnesses.Select(f => f.ToString(CultureInfo.InvariantCulture)).ToList(), BestFitnesses.Select(f => f.ToString(CultureInfo.InvariantCulture)).ToList(), Operators.Select(o => o.ToString()!).ToList() });
         return BestSolution;
     }
 

@@ -2,10 +2,7 @@ namespace VRPTW.Core.Operators;
 
 public sealed class RelocateIntraOperator : IntraOperator
 {
-    protected override OperatorEnum GetName()
-    {
-        return OperatorEnum.RelocateIntra;
-    }
+    public override OperatorEnum GetName() => OperatorEnum.RelocateIntra;
 
     protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle)
     {
