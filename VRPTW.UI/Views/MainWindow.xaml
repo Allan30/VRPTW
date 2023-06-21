@@ -95,7 +95,7 @@
                                                       Margin="10,0,0,0" />
                                         </StackPanel>
                                         <StackPanel Margin="0,4">
-                                            <Label Content="Opérateurs de voisinage" Style="{StaticResource Subtitle}" />
+                                            <Label Content="Opérateur(s) de voisinage" Style="{StaticResource Subtitle}" />
                                             <ListView ItemsSource="{Binding Source={x:Static viewmodels:RoutesViewModel.Operators}, Mode=OneWay}"
                                                       SelectionMode="Multiple"
                                                       Name="OperatorsListView"
