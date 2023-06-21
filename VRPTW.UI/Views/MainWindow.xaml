@@ -80,7 +80,7 @@
                             <StackPanel Visibility="{Binding IsSolutionLoaded, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                                         Margin="0,8,0,8">
 
-                                <Expander Header="Paramètres" x:Name="ParametersExpander">
+                                <Expander Header="Paramètres" x:Name="ParametersExpander" IsExpanded="True">
                                     <StackPanel Margin="0,0,8,0">
                                         <StackPanel Margin="0,4">
                                             <Label Content="Heuristique" Style="{StaticResource Subtitle}" />
@@ -95,7 +95,7 @@
                                                       Margin="10,0,0,0" />
                                         </StackPanel>
                                         <StackPanel Margin="0,4">
-                                            <Label Content="Opérateurs" Style="{StaticResource Subtitle}" />
+                                            <Label Content="Opérateurs de voisinage" Style="{StaticResource Subtitle}" />
                                             <ListView ItemsSource="{Binding Source={x:Static viewmodels:RoutesViewModel.Operators}, Mode=OneWay}"
                                                       SelectionMode="Multiple"
                                                       Name="OperatorsListView"
