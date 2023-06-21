@@ -11,24 +11,21 @@ public static class CsvWriter
         // write headers
         csv.AppendLine(string.Join(";", headers));
 
-        // write data
-        for (var i = 0; i < data[0].Count; i++)
+        // write data. Each List<string> in the List<List<string>> represents a column
+        int maxRowCount = data.Max(column => column.Count); // Determine the maximum number of rows in any column
+        for (int row = 0; row < maxRowCount; row++)
         {
-            var line = "";
-            foreach (var col in data)
+            var rowData = new List<string>();
+
+            foreach (var column in data)
             {
-                try
-                {
-                    line += col[i] + ";";
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    line += "";
-                }
-                
-                csv.AppendLine(line);
+                if (row < column.Count)
+                    rowData.Add(column[row]);
+                else
+                    rowData.Add(""); // Fill empty cells with empty string if the row is shorter in that column
             }
+
+            csv.AppendLine(string.Join(";", rowData));
         }
 
         File.WriteAllText(path, csv.ToString());
