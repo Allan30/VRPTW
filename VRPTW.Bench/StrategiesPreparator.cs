@@ -49,9 +49,9 @@ public sealed class StrategiesPreparator
         
         foreach (var tSize in TabuSizes)
         {
-            strategies.Add((operatorsList, new TabuStrategy(new BestWithSelectedOperatorsStrategy()) { TabuSize = tSize, NbSteps = numberOfSteps }));
+            strategies.Add((operatorsList, new TabuStrategy(new BestWithSelectedOperatorsStrategy(), numberOfSteps, tSize)));
             if (UseRandomNeighborhoodStrategy)
-                strategies.Add((operatorsList, new TabuStrategy(new RandomWithSelectedOperatorsStrategy()) { TabuSize = tSize, NbSteps = numberOfSteps }));
+                strategies.Add((operatorsList, new TabuStrategy(new RandomWithSelectedOperatorsStrategy(), numberOfSteps, tSize)));
         }
 
         return strategies;
@@ -67,9 +67,9 @@ public sealed class StrategiesPreparator
             {
                 foreach (var alpha in Alphas)
                 {
-                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy()) { Alpha = alpha, InitialTemperature = temp, NbSteps = sNumber }));
+                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy(), sNumber, temp, alpha)));
                     if (UseRandomNeighborhoodStrategy)
-                        strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy()) { Alpha = alpha, InitialTemperature = temp, NbSteps = sNumber }));
+                        strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy(), sNumber, temp, alpha)));
                 }
             }
         }
@@ -77,15 +77,15 @@ public sealed class StrategiesPreparator
         {
             foreach (var alpha in AlphaTempCombinations.Value.FixedTemp.Alphas)
             {
-                strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy()) { Alpha = alpha, InitialTemperature = AlphaTempCombinations.Value.FixedTemp.Temp, NbSteps = sNumber }));
+                strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy(), sNumber, AlphaTempCombinations.Value.FixedTemp.Temp, alpha)));
                 if (UseRandomNeighborhoodStrategy)
-                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy()) { Alpha = alpha, InitialTemperature = AlphaTempCombinations.Value.FixedTemp.Temp, NbSteps = sNumber }));
+                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy(), sNumber, AlphaTempCombinations.Value.FixedTemp.Temp, alpha)));
             }
             foreach (var temp in AlphaTempCombinations.Value.FixedAlpha.Temps)
             {
-                strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy()) { Alpha = AlphaTempCombinations.Value.FixedAlpha.Alpha, InitialTemperature = temp, NbSteps = sNumber }));
+                strategies.Add((opsList, new SimulatedAnnealingStrategy(new BestWithSelectedOperatorsStrategy(), sNumber, temp, AlphaTempCombinations.Value.FixedAlpha.Alpha)));
                 if (UseRandomNeighborhoodStrategy)
-                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy()) { Alpha = AlphaTempCombinations.Value.FixedAlpha.Alpha, InitialTemperature = temp, NbSteps = sNumber }));
+                    strategies.Add((opsList, new SimulatedAnnealingStrategy(new RandomWithSelectedOperatorsStrategy(), sNumber, temp, AlphaTempCombinations.Value.FixedAlpha.Alpha)));
             }
         }
 

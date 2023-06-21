@@ -5,14 +5,16 @@ namespace VRPTW.Core.Heuristics;
 
 public sealed class TabuStrategy : HeuristicStrategyBase
 {
-    public int TabuSize { get; set; } = 80;
+    public int TabuSize { get; init; } = 80;
 
     private int _currentStep = 0;
 
     private readonly List<(OperatorEnum operatorName, List<string> clientName)> _tabouList = new();
 
-    public TabuStrategy(INeighborhoodStrategy neighborhoodStrategy) : base(neighborhoodStrategy)
+    public TabuStrategy(INeighborhoodStrategy neighborhoodStrategy, int nbStebs, int tabuSize) : base(neighborhoodStrategy)
     {
+        NbSteps = nbStebs;
+        TabuSize = tabuSize;
     }
 
     protected override bool LoopConditon => _currentStep < NbSteps;

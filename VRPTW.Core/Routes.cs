@@ -81,7 +81,7 @@ public sealed class Routes : ICloneable
             Depot,
             Clients = Clients.Select(client => (Client)client.Clone()).ToList(),
             MaxCapacity,
-            Vehicles = Vehicles.Select(vehicle => (Vehicle)vehicle.Clone()).ToList()
+            Vehicles =  Vehicles.Select(vehicle => (Vehicle)vehicle.Clone()).ToList()
         );
 
     public int NbClients => Vehicles.Sum(vehicle => vehicle.NbClients);

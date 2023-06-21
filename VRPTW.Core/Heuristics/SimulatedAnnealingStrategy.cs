@@ -7,18 +7,21 @@ public sealed class SimulatedAnnealingStrategy : HeuristicStrategyBase
 {
     private int _currentStep = 0;
     protected override bool LoopConditon => _currentStep < NbSteps;
-    public double InitialTemperature { get; set; } = 10_000;
+    public double InitialTemperature { get; init; }
     public double Temperature { get; private set; }
-    public double Alpha { get; set; } = 0.985;
+    public double Alpha { get; init; }
 
-    public SimulatedAnnealingStrategy(INeighborhoodStrategy neighborhoodStrategy) : base(neighborhoodStrategy)
+    public SimulatedAnnealingStrategy(INeighborhoodStrategy neighborhoodStrategy, int nbSteps, double initialTemperature, double alpha) : base(neighborhoodStrategy)
     {
+        NbSteps = nbSteps;
+        InitialTemperature = initialTemperature;
+        Temperature = initialTemperature;
+        Alpha = alpha;
     }
 
     protected override Routes GetNewSolution(List<(Vehicle src, Vehicle trg, double delta, (OperatorEnum name, List<int> clientsIndex) operation)> vehicles, Routes solution, IProgress<int> progress)
     {
         progress.Report(++_currentStep);
-        Temperature = InitialTemperature;
         if (vehicles.Count == 0)
         {
             return solution;

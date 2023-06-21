@@ -14,7 +14,7 @@ public abstract class HeuristicStrategyBase
     protected Random Random { get; } = new();
     public double BestFitness { get; protected set; } = double.MaxValue;
     protected Routes? BestSolution;
-    public int NbSteps { get; set; } = 1_000;
+    public int NbSteps { get; init; }
     protected abstract bool LoopConditon { get; }
     public INeighborhoodStrategy NeighborhoodStrategy { get; set; }
 
