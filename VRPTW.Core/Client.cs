@@ -2,7 +2,7 @@
 
 namespace VRPTW.Core;
 
-public sealed class Client : ICloneable, IEquatable<Client>
+public sealed class Client : IEquatable<Client>
 {
     public string Id { get; }
     public Vector2 Position { get; }
@@ -26,8 +26,6 @@ public sealed class Client : ICloneable, IEquatable<Client>
     }
 
     public float GetDistance(Client otherClient) => Vector2.Distance(Position, otherClient.Position);
-
-    public object Clone() => new Client(Id, Position, ReadyTime, DueTime, Demand, Service);
 
     public int PositionHashCode { get; }
     public override int GetHashCode() => PositionHashCode;

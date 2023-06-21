@@ -79,7 +79,7 @@ public sealed class Routes : ICloneable
     public object Clone() =>
         new Routes(
             Depot,
-            Clients = Clients.Select(client => (Client)client.Clone()).ToList(),
+            Clients = new List<Client>(Clients),
             MaxCapacity,
             Vehicles =  Vehicles.Select(vehicle => (Vehicle)vehicle.Clone()).ToList()
         );
