@@ -34,7 +34,7 @@ public class Program
             var routes = VrpParser.ExtractVrpFile(file);
             var strategies = strategiesPreparator.Prepare();
         
-            Parallel.ForEach(strategies, new ParallelOptions { MaxDegreeOfParallelism = 1 }, (strategy, state, index) =>
+            Parallel.ForEach(strategies, new ParallelOptions { MaxDegreeOfParallelism = -1 }, (strategy, state, index) =>
             {
                 var tmpSolution = (Routes) routes.Clone();
                 tmpSolution.GenerateRandomSolution();
@@ -61,7 +61,14 @@ public class Program
         var neighbStratName = strategy.Strategy.NeighborhoodStrategy.GetType().Name.ToLower().Replace("strategy", string.Empty);
         var operatorsName = strategy.Operators.SequenceEqual(StrategiesPreparator.AllOperators())
             ? "allops"
-            : string.Join("_", strategy.Operators.Select(o => o.ToString().ToLower()));
-        return string.Join('_', strategyName, neighbStratName, operatorsName);
+            : string.Join('_', strategy.Operators.Select(o => o.ToString().ToLower()));
+        var additionalInfos = strategy.Strategy switch
+        {
+            SimulatedAnnealingStrategy strat => $"steps{strat.NbSteps}_alpha{strat.Alpha}_temp{strat.Temperature}",
+            TabuStrategy strat => $"steps{strat.NbSteps}_tabusize{strat.TabuSize}",
+            DescentStrategy => string.Empty,
+            _ => throw new NotImplementedException(),
+        };
+        return string.Join('_', operatorsName, neighbStratName, strategyName);
     }
 }
