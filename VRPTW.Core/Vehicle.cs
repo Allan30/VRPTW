@@ -46,7 +46,7 @@ public sealed class Vehicle : ICloneable
         new Vehicle(Id, MaxCapacity, Depot)
         {
             CurrentCapacity = CurrentCapacity,
-            Clients = new List<Client>(Clients)
+            Clients = Clients.Select(c => (Client)c.Clone()).ToList()
         };
 
     public bool IsCorrect()
