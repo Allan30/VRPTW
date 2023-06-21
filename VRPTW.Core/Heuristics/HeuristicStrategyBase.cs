@@ -10,7 +10,7 @@ public abstract class HeuristicStrategyBase
     public List<double> BestFitnesses { get; protected set; } = new();
     public List<double> Fitnesses { get; protected set; } = new();
     
-    public List<int> numbersOfVehicles { get; set; } = new();
+    public List<int> NumbersOfVehicles { get; } = new();
     protected Random Random { get; } = new();
     public double BestFitness { get; protected set; } = double.MaxValue;
     protected Routes? BestSolution;
@@ -46,7 +46,7 @@ public abstract class HeuristicStrategyBase
             }
             BestFitnesses.Add(BestFitness); 
             Fitnesses.Add(newFitness);
-            numbersOfVehicles.Add(solution.Vehicles.Count);
+            NumbersOfVehicles.Add(solution.Vehicles.Count);
         }
         stopwatch.Stop();
         BestSolution.TimeToCalculate = stopwatch.Elapsed;
