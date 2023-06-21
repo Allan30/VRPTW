@@ -214,7 +214,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Visibility="{Binding IsSolutionCalculated, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                  Header="Route sélectionnée"
+                                  Header="Véhicule sélectionné"
                                   IsExpanded="True"
                                   Padding="10">
                             <StackPanel>
@@ -236,7 +236,7 @@
                                 </ComboBox>
                                 <CheckBox IsChecked="{Binding DisplayAllRoutes, Converter={StaticResource InvertBoolConverter}}"
                                           Margin="0,10">
-                                    <TextBlock Text="N'afficher que la route sélectionnée"
+                                    <TextBlock Text="N'afficher que le véhicule sélectionné"
                                                TextWrapping="Wrap"
                                                Margin="4,0,0,0" />
                                     <CheckBox.Style>
