@@ -2,6 +2,7 @@
 using MahApps.Metro.Controls;
 using ScottPlot;
 using ScottPlot.Plottable;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -41,6 +42,8 @@ public partial class MainWindow : MetroWindow
     public MainWindow()
     {
         InitializeComponent();
+        PlotZone.RightClicked -= PlotZone.DefaultRightClickEvent;
+        PlotZone.RightClicked += CustomRightClickEvent;
         ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
         ThemeManager.Current.SyncTheme();
         PlotZone.Plot.Style(ScottPlot.Style.Gray1);
@@ -297,5 +300,29 @@ public partial class MainWindow : MetroWindow
     private void OnStartVRPTWButtonClick(object sender, RoutedEventArgs e)
     {
         ParametersExpander.IsExpanded = false;
+    }
+
+    public void CustomRightClickEvent(object sender, EventArgs e)
+    {
+        MenuItem item;
+        var cm = new ContextMenu();
+
+        item = new() { Header = "Enregistrer l'image..." };
+        item.Click += (o, e) => PlotZone.SaveAsImage();
+        cm.Items.Add(item);
+        
+        item = new() { Header = "Copier l'image" };
+        item.Click += (o, e) => Clipboard.SetImage(WpfPlot.BmpImageFromBmp(PlotZone.Plot.Render()));
+        cm.Items.Add(item);
+        
+        cm.Items.Add(new Separator());
+
+        item = new() { Header = "Zoom par défaut" };
+        item.Click += (o, e) => { PlotZone.Plot.AxisAuto(); PlotZone.Refresh(); };
+        cm.Items.Add(item);
+
+        cm.Items.Add(new Separator());
+
+        cm.IsOpen = true;
     }
 }

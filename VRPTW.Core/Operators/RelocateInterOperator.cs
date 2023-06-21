@@ -2,20 +2,13 @@ namespace VRPTW.Core.Operators;
 
 public sealed class RelocateInterOperator : InterOperator
 {
-    public override OperatorEnum GetName()
-    {
-        return OperatorEnum.RelocateInter;
-    }
+    public override OperatorEnum GetName() => OperatorEnum.RelocateInter;
 
-    protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle)
-    {
-        return indexSrc != vehicle.Clients.Count - 1;
-    }
+    protected override bool IndexSrcCondition(int indexSrc, Vehicle vehicle) =>
+        indexSrc != vehicle.Clients.Count - 1;
 
-    protected override bool IndexTrgCondition(int indexTrg, Vehicle vehicle)
-    {
-        return indexTrg != vehicle.Clients.Count - 1;
-    }
+    protected override bool IndexTrgCondition(int indexTrg, Vehicle vehicle) =>
+        indexTrg != vehicle.Clients.Count - 1;
 
     protected override int IndexSrc => 1;
 
