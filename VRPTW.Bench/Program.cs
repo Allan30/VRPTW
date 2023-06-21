@@ -33,10 +33,12 @@ public class Program
             Directory.CreateDirectory(outputPath);
             var routes = VrpParser.ExtractVrpFile(file);
             var strategies = strategiesPreparator.Prepare();
-
-            Parallel.ForEach(strategies, new ParallelOptions { MaxDegreeOfParallelism = -1 }, (strategy, state, index) =>
+        
+            Parallel.ForEach(strategies, new ParallelOptions { MaxDegreeOfParallelism = 1 }, (strategy, state, index) =>
             {
-                strategy.Strategy.Calculate((Routes)routes.Clone(), strategy.Operators, new Progress<int>(), CancellationToken.None);                
+                var tmpSolution = (Routes) routes.Clone();
+                tmpSolution.GenerateRandomSolution();
+                strategy.Strategy.Calculate((Routes)tmpSolution, strategy.Operators, new Progress<int>(), CancellationToken.None);                
                 
                 CsvWriter.WriteCsv(
                     $"{outputPath}/{index:D3}_{ConstructFileNameFromStrategy(strategy)}.csv",
@@ -48,6 +50,7 @@ public class Program
                         strategy.Strategy.Operators.Select(op => op.GetName().ToString()).ToList(),
                     }
                 );
+                Console.WriteLine("Done" + index + " " + ConstructFileNameFromStrategy(strategy) + " " + file + " " + DateTime.Now.ToString("HH:mm:ss.fff"));
             });
         }
     }

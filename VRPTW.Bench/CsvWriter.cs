@@ -17,9 +17,18 @@ public static class CsvWriter
             var line = "";
             foreach (var col in data)
             {
-                line += col[i] + ";";
+                try
+                {
+                    line += col[i] + ";";
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    line += "";
+                }
+                
+                csv.AppendLine(line);
             }
-            csv.AppendLine(line);
         }
 
         File.WriteAllText(path, csv.ToString());

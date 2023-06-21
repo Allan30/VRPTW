@@ -50,6 +50,7 @@ public abstract class HeuristicStrategyBase
         }
         stopwatch.Stop();
         BestSolution.TimeToCalculate = stopwatch.Elapsed;
+        Console.WriteLine($"Best fitness: {BestFitness}");
         return BestSolution;
     }
 

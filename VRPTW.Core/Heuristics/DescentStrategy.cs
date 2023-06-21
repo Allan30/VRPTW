@@ -33,6 +33,7 @@ public sealed class DescentStrategy : HeuristicStrategyBase
         newRoutes.ChangeVehicle(bestOperation.src);
         newRoutes.ChangeVehicle(bestOperation.trg);
         _currentFitness = newRoutes.Fitness;
+        Operators.Add(GetOperatorsFromName(new List<OperatorEnum> { bestOperation.operation.name })[0]);
         return newRoutes;
     }
 }
