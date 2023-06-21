@@ -79,9 +79,9 @@ public sealed class Routes : ICloneable
     public object Clone() =>
         new Routes(
             Depot,
-            Clients = new List<Client>(Clients),
+            new List<Client>(Clients),
             MaxCapacity,
-            Vehicles =  Vehicles.Select(vehicle => (Vehicle)vehicle.Clone()).ToList()
+            Vehicles.Select(vehicle => (Vehicle)vehicle.Clone()).ToList()
         );
 
     public int NbClients => Vehicles.Sum(vehicle => vehicle.NbClients);
