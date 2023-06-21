@@ -38,7 +38,7 @@ public class Program
             {
                 var tmpSolution = (Routes)routes.Clone();
                 tmpSolution.GenerateRandomSolution();
-                strategy.Strategy.Calculate((Routes)tmpSolution, strategy.Operators, new Progress<int>(), CancellationToken.None);                
+                strategy.Strategy.Calculate(tmpSolution, strategy.Operators, new Progress<int>(), CancellationToken.None);                
                 
                 CsvWriter.WriteCsv(
                     $"{outputPath}/{index:D3}_{ConstructFileNameFromStrategy(strategy)}.csv",
