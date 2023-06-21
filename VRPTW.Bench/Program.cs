@@ -36,7 +36,7 @@ public class Program
         
             Parallel.ForEach(strategies, new ParallelOptions { MaxDegreeOfParallelism = -1 }, (strategy, state, index) =>
             {
-                var tmpSolution = (Routes) routes.Clone();
+                var tmpSolution = (Routes)routes.Clone();
                 tmpSolution.GenerateRandomSolution();
                 strategy.Strategy.Calculate((Routes)tmpSolution, strategy.Operators, new Progress<int>(), CancellationToken.None);                
                 
