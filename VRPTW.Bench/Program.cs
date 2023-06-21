@@ -54,8 +54,8 @@ public class Program
 
     private static string ConstructFileNameFromStrategy((List<OperatorEnum> Operators, HeuristicStrategyBase Strategy) strategy)
     {
-        var strategyName = strategy.Strategy.GetType().Name.ToLower();
-        var neighbStratName = strategy.Strategy.NeighborhoodStrategy.GetType().Name.ToLower();
+        var strategyName = strategy.Strategy.GetType().Name.ToLower().Replace("strategy", string.Empty);
+        var neighbStratName = strategy.Strategy.NeighborhoodStrategy.GetType().Name.ToLower().Replace("strategy", string.Empty);
         var operatorsName = strategy.Operators.SequenceEqual(StrategiesPreparator.AllOperators())
             ? "allops"
             : string.Join("_", strategy.Operators.Select(o => o.ToString().ToLower()));
