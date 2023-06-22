@@ -110,21 +110,28 @@ public partial class RoutesViewModel : ObservableObject
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(StartVRPTWCommand))]
     [NotifyCanExecuteChangedFor(nameof(RandomSolutionCommand))]
+    [NotifyPropertyChangedFor(nameof(IsSolutionCalculable))]
     private bool _isSolutionLoaded;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RandomSolutionCommand))]
+    [NotifyPropertyChangedFor(nameof(IsSolutionCalculable))]
+    [NotifyCanExecuteChangedFor(nameof(ResetCommand))]
     private bool _isSolutionCalculating;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ResetCommand))]
     private bool _isSolutionCalculated;
 
+    public bool IsSolutionCalculatedAndNotCalculating => IsSolutionCalculated && !IsSolutionCalculating;
+    public bool IsSolutionLoadedAndNotCalculating => IsSolutionLoaded && !IsSolutionCalculating;
+
     public bool IsSolutionCalculable => IsSolutionLoaded && !IsSolutionCalculating && SelectedOperators.Any();
 
     [ObservableProperty]
     private bool _displayAllRoutes = true;
 
-    [RelayCommand(CanExecute = nameof(IsSolutionLoaded))]
+    [RelayCommand(CanExecute = nameof(IsSolutionLoadedAndNotCalculating))]
     private void RandomSolution()
     {
         IsSolutionCalculated = false;
@@ -133,7 +140,7 @@ public partial class RoutesViewModel : ObservableObject
         IsSolutionCalculated = true;
     }
 
-    [RelayCommand(CanExecute = nameof(IsSolutionCalculated))]
+    [RelayCommand(CanExecute = nameof(IsSolutionCalculatedAndNotCalculating))]
     private void Reset()
     {
         IsSolutionCalculated = false;
